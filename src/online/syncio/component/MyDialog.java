@@ -15,8 +15,6 @@ public class MyDialog extends javax.swing.JPanel {
         setBackground(new Color(0f, 0f, 0f, 0f));
         setSize(350, 170);
         
-        btnDismiss.setFont(new MyFont().SFProDisplayBold);
-        
         lblTitle.setText(title);
         lblText.setText("<html><p style='text-align: center;'>" + text + "</p></html>");
         
@@ -41,8 +39,12 @@ public class MyDialog extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
-        pnlMain.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(219, 219, 219)));
+        pnlMain.setBorderColor(new java.awt.Color(219, 219, 219));
         pnlMain.setBorderThickness(1);
+        pnlMain.setRoundBottomLeft(10);
+        pnlMain.setRoundBottomRight(10);
+        pnlMain.setRoundTopLeft(10);
+        pnlMain.setRoundTopRight(10);
 
         btnClose.setBackground(null);
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/close_16px.png"))); // NOI18N
@@ -68,6 +70,7 @@ public class MyDialog extends javax.swing.JPanel {
         btnDismiss.setForeground(new java.awt.Color(0, 149, 246));
         btnDismiss.setText("Dismiss");
         btnDismiss.setBorderThickness(0);
+        btnDismiss.setFontBold(2);
         btnDismiss.setRadius(20);
         btnDismiss.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,9 +83,9 @@ public class MyDialog extends javax.swing.JPanel {
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(10, 10, 10)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblText, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                    .addComponent(lblText, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                     .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -102,8 +105,8 @@ public class MyDialog extends javax.swing.JPanel {
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblText, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addComponent(btnDismiss, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDismiss, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
         );
 

@@ -6,7 +6,8 @@ import online.syncio.utils.TimeHelper;
 import org.bson.types.Binary;
 
 public class Post {
-    public String userID;
+    private String postID;
+    private String userID;
     private String caption;
     private String datePosted = TimeHelper.getCurrentDateTime();
     public ArrayList<Binary> lPhoto;
@@ -21,6 +22,14 @@ public class Post {
         this.userID = userID;
         this.caption = caption;
         this.lPhoto = lPhoto;
+    }
+
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
     }
     
     public String getUserID() {

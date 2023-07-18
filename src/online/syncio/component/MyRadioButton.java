@@ -13,6 +13,16 @@ public class MyRadioButton extends JRadioButton {
     private static final Color SELECTED_COLOR = new Color(0, 149, 246); 
     private static final Color SELECTED_CIRCLE_COLOR = Color.WHITE;
     private static final int CIRCLE_SIZE = 8;
+    private int fontBold = 1;
+    
+    public int getFontBold() {
+        return fontBold;
+    }
+
+    public void setFontBold(int fontBold) {
+        this.fontBold = fontBold;
+        setFont(ComponentInit.fontStyle(getFontBold(), this));
+    }
 
     /**
      * Creates a new instance of the MyRadioButton class.
@@ -20,11 +30,8 @@ public class MyRadioButton extends JRadioButton {
      * changes the cursor to a hand cursor, and customizes the appearance with an icon.
      */
     public MyRadioButton() {
-        setOpaque(false);
-        setFont(new MyFont().SFProDisplayMedium);
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
-        setBorderPainted(false);
-        setForeground(Color.BLACK);
+        ComponentInit.applyCommonProperties(this);
+        
         setIcon(new Icon() {
             @Override
             public void paintIcon(Component c, Graphics g, int x, int y) {

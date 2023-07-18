@@ -1,5 +1,4 @@
 package online.syncio;
-// Test pull
 
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -10,10 +9,11 @@ import javax.swing.JButton;
 import online.syncio.model.MyFont;
 import online.syncio.ui.PopupCreateNewPost;
 import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyButton;
 
 public class Main extends javax.swing.JFrame {
 
-    static JButton[] btnMenuList;
+    static MyButton[] btnMenuList;
     public static String prevTab, curTab;
     public static MyFont myFont = new MyFont();
 
@@ -32,13 +32,13 @@ public class Main extends javax.swing.JFrame {
         pnlTabContent.add(new Notification(), "notifications");
         pnlTabContent.add(new Profile(), "profile");
 
-        btnMenuList = new JButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
+        btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
-        for (JButton btn : btnMenuList) {
+        for (MyButton btn : btnMenuList) {
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JButton btn = (JButton) e.getSource();
+                    MyButton btn = (MyButton) e.getSource();
      
                     String name = e.getActionCommand().toLowerCase().replaceAll(" ", "");
                     
@@ -55,16 +55,16 @@ public class Main extends javax.swing.JFrame {
      * @param newTab The name of the tab to be shown.
      */
     public static void showTab(String newTab) {
-        for (JButton b : btnMenuList) {
+        for (MyButton b : btnMenuList) {
             if (b.getText().trim().equalsIgnoreCase(curTab)) {
-                b.setFont(myFont.SFProDisplayMedium);
-                b.setFont(b.getFont().deriveFont(16f));
+                b.setFontBold(1);
+//                b.setFont(b.getFont().deriveFont(16f));
                 break;
             }
             
             if(b.getText().trim().equalsIgnoreCase(newTab)) {
-                b.setFont(myFont.SFProDisplayBold);
-                b.setFont(b.getFont().deriveFont(16f));
+                b.setFontBold(2);
+//                b.setFont(b.getFont().deriveFont(16f));
             }
         }
   
@@ -77,14 +77,14 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-    public static void showTab(String newTab, JButton btn) {
-        btn.setFont(myFont.SFProDisplayBold);
-        btn.setFont(btn.getFont().deriveFont(16f));
+    public static void showTab(String newTab, MyButton btn) {
+        btn.setFontBold(2);
+//        btn.setFont(btn.getFont().deriveFont(16f));
 
-        for (JButton b : btnMenuList) {
+        for (MyButton b : btnMenuList) {
             if (b.getText().trim().equalsIgnoreCase(curTab)) {
-                b.setFont(myFont.SFProDisplayMedium);
-                b.setFont(b.getFont().deriveFont(16f));
+                b.setFontBold(1);
+//                b.setFont(b.getFont().deriveFont(16f));
                 break;
             }
         }
@@ -151,7 +151,7 @@ public class Main extends javax.swing.JFrame {
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/home_28px.png"))); // NOI18N
         btnHome.setText(" Home");
         btnHome.setBorderThickness(0);
-        btnHome.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnHome.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnHome.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnHome.setMaximumSize(new java.awt.Dimension(200, 60));
         btnHome.setMinimumSize(new java.awt.Dimension(200, 60));
@@ -163,7 +163,7 @@ public class Main extends javax.swing.JFrame {
         btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/search_28px.png"))); // NOI18N
         btnSearch.setText(" Search");
         btnSearch.setBorderThickness(0);
-        btnSearch.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnSearch.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnSearch.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnSearch.setMaximumSize(new java.awt.Dimension(200, 50));
         btnSearch.setMinimumSize(new java.awt.Dimension(200, 50));
@@ -175,7 +175,7 @@ public class Main extends javax.swing.JFrame {
         btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/message_28px.png"))); // NOI18N
         btnMessage.setText(" Messages");
         btnMessage.setBorderThickness(0);
-        btnMessage.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnMessage.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnMessage.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnMessage.setMaximumSize(new java.awt.Dimension(200, 50));
         btnMessage.setMinimumSize(new java.awt.Dimension(200, 50));
@@ -187,7 +187,7 @@ public class Main extends javax.swing.JFrame {
         btnNotification.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/notification_28px.png"))); // NOI18N
         btnNotification.setText(" Notifications");
         btnNotification.setBorderThickness(0);
-        btnNotification.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnNotification.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnNotification.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnNotification.setMaximumSize(new java.awt.Dimension(200, 50));
         btnNotification.setMinimumSize(new java.awt.Dimension(200, 50));
@@ -199,7 +199,7 @@ public class Main extends javax.swing.JFrame {
         btnCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/create_28px.png"))); // NOI18N
         btnCreate.setText(" Create");
         btnCreate.setBorderThickness(0);
-        btnCreate.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnCreate.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnCreate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCreate.setMaximumSize(new java.awt.Dimension(200, 50));
         btnCreate.setMinimumSize(new java.awt.Dimension(200, 50));
@@ -216,7 +216,7 @@ public class Main extends javax.swing.JFrame {
         btnProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_28px.png"))); // NOI18N
         btnProfile.setText(" Profile");
         btnProfile.setBorderThickness(0);
-        btnProfile.setFont(new java.awt.Font("SF Pro Display Regular", 0, 16)); // NOI18N
+        btnProfile.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnProfile.setMaximumSize(new java.awt.Dimension(200, 50));
         btnProfile.setMinimumSize(new java.awt.Dimension(200, 50));

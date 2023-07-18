@@ -65,8 +65,7 @@ public class MyTextPane extends JTextPane {
     
     public MyTextPane() {
         setOpaque(false);
-        setFont(new Font("SansSerif", Font.PLAIN, 16));
-        setFont(getFont().deriveFont(Font.PLAIN, 14f));
+        setFont(new Font("SansSerif", Font.PLAIN, 14));
         setCursor(new Cursor(Cursor.TEXT_CURSOR));
         setBorder(new EmptyBorder(1, 5, 1, 5));
     }
@@ -87,6 +86,7 @@ public class MyTextPane extends JTextPane {
         //Paint inside, Border set thickness pix
         g2.setColor(getBackground());
         g2.fillRoundRect(borderThickness, borderThickness, getWidth() - borderThickness * 2, getHeight() - borderThickness * 2, radius, radius);
+        
         super.paintComponent(g);
     }
     

@@ -1,18 +1,17 @@
 package online.syncio.component;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import online.syncio.model.MyFont;
 
 public class MyLabel extends JLabel {
     private int radius = 0;
     private Color borderColor = Color.WHITE;
     private int borderThickness = 0;
+    private int fontBold = 1;
 
     
     
@@ -45,21 +44,24 @@ public class MyLabel extends JLabel {
         this.borderColor = borderColor;
     }
     
+    public int getFontBold() {
+        return fontBold;
+    }
+
+    public void setFontBold(int fontBold) {
+        this.fontBold = fontBold;
+        setFont(ComponentInit.fontStyle(getFontBold(), this));
+    }
+    
 
     
     public MyLabel() {
-        setOpaque(false);
-        setFont(new MyFont().SFProDisplayMedium);
-        setBackground(Color.WHITE);
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
+        ComponentInit.applyCommonProperties(this);
     }
     
     public MyLabel(String text) {
         setText(text);
-        setOpaque(false);
-        setFont(new MyFont().SFProDisplayMedium);
-        setBackground(null);
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
+        ComponentInit.applyCommonProperties(this);
     }
     
     
@@ -74,7 +76,6 @@ public class MyLabel extends JLabel {
             g2.setColor(borderColor);
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         }
-        
         
         //Paint inside, Border set thickness pix
         g2.setColor(getBackground());

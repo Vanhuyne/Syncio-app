@@ -30,7 +30,6 @@ public class MyNotification extends javax.swing.JDialog {
         lbl.setBorder(new EmptyBorder(10, 20, 10, 20));
         lbl.setRadius(40);
         
-        lbl.setFont(lbl.getFont().deriveFont(14f));
         lbl.setText("<html><div style=\"width: " + size + "px; text-align: center\">" + message + "</div></html>");
         lbl.setHorizontalAlignment(JLabel.CENTER);
         
@@ -76,7 +75,6 @@ public class MyNotification extends javax.swing.JDialog {
         lbl.setBorder(new EmptyBorder(10, 20, 10, 20));
         lbl.setRadius(40);
         
-        lbl.setFont(lbl.getFont().deriveFont(14f));
         lbl.setText("<html><div style=\"width: 100px; text-align: center\">" + message + "</div></html>");
         lbl.setHorizontalAlignment(JLabel.CENTER);
         
@@ -121,7 +119,6 @@ public class MyNotification extends javax.swing.JDialog {
         lbl.setBorder(new EmptyBorder(10, 20, 10, 20));
         lbl.setRadius(40);
         
-        lbl.setFont(lbl.getFont().deriveFont(14f));
         lbl.setText("<html><div style=\"width: 100px; text-align: center\">This is  a notification</div></html>");
         lbl.setHorizontalAlignment(JLabel.CENTER);
         

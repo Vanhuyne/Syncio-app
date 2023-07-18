@@ -69,7 +69,7 @@
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                           <Component id="btnClose" min="-2" pref="24" max="-2" attributes="0"/>
-                          <EmptySpace pref="281" max="32767" attributes="0"/>
+                          <EmptySpace pref="279" max="32767" attributes="0"/>
                           <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="274" max="-2" attributes="0"/>
                           <Component id="btnShare" min="-2" max="-2" attributes="0"/>
@@ -127,9 +127,7 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Share"/>
                 <Property name="borderThickness" type="int" value="0"/>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="SF Pro Display Regular" size="14" style="1"/>
-                </Property>
+                <Property name="fontBold" type="int" value="2"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShareActionPerformed"/>
@@ -600,6 +598,9 @@
                   <SubComponents>
                     <Component class="online.syncio.component.MyLabel" name="lblCountNumber">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="fe" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                             <EmptyBorder bottom="1" left="1" right="10" top="1"/>

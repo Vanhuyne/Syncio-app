@@ -17,8 +17,11 @@ import static online.syncio.Main.prevTab;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyNotification;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
+import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.Post;
 import online.syncio.utils.ImageHelper;
 import org.bson.types.Binary;
@@ -27,7 +30,8 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
 
     ArrayList<String> imagePaths = new ArrayList<>();
     int imageIndex = 0;
-    PostDAO postDAO = new PostDAOImpl();
+    PostDAO postDAO = new PostDAOImpl(MongoDBConnect.getDatabase());
+    UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
     
     public PopupCreateNewPost() {
         initComponents();
@@ -168,7 +172,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         btnShare.setForeground(new java.awt.Color(0, 149, 246));
         btnShare.setText("Share");
         btnShare.setBorderThickness(0);
-        btnShare.setFont(new java.awt.Font("SF Pro Display Regular", 1, 14)); // NOI18N
+        btnShare.setFontBold(2);
         btnShare.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnShareActionPerformed(evt);
@@ -184,7 +188,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
                 .addGroup(pnlTopLayout.createSequentialGroup()
                     .addGap(15, 15, 15)
                     .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 279, Short.MAX_VALUE)
                     .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(274, 274, 274)
                     .addComponent(btnShare, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -439,6 +443,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         myPanel1.setPreferredSize(new java.awt.Dimension(278, 407));
         myPanel1.setLayout(new java.awt.BorderLayout());
 
+        lblCountNumber.setBackground(new java.awt.Color(254, 255, 255));
         lblCountNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 10));
         lblCountNumber.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCountNumber.setText(" ");
@@ -546,7 +551,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
     }//GEN-LAST:event_txpCaptionKeyTyped
 
     private void btnShareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShareActionPerformed
-        String userID = "56duongID";
+        String userID = "56duongID"; //LoggedInUser.getID()
         String caption = "";
         try {
             caption = txpCaption.getDocument().getText(0, txpCaption.getDocument().getLength()).trim();
@@ -558,12 +563,21 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
             lPhoto.add(new Binary(ImageHelper.readAsByte(photo)));
         }
 
+        
         //validate
         if((caption.equals("") || caption.equalsIgnoreCase(txpCaption.getPlaceholder())) && lPhoto.isEmpty()) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Please select an image or add a caption before sharing the post"), "dialog");
             return;
         }
         
+        //check user exist
+        if(userDAO.getByID("4f693d40e4b04cde19f17205") == null) {
+            GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
+            return;
+        }
+        
+        
+        //add
         Post post = new Post(userID, caption, lPhoto);
         boolean result = postDAO.add(post);
         if(result) {

@@ -1,18 +1,17 @@
 package online.syncio.component;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import online.syncio.model.MyFont;
 
 public class MyButton extends JButton {
     private int radius = 15;
     private Color borderColor = Color.BLACK;
     private int borderThickness = 1;
+    private int fontBold = 1;
 
     
     
@@ -44,16 +43,20 @@ public class MyButton extends JButton {
         this.borderThickness = borderThickness;
         this.borderColor = borderColor;
     }
+
+    public int getFontBold() {
+        return fontBold;
+    }
+
+    public void setFontBold(int fontBold) {
+        this.fontBold = fontBold;
+        setFont(ComponentInit.fontStyle(getFontBold(), this));
+    }
     
     
     
     public MyButton() {
-        setOpaque(false);
-        setFont(new MyFont().SFProDisplayMedium);
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
-        setFocusPainted(false);
-        setContentAreaFilled(false);
-        setBorder(null);
+        ComponentInit.applyCommonProperties(this);
     }
     
     
