@@ -2,7 +2,7 @@ package online.syncio.component;
 
 import java.awt.*;
 import javax.swing.*;
-import online.syncio.model.MyFont;
+import online.syncio.resources.fonts.MyFont;
 
 /**
  * A custom radio button with a circular shape and customizable colors.

@@ -1,7 +1,7 @@
 package online.syncio.component;
 
 import java.awt.Color;
-import online.syncio.model.MyFont;
+import online.syncio.resources.fonts.MyFont;
 
 public class MyDialog extends javax.swing.JPanel {
 

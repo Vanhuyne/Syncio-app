@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import online.syncio.Main;
+import online.syncio.view.Main;
 
 /**
  * Utility class providing helper methods for various operations.

@@ -13,21 +13,27 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import online.syncio.model.MyFont;
+import online.syncio.resources.fonts.MyFont;
 
 public class ComponentInit {
+
     public static Font fontStyle(int bold, JComponent component) {
         float existingFont = component.getFont().getSize();
 
-        if(bold == 0) return new MyFont().getSFProDisplayRegular().deriveFont(existingFont);
-        else if(bold == 1) return new MyFont().getSFProDisplayMedium().deriveFont(existingFont);
-        else if(bold == 2) return new MyFont().getSFProDisplayBold().deriveFont(existingFont);
-        
+        switch (bold) {
+            case 0:
+                return new MyFont().getSFProDisplayRegular().deriveFont(existingFont);
+            case 1:
+                return new MyFont().getSFProDisplayMedium().deriveFont(existingFont);
+            case 2:
+                return new MyFont().getSFProDisplayBold().deriveFont(existingFont);
+            default:
+                break;
+        }
+
         return null;
     }
-    
-    
-    
+
     public static void applyProperties(JLabel label) {
         label.setBackground(new Color(0f, 0f, 0f, 0f));
     }
@@ -36,12 +42,12 @@ public class ComponentInit {
         textField.setCursor(new Cursor(Cursor.TEXT_CURSOR));
         textField.setBorder(new EmptyBorder(1, 5, 1, 5));
     }
-    
+
     public static void applyProperties(JPasswordField passwordField) {
         passwordField.setCursor(new Cursor(Cursor.TEXT_CURSOR));
         passwordField.setBorder(new EmptyBorder(1, 5, 1, 5));
     }
-    
+
     public static void applyProperties(JTextArea textArea) {
         textArea.setCursor(new Cursor(Cursor.TEXT_CURSOR));
         textArea.setBorder(new EmptyBorder(3, 5, 3, 5));
@@ -50,9 +56,9 @@ public class ComponentInit {
     }
 
     public static void applyProperties(JComboBox<?> comboBox) {
-        
+
     }
-    
+
     public static void applyProperties(JRadioButton radioButton) {
         radioButton.setBorderPainted(false);
         radioButton.setForeground(Color.BLACK);
@@ -63,25 +69,21 @@ public class ComponentInit {
         button.setContentAreaFilled(false);
         button.setBorder(null);
     }
-    
+
     public static void applyProperties(JTable table) {
-        
+
     }
-    
+
     public static void applyProperties(MyTable table) {
         table.setFontHeaderBold(2);
     }
-    
-    
-    
+
     public static void applyCommonProperties(JComponent component) {
         component.setOpaque(false);
         component.setFont(new MyFont().getSFProDisplayMedium());
         component.setFont(component.getFont().deriveFont(14f));
         component.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        
-        
+
         if (component instanceof JLabel) {
             applyProperties((JLabel) component);
         } else if (component instanceof JTextField) {
@@ -97,6 +99,6 @@ public class ComponentInit {
         } else if (component instanceof JTable) {
             applyProperties((JTable) component);
         }
-        
+
     }
 }

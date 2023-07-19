@@ -8,15 +8,13 @@ import online.syncio.model.User;
 import org.bson.types.ObjectId;
 
 public class UserDAOImpl implements UserDAO {
+
     private MongoDatabase database;
 
     public UserDAOImpl(MongoDatabase database) {
         this.database = database;
     }
 
-    
-    
-    
     @Override
     public boolean add(User t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -27,26 +25,20 @@ public class UserDAOImpl implements UserDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
-    
     @Override
     public boolean deleteByID(String entityID) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
-    
     @Override
     public User getByID(String userID) {
         MongoCollection<User> users = database.getCollection("users", User.class);
         return users.find(eq("_id", new ObjectId(userID))).first();
     }
 
-    
-    
     @Override
     public List<User> getAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }
