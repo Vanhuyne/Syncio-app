@@ -122,7 +122,7 @@ public class ChamCong extends javax.swing.JFrame {
         MongoCollection<Document> tasks = database.getCollection("task", Document.class);
 
         String type = "INFO";
-        if(member == null) member = cboMember.getSelectedItem().toString();
+        member = cboMember.getSelectedItem().toString();
         String task = txtTask.getText();
         
         try {
