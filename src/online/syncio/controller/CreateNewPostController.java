@@ -47,7 +47,7 @@ public class CreateNewPostController {
             GlassPanePopup.showPopup(new MyDialog("Error", "Please select an image or add a caption before sharing the post"), "dialog");
             return;
         }
-        
+     
         if (userDAO.getByID(LoggedInUser.getCurrentUser().getIdAsString()) == null) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
             return;
@@ -56,6 +56,9 @@ public class CreateNewPostController {
         Post post = new Post(userID, caption, lPhoto);
 
         boolean result = postDAO.add(post);
-        this.popup.uploadNotification(result);
+
+        if (result) {
+            this.popup.uploadNotification();
+        }
     }
 }
