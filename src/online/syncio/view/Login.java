@@ -1,73 +1,72 @@
 package online.syncio.view;
 
+import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.swing.BorderFactory;
-import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
-import online.syncio.component.MyDialog;
+import online.syncio.component.MyPasswordField;
+import online.syncio.component.MyTextField;
+import online.syncio.controller.LoginController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-
 import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.LoggedInUser;
-import online.syncio.model.User;
+import online.syncio.utils.TextHelper;
 
-/**
- *
- * @author DELL
- */
 public class Login extends javax.swing.JFrame {
 
-    List<User> listUsers = new ArrayList<>();
+    private static Main main;
+    private LoginController controller;
+    private MongoDatabase database;
+    private UserDAO userDAO;
+    
+    
 
     public Login() {
+        this.database = MongoDBConnect.getDatabase();
+        
+        userDAO = new UserDAOImpl(database);
+
+        setUndecorated(true);
         initComponents();
+        setBackground(new Color(0f, 0f, 0f, 0f));
+        
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
-        addPlaceholderText(txtUser, "Username");
-        addPlaceholderText(txtPassword, "Password");
+        TextHelper.addPlaceholderText(txtUser, "Username");
+        TextHelper.addPlaceholderText(txtPassword, "Password");
 
         txtUser.requestFocus();
-    }
-
-    private void addPlaceholderText(JTextField textField, String placeholderText) {
-        // Save the default foreground color of the text field
-        Color defaultColor = textField.getForeground();
-
-        // Set the placeholder text
-        textField.setText(placeholderText);
-
-        // Add a focus listener to handle the placeholder text
-        textField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(placeholderText)) {
-                    textField.setText("");
-                    textField.setForeground(defaultColor);
+        
+        this.controller = new LoginController(this);
+        
+        
+        
+        //When the Enter key is pressed, click on the btnLogin.
+        KeyListener enterKeyListener = new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnLogin.doClick();
                 }
             }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textField.getText().isEmpty()) {
-                    textField.setForeground(Color.GRAY);
-                    textField.setText(placeholderText);
-                }
-            }
-        });
+        };
+        txtUser.addKeyListener(enterKeyListener);
+        txtPassword.addKeyListener(enterKeyListener);
     }
 
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        pnlContainer = new online.syncio.component.MyPanel();
+        windowTitleBar1 = new online.syncio.component.WindowTitleBar();
+        pnlMain = new online.syncio.component.MyPanel();
         pnlForm = new javax.swing.JPanel();
         myLabel1 = new online.syncio.component.MyLabel();
         txtUser = new online.syncio.component.MyTextField();
@@ -79,31 +78,34 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1280, 720));
+        pnlContainer.setRoundBottomLeft(20);
+        pnlContainer.setRoundBottomRight(20);
+        pnlContainer.setRoundTopLeft(20);
+        pnlContainer.setRoundTopRight(20);
+        pnlContainer.setLayout(new java.awt.BorderLayout());
+
+        windowTitleBar1.setFrame(this);
+        pnlContainer.add(windowTitleBar1, java.awt.BorderLayout.PAGE_START);
+
+        pnlMain.setBackground(new java.awt.Color(255, 255, 255));
+        pnlMain.setRoundBottomLeft(20);
+        pnlMain.setRoundBottomRight(20);
 
         pnlForm.setBackground(new java.awt.Color(255, 255, 255));
         pnlForm.setPreferredSize(new java.awt.Dimension(412, 454));
 
+        myLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         myLabel1.setText("Login");
-        myLabel1.setFont(new java.awt.Font("SF Pro Display Medium", 0, 36)); // NOI18N
-
-        txtUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUserActionPerformed(evt);
-            }
-        });
+        myLabel1.setFont(new java.awt.Font("SF Pro Display Bold", 0, 36)); // NOI18N
+        myLabel1.setFontBold(2);
 
         btnLogin.setBackground(new java.awt.Color(0, 149, 246));
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Login");
         btnLogin.setBorderColor(new java.awt.Color(255, 255, 255));
+        btnLogin.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnLogin.setPreferredSize(new java.awt.Dimension(92, 20));
-        btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnLoginMouseClicked(evt);
-            }
-        });
+        btnLogin.setRadius(10);
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -171,98 +173,33 @@ public class Login extends javax.swing.JFrame {
                 .addGap(16, 16, 16))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(433, 433, 433)
+        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
+        pnlMain.setLayout(pnlMainLayout);
+        pnlMainLayout.setHorizontalGroup(
+            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMainLayout.createSequentialGroup()
+                .addGap(434, 434, 434)
                 .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(435, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        pnlMainLayout.setVerticalGroup(
+            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGap(130, 130, 130)
                 .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addGap(96, 96, 96))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        pnlContainer.add(pnlMain, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(pnlContainer, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-
+        controller.loginAuthentication();
     }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
-
-    }//GEN-LAST:event_txtUserActionPerformed
-
-    private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
-        String username = txtUser.getText();
-        String password = new String(txtPassword.getPassword());
-
-        Set<String> setError = new HashSet<String>();
-        //txtUser
-        if (username.isEmpty() || username.equalsIgnoreCase("username")) {
-            setError.add("Please enter a username");
-            txtUser.requestFocus();
-        } else if (!username.matches("[a-zA-Z0-9]+")) {
-            setError.add("Username can only contain the characters [a-zA-Z0-9]");
-            txtUser.requestFocus();
-        }
-        //txtPassword
-        if (password.isEmpty() || password.equalsIgnoreCase("password")) {
-            setError.add("Please enter a password");
-            txtPassword.requestFocus();
-        } else if (!password.matches("[a-zA-Z0-9]+")) {
-            setError.add("Password does not contain special characters");
-            txtPassword.requestFocus();
-        }
-        if (!setError.isEmpty()) {
-            //neu co loi => hien thi loi
-            String errors = "";
-            for (String error : setError) {
-                errors += error + "<br>";
-            }
-            GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
-
-        } // dang nhap thanh cong
-        else {
-            UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
-            User user = userDAO.authentication(username, password);
-                if (user != null ) {
-                    LoggedInUser.setCurrentUser(user); //set loggedin user
-                    GlassPanePopup.showPopup(new MyDialog("Success", "Logged in successfully"), "dialog");
-                    // set role
-                    if (LoggedInUser.isAdmin()) {
-//                       new AdminHome();
-                    } else {
-                        new Main().setVisible(true);
-                        dispose();
-                    }
-                } else {
-                    GlassPanePopup.showPopup(new MyDialog("Error", "Wrong account or password"), "dialog");
-                }
-            
-        }
-    }//GEN-LAST:event_btnLoginMouseClicked
 
     /**
      * @param args the command line arguments
@@ -300,15 +237,33 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
+    
+    
+    public MyPasswordField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public MyTextField getTxtUser() {
+        return txtUser;
+    }
+    
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnLogin;
-    private javax.swing.JPanel jPanel1;
     private online.syncio.component.MyLabel lblContinue;
     private online.syncio.component.MyLabel lblCreateAccount;
     private online.syncio.component.MyLabel lblForgetPassword;
     private online.syncio.component.MyLabel myLabel1;
+    private online.syncio.component.MyPanel pnlContainer;
     private javax.swing.JPanel pnlForm;
+    private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPasswordField txtPassword;
     private online.syncio.component.MyTextField txtUser;
+    private online.syncio.component.WindowTitleBar windowTitleBar1;
     // End of variables declaration//GEN-END:variables
 }

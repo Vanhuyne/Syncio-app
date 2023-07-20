@@ -48,8 +48,8 @@ public class MyTable extends JTable {
         ComponentInit.applyCommonProperties(this);
         
         // Style
-        setPreferredSize(new Dimension(400, 200));
-        setPreferredScrollableViewportSize(new Dimension(400, 200));
+//        setPreferredSize(new Dimension(400, 200));
+//        setPreferredScrollableViewportSize(new Dimension(400, 200));
         setRowHeight(30); //width height
         setForeground(Color.BLACK);
         setSelectionForeground(Color.WHITE); //change text color of selected row

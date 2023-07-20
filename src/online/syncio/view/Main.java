@@ -7,8 +7,10 @@ import java.awt.event.ActionEvent;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
+import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.model.LoggedInUser;
 
 public class Main extends javax.swing.JFrame {
 
@@ -43,6 +45,13 @@ public class Main extends javax.swing.JFrame {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = e.getActionCommand().toLowerCase().replaceAll(" ", "");
+                if((name1.equals("messages") || (name1.equals("notifications")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+                    dispose();
+                    new Login().setVisible(true);
+                    GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+                    return;
+                }
+                
                 showTab(name1, btn1);
             });
         }
@@ -224,7 +233,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        GlassPanePopup.showPopup(new PopupCreateNewPost(this), "createnewpost");
+        if(LoggedInUser.getCurrentUser() != null) {
+            GlassPanePopup.showPopup(new PopupCreateNewPost(this), "createnewpost");
+        }
     }//GEN-LAST:event_btnCreateActionPerformed
 
     public static void main(String args[]) {

@@ -21,24 +21,25 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
+import online.syncio.model.LoggedInUser;
 
 public class PopupCreateNewPost extends javax.swing.JPanel {
 
     private ArrayList<String> imagePaths = new ArrayList<>();
     private int imageIndex = 0;
 
+    private Main main;
+    private CreateNewPostController controller;
     private MongoDatabase database;
     private PostDAO postDAO;
     private UserDAO userDAO;
 
-    private Main main;
-
-    private CreateNewPostController controller;
-
+    
+    
     public PopupCreateNewPost(Main main) {
         this.main = main;
-
         this.database = this.main.getDatabase();
+        
         postDAO = new PostDAOImpl(database);
         userDAO = new UserDAOImpl(database);
 
@@ -53,12 +54,15 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
 
         txtCaption.setPlaceholder("Write a caption...");
         btnSelectImage.requestFocus();
+        
+        lblAccount.setText(LoggedInUser.getCurrentUser().getUsername());
 
         imageSelected(false);
+        
         this.controller = new CreateNewPostController(this);
-
     }
 
+    
     public void addEmoji(JLabel lbl, Color color) {
         int length = txtCaption.getDocument().getLength();
 
@@ -69,11 +73,13 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         }
     }
 
+    
     public void showCaptionLength() {
         int length = txtCaption.getDocument().getLength();
         lblCountNumber.setText(length + "/500");
     }
 
+    
     public void imageSelected(boolean isSelected) {
         if (isSelected) {
             lblImage.setVisible(false);
@@ -98,6 +104,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         pnlLeft.repaint();
     }
 
+    
     public void selectImage(int i) {
         if (i >= 0 && i < imagePaths.size()) {
             imageIndex = i;
@@ -108,6 +115,8 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         }
     }
 
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -545,6 +554,8 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         showCaptionLength();
     }//GEN-LAST:event_txtCaptionKeyReleased
 
+    
+    
     public void uploadImage() {
         JFileChooser fc = new JFileChooser();
         fc.setMultiSelectionEnabled(true);
@@ -588,6 +599,8 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         return userDAO;
     }
 
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnClose;
     private online.syncio.component.MyButton btnNext;

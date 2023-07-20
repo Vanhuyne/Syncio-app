@@ -6,6 +6,7 @@ import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.PopupCreateNewPost;
@@ -17,6 +18,8 @@ public class CreateNewPostController {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
+    
+    
     public CreateNewPostController(PopupCreateNewPost popup) {
         this.popup = popup;
 
@@ -24,8 +27,10 @@ public class CreateNewPostController {
         userDAO = this.popup.getUserDAO();
     }
 
+    
+    
     public void uploadPost() {
-        String userID = "56duongID";
+        String userID = LoggedInUser.getCurrentUser().getUsername();
         String caption = "";
 
         try {
@@ -42,8 +47,8 @@ public class CreateNewPostController {
             GlassPanePopup.showPopup(new MyDialog("Error", "Please select an image or add a caption before sharing the post"), "dialog");
             return;
         }
-
-        if (userDAO.getByID("56duongID") != null) {
+     
+        if (userDAO.getByID(LoggedInUser.getCurrentUser().getIdAsString()) == null) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
             return;
         }
@@ -56,5 +61,4 @@ public class CreateNewPostController {
             this.popup.uploadNotification();
         }
     }
-
 }
