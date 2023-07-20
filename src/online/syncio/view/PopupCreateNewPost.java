@@ -12,10 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
 import static online.syncio.view.Main.prevTab;
 import online.syncio.component.GlassPanePopup;
-import online.syncio.component.MyDialog;
 import online.syncio.component.MyNotification;
 import online.syncio.component.MyTextPane;
 import online.syncio.controller.CreateNewPostController;
@@ -23,9 +21,6 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.Post;
-import online.syncio.utils.ImageHelper;
-import org.bson.types.Binary;
 
 public class PopupCreateNewPost extends javax.swing.JPanel {
 
@@ -571,12 +566,10 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         }
     }
 
-    public void uploadNotification(boolean result) {
-        if (result) {
-            GlassPanePopup.closePopup("createnewpost");
-            this.main.showTab(prevTab);
-            new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Post shared").setVisible(true);
-        }
+    public void uploadNotification() {
+        GlassPanePopup.closePopup("createnewpost");
+        this.main.showTab(prevTab);
+        new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Post shared").setVisible(true);
     }
 
     public MyTextPane getTxtCaption() {

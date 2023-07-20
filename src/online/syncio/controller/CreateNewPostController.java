@@ -43,7 +43,7 @@ public class CreateNewPostController {
             return;
         }
 
-        if (userDAO.getByID("4f693d40e4b04cde19f17205") == null) {
+        if (userDAO.getByID("56duongID") != null) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
             return;
         }
@@ -51,7 +51,10 @@ public class CreateNewPostController {
         Post post = new Post(userID, caption, lPhoto);
 
         boolean result = postDAO.add(post);
-        this.popup.uploadNotification(result);
+
+        if (result) {
+            this.popup.uploadNotification();
+        }
     }
 
 }
