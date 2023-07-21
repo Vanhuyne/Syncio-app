@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import online.syncio.utils.TimeHelper;
 import org.bson.types.Binary;
+import org.bson.types.ObjectId;
 
 public class Post {
-    private String postID;
+    private ObjectId id;
     private String userID;
     private String caption;
     private String datePosted = TimeHelper.getCurrentDateTime();
@@ -24,12 +25,20 @@ public class Post {
         this.lPhoto = lPhoto;
     }
 
-    public String getPostID() {
-        return postID;
+    public ObjectId getId() {
+        return id;
     }
 
-    public void setPostID(String postID) {
-        this.postID = postID;
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+    
+    public String getIdAsString() {
+        return id.toString();
+    }
+
+    public void setIdAsString(String id) {
+        this.id = new ObjectId(id);
     }
     
     public String getUserID() {

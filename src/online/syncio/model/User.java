@@ -2,9 +2,10 @@ package online.syncio.model;
 
 import java.util.ArrayList;
 import online.syncio.utils.TimeHelper;
+import org.bson.types.ObjectId;
 
 public class User {
-    private String userID;
+    private ObjectId id;
     private String username;
     private String password;
     private String email;
@@ -17,7 +18,7 @@ public class User {
     public User() {
     }
 
-    public User( String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> followers) {
+    public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> followers) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -27,12 +28,40 @@ public class User {
         this.followers = followers;
     }
 
-    public String getUserID() {
-        return userID;
+    public User(ObjectId id, String username, String password, String email, String bio, int role, int flag) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.bio = bio;
+        this.role = role;
+        this.flag = flag;
+    }
+    
+    public User(String id, String username, String password, String email, String bio, int role, int flag) {
+        this.id = new ObjectId(id);
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.bio = bio;
+        this.role = role;
+        this.flag = flag;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+    
+    public String getIdAsString() {
+        return id.toString();
+    }
+
+    public void setIdAsString(String id) {
+        this.id = new ObjectId(id);
     }
     
     public String getUsername() {
