@@ -4,19 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import online.syncio.component.ConnectionPanel;
 import online.syncio.component.MyLabel;
 import online.syncio.resources.fonts.MyFont;
 
-public class EditProfile extends javax.swing.JPanel {
+public class EditProfile extends ConnectionPanel {
 
     private Font regularFont = new MyFont().getSFProDisplayRegular(), boldFont = new MyFont().getSFProDisplayBold();
 
     private MyLabel[] changeLabelList;
     private Main main;
 
-    public EditProfile(Main main) {
-        this.main = main;
-
+    public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 

@@ -21,8 +21,6 @@ public class UserDAOImpl implements UserDAO {
         this.database = database;
     }
 
-    
-    
     @Override
     public boolean add(User user) {
         MongoCollection<User> collection = database.getCollection("users", User.class);
@@ -37,8 +35,6 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
-    
-    
     @Override
     public boolean updateByID(User t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -49,15 +45,11 @@ public class UserDAOImpl implements UserDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
-    
     @Override
     public User getByID(String userID) {
         MongoCollection<User> users = database.getCollection("users", User.class);
         return users.find(eq("_id", new ObjectId(userID))).first();
     }
-    
-    
 
     @Override
     public List<User> getAll() {
@@ -78,44 +70,38 @@ public class UserDAOImpl implements UserDAO {
         return lUser;
     }
 
-    
-    
     public User authentication(String username, String password) {
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
         User user = collection.find(eq("username", username)).first();
 
         // check password
-        if(user != null) {
+        if (user != null) {
             if (TextHelper.authenticationPasswordHash(password, user.getPassword())) {
                 return user;
             }
         }
-        
+
         return null;
     }
 
-    
-    
     public boolean checkEmail(String email) {
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
         Bson filter = Filters.eq("email", email);
         User user = collection.find(filter).first();
 
-        return user != null; //  user ton tai => true 
+        return user != null; //  user ton tai => true
     }
 
-    
-    
     @Override
     public boolean checkUsername(String username) {
         MongoCollection<User> users = database.getCollection("users", User.class);
-        
+
         Bson filter = Filters.eq("username", username);
         User user = users.find(filter).first();
 
-        return user != null; //  username ton tai => true 
+        return user != null; //  username ton tai => true
     }
 
 }

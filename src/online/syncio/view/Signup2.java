@@ -3,21 +3,15 @@ package online.syncio.view;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.ArrayList;
 import java.util.HashSet;
-
-import java.util.List;
 import java.util.Set;
-
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-
 import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
@@ -30,13 +24,13 @@ public class Signup2 extends javax.swing.JFrame {
         initComponents();
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
-        
+
         addPlaceholderText(txtUser, "Username");
         addPlaceholderText(txtEmail, "Email");
         addPlaceholderText(txtPassword, "Password");
         addPlaceholderText(txtPassword2, "Password");
         addPlaceholderText(txtOTP, "OTP");
-        
+
         txtEmail.requestFocus();
         txtOTP.setVisible(false);
     }
@@ -242,7 +236,7 @@ public class Signup2 extends javax.swing.JFrame {
 
         UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
         User user = userDAO.authentication(username, password);
-        
+
         //txtEmail
         if (email.isEmpty() || email.equalsIgnoreCase("email")) {
             setError.add("Please enter Email");
@@ -250,8 +244,8 @@ public class Signup2 extends javax.swing.JFrame {
         } else if (!email.matches("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$")) {
             setError.add("Email is wrong format");
             txtEmail.requestFocus();
-        } 
-        
+        }
+
         // txtUsername
         if (username.isEmpty() || username.equalsIgnoreCase("username")) {
             setError.add("Please enter Username");
@@ -260,7 +254,7 @@ public class Signup2 extends javax.swing.JFrame {
             setError.add("Username is wrong format");
             txtUser.requestFocus();
         }
-        
+
         //txtPassword
         if (password.isEmpty() || password.equalsIgnoreCase("password")) {
             setError.add("Please enter Password");
@@ -274,11 +268,11 @@ public class Signup2 extends javax.swing.JFrame {
         if (confirmpassword.isEmpty() || confirmpassword.equalsIgnoreCase("Confirm Password")) {
             setError.add("Please enter Confirm Password");
             txtPassword2.requestFocus();
-        }   
-        if (confirmpassword.length() != password.length()) { 
+        }
+        if (confirmpassword.length() != password.length()) {
             setError.add("Confirm Password is not the same as Password");
             txtPassword2.requestFocus();
-        }    
+        }
         if (!setError.isEmpty()) {
             //neu co loi => hien thi loi
             String errors = "";
@@ -293,34 +287,34 @@ public class Signup2 extends javax.swing.JFrame {
                 txtEmail.requestFocus();
                 return;
             }
-            
-            if (btnType.equalsIgnoreCase("Sign up") && user == null ) {
+
+            if (btnType.equalsIgnoreCase("Sign up") && user == null) {
                 //gui email
                 int o = (int) (Math.random() * 900000) + 100000;
                 otp = o;
                 String subject = "WELCOME TO SYNCIO";
                 String recipientName = email;
                 String content = "<tr>\n"
-                          + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
-                          + "<h4>" + subject + "</h4>\n"
-                          + "<br>\n"
-                          + "Dear " + recipientName + ",<br>\n"
-                          + "Thank you for creating your personal account on SYNCIO.<br>\n"
-                          + "<br><br>\n"
-                          + "Your OTP code is:\n"
-                          + "<br><br>\n"
-                          + "<h2>" + o + "</h2>\n"
-                          + "</td>\n"
-                          + "</tr>\n"
-                          + "<tr>\n"
-                          + "<td>\n"
-                          + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
-                          + "</td>\n"
-                          + "</tr>\n";
-                
+                        + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
+                        + "<h4>" + subject + "</h4>\n"
+                        + "<br>\n"
+                        + "Dear " + recipientName + ",<br>\n"
+                        + "Thank you for creating your personal account on SYNCIO.<br>\n"
+                        + "<br><br>\n"
+                        + "Your OTP code is:\n"
+                        + "<br><br>\n"
+                        + "<h2>" + o + "</h2>\n"
+                        + "</td>\n"
+                        + "</tr>\n"
+                        + "<tr>\n"
+                        + "<td>\n"
+                        + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
+                        + "</td>\n"
+                        + "</tr>\n";
+
                 boolean sendStatus = SendEmail.sendFormat(email, email, subject, content);
                 //insert OTP into user
-                
+
                 if (!sendStatus) {
                     GlassPanePopup.showPopup(new MyDialog("Error", "An error occurred while sending the email"), "dialog");
                     return;
@@ -340,8 +334,8 @@ public class Signup2 extends javax.swing.JFrame {
                     // hash password
                     password = TextHelper.HashPassword(password);
 
-                    boolean result = userDAO.add(new User(username, password, email, null , 0,  0, null ));
-                    
+                    boolean result = userDAO.add(new User(username, password, email, null, 0, 0, null));
+
                     if (result) {
                         dispose();
                         new Login().setVisible(true);
@@ -351,13 +345,13 @@ public class Signup2 extends javax.swing.JFrame {
                     GlassPanePopup.showPopup(new MyDialog("Error", "Wrong code. Try again."), "dialog");
                     txtOTP.requestFocus();
                 }
-                
-            }else {
+
+            } else {
                 GlassPanePopup.showPopup(new MyDialog("Error", "Username already exists."), "dialog");
             }
-        }    
+        }
     }//GEN-LAST:event_btnSignupActionPerformed
-    
+
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
 
     }//GEN-LAST:event_txtEmailActionPerformed

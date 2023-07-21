@@ -4,18 +4,19 @@ import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import online.syncio.component.ConnectionPanel;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
-import online.syncio.dao.MongoDBConnect;
 import online.syncio.model.LoggedInUser;
 
-public class Main extends javax.swing.JFrame {
+public final class Main extends javax.swing.JFrame {
 
     private MongoDatabase database;
 
+    static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
@@ -27,44 +28,46 @@ public class Main extends javax.swing.JFrame {
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
 
-        database = MongoDBConnect.getDatabase();
+        connectionPanelList = new ConnectionPanel[]{new Home(), new Search(), new Message(), new Notification(),
+            new Profile(), new OtherUserProfile(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
-        pnlTabContent.add(new Home(this), "home");
-        pnlTabContent.add(new Search(this), "search");
-        pnlTabContent.add(new Message(this), "messages");
-        pnlTabContent.add(new Notification(this), "notifications");
-        pnlTabContent.add(new Profile(this), "profile");
-        pnlTabContent.add(new OtherUserProfile(this), "otherUserProfile");
-
-        pnlTabContent.add(new EditProfile(this), "editProfile");
+        addTab();
 
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
         for (MyButton btn : btnMenuList) {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
-                String name1 = e.getActionCommand().toLowerCase().replaceAll(" ", "");
-                if((name1.equals("messages") || (name1.equals("notifications")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+                String name1 = btn1.getName().trim();
+                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
                     dispose();
                     new Login().setVisible(true);
                     GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
                     return;
                 }
-                
+
                 showTab(name1, btn1);
             });
         }
     }
 
+    public void addTab() {
+        for (ConnectionPanel pnl : connectionPanelList) {
+            String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
+            pnlTabContent.add(pnl, pnlName);
+            pnl.setConnection(this);
+        }
+    }
+
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
-            if (b.getText().trim().equalsIgnoreCase(curTab)) {
+            if (b.getName().trim().equalsIgnoreCase(curTab)) {
                 b.setFontBold(1);
                 break;
             }
 
-            if (b.getText().trim().equalsIgnoreCase(newTab)) {
+            if (b.getName().trim().equalsIgnoreCase(newTab)) {
                 b.setFontBold(2);
             }
         }
@@ -81,7 +84,7 @@ public class Main extends javax.swing.JFrame {
     public void showTab(String newTab, MyButton btn) {
         btn.setFontBold(2);
         for (MyButton b : btnMenuList) {
-            if (b.getText().trim().equalsIgnoreCase(curTab)) {
+            if (b.getName().trim().equalsIgnoreCase(curTab)) {
                 b.setFontBold(1);
                 break;
             }
@@ -94,7 +97,6 @@ public class Main extends javax.swing.JFrame {
             CardLayout c = (CardLayout) pnlTabContent.getLayout();
             c.show(pnlTabContent, curTab);
         }
-
     }
 
     @SuppressWarnings("unchecked")
@@ -148,6 +150,7 @@ public class Main extends javax.swing.JFrame {
         btnHome.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnHome.setMaximumSize(new java.awt.Dimension(200, 60));
         btnHome.setMinimumSize(new java.awt.Dimension(200, 60));
+        btnHome.setName("home"); // NOI18N
         btnHome.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnHome);
 
@@ -160,6 +163,7 @@ public class Main extends javax.swing.JFrame {
         btnSearch.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnSearch.setMaximumSize(new java.awt.Dimension(200, 50));
         btnSearch.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnSearch.setName("search"); // NOI18N
         btnSearch.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnSearch);
 
@@ -172,6 +176,7 @@ public class Main extends javax.swing.JFrame {
         btnMessage.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnMessage.setMaximumSize(new java.awt.Dimension(200, 50));
         btnMessage.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnMessage.setName("message"); // NOI18N
         btnMessage.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnMessage);
 
@@ -184,6 +189,7 @@ public class Main extends javax.swing.JFrame {
         btnNotification.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnNotification.setMaximumSize(new java.awt.Dimension(200, 50));
         btnNotification.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnNotification.setName("notification"); // NOI18N
         btnNotification.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnNotification);
 
@@ -196,6 +202,7 @@ public class Main extends javax.swing.JFrame {
         btnCreate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCreate.setMaximumSize(new java.awt.Dimension(200, 50));
         btnCreate.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnCreate.setName("create"); // NOI18N
         btnCreate.setPreferredSize(new java.awt.Dimension(200, 50));
         btnCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,6 +220,7 @@ public class Main extends javax.swing.JFrame {
         btnProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnProfile.setMaximumSize(new java.awt.Dimension(200, 50));
         btnProfile.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnProfile.setName("profile"); // NOI18N
         btnProfile.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnProfile);
 
@@ -233,7 +241,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        if(LoggedInUser.getCurrentUser() != null) {
+        if (LoggedInUser.getCurrentUser() != null) {
             GlassPanePopup.showPopup(new PopupCreateNewPost(this), "createnewpost");
         }
     }//GEN-LAST:event_btnCreateActionPerformed
@@ -251,18 +259,12 @@ public class Main extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        //</editor-fold>
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
         });
@@ -273,7 +275,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     public MongoDatabase getDatabase() {
-        return this.database;
+        return database;
+    }
+
+    public void setDatabase(MongoDatabase database) {
+        this.database = database;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,23 +1,17 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import online.syncio.component.ConnectionPanel;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
 
-public class Profile extends javax.swing.JPanel {
+public class Profile extends ConnectionPanel {
 
     private Font regularFont = new MyFont().getSFProDisplayRegular(), boldFont = new MyFont().getSFProDisplayBold();
 
-    private Main main;
-    private MongoDatabase database;
-
-    public Profile(Main main) {
-        this.main = main;
-        this.database = this.main.getDatabase();
-
+    public Profile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
     }

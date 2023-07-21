@@ -2,9 +2,6 @@ package online.syncio.view;
 
 import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
@@ -12,7 +9,6 @@ import online.syncio.component.MyLabel;
 import online.syncio.component.MyPanel;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
-import online.syncio.controller.LoginController;
 import online.syncio.controller.SignupController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
@@ -27,18 +23,16 @@ public class Signup extends javax.swing.JFrame {
     private MongoDatabase database;
     private UserDAO userDAO;
     private int otp = -1;
-    
-    
 
     public Signup() {
         this.database = MongoDBConnect.getDatabase();
-        
+
         userDAO = new UserDAOImpl(database);
 
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        
+
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
         TextHelper.addPlaceholderText(txtEmail, "Email");
@@ -47,15 +41,13 @@ public class Signup extends javax.swing.JFrame {
         TextHelper.addPlaceholderText(txtPasswordConfirm, "Password Confirm");
 
         txtEmail.requestFocus();
-        
+
         this.controller = new SignupController(this);
-        
+
         //press Enter => click btnLogin
         ActionHelper.assignEnterKeyListener(btnSignup, txtEmail, txtUsername, txtPassword, txtPasswordConfirm);
     }
 
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -228,8 +220,6 @@ public class Signup extends javax.swing.JFrame {
         new Login().setVisible(true);
     }//GEN-LAST:event_lblLoginMouseClicked
 
-  
-  
     /**
      * @param args the command line arguments
      */
@@ -260,12 +250,10 @@ public class Signup extends javax.swing.JFrame {
         });
     }
 
-    
-    
     public MyLabel getLblTitle() {
         return lblTitle;
     }
-    
+
     public MyTextField getTxtEmail() {
         return txtEmail;
     }
@@ -293,7 +281,7 @@ public class Signup extends javax.swing.JFrame {
     public void setPnlPassword(MyPanel pnlPassword) {
         this.pnlPassword = pnlPassword;
     }
-    
+
     public UserDAO getUserDAO() {
         return userDAO;
     }
@@ -305,8 +293,6 @@ public class Signup extends javax.swing.JFrame {
     public void setOtp(int otp) {
         this.otp = otp;
     }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnSignup;
