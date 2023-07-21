@@ -3,17 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/model/Post.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/ChamCong.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Signup2.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/PostDAOImpl.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Login.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/model/User.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/model/LoggedInUser.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/LoginController.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/UserDAOImpl.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/CreateNewPostController.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/SendEmail.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Signup.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/TextHelper.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Main.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/PopupCreateNewPost.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/SignupController.java</file>
         </group>
     </open-files>
 </project-private>
