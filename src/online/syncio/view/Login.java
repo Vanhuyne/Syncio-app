@@ -17,6 +17,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.utils.TextHelper;
 
 /**
  *
@@ -115,6 +116,11 @@ public class Login extends javax.swing.JFrame {
 
         lblCreateAccount.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblCreateAccount.setText("CREATE ACCOUNT");
+        lblCreateAccount.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCreateAccountMouseClicked(evt);
+            }
+        });
 
         lblContinue.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblContinue.setText("CONTINUE AS A GUEST");
@@ -217,7 +223,7 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLoginMouseClicked
         String username = txtUser.getText();
         String password = new String(txtPassword.getPassword());
-
+//        String hashPassword = TextHelper.HashPassword(password);
         Set<String> setError = new HashSet<String>();
         //txtUser
         if (username.isEmpty() || username.equalsIgnoreCase("username")) {
@@ -227,6 +233,7 @@ public class Login extends javax.swing.JFrame {
             setError.add("Username can only contain the characters [a-zA-Z0-9]");
             txtUser.requestFocus();
         }
+        
         //txtPassword
         if (password.isEmpty() || password.equalsIgnoreCase("password")) {
             setError.add("Please enter a password");
@@ -243,36 +250,42 @@ public class Login extends javax.swing.JFrame {
             }
             GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
 
-        } // dang nhap thanh cong
+        } 
+        
+        // dang nhap thanh cong
         else {
             UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
             User user = userDAO.authentication(username, password);
                 if (user != null ) {
-                    LoggedInUser.setCurrentUser(user); //set loggedin user
+                    
+                    //set loggedin user
+                    LoggedInUser.setCurrentUser(user); 
                     GlassPanePopup.showPopup(new MyDialog("Success", "Logged in successfully"), "dialog");
+                    
                     // set role
-                    if (LoggedInUser.isAdmin()) {
-//                       new AdminHome();
+                    if (LoggedInUser.isAdmin()) {                       
+//                      new AdminHome();
                     } else {
                         new Main().setVisible(true);
                         dispose();
                     }
                 } else {
                     GlassPanePopup.showPopup(new MyDialog("Error", "Wrong account or password"), "dialog");
+                    
                 }
             
         }
     }//GEN-LAST:event_btnLoginMouseClicked
 
+    private void lblCreateAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCreateAccountMouseClicked
+        dispose();
+        new Signup().setVisible(true);
+    }//GEN-LAST:event_lblCreateAccountMouseClicked
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows Classic".equals(info.getName())) {
