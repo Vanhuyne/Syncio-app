@@ -44,7 +44,7 @@ public class ChamCong extends javax.swing.JFrame {
         cboMember.addItem("Huy");
         cboMember.addItem("Sanh");
         cboMember.addItem("Thuan");
-        
+
         member = getSessionValue();
         cboMember.setSelectedItem(member);
         
@@ -122,7 +122,9 @@ public class ChamCong extends javax.swing.JFrame {
         MongoCollection<Document> tasks = database.getCollection("task", Document.class);
 
         String type = "INFO";
+
         member = cboMember.getSelectedItem().toString();
+
         String task = txtTask.getText();
         
         try {

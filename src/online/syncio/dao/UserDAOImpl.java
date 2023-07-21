@@ -9,6 +9,7 @@ import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
 import online.syncio.model.User;
+import online.syncio.utils.TextHelper;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
@@ -87,13 +88,25 @@ public class UserDAOImpl implements UserDAO {
         }
         
         // check password
-        if (user.getPassword().equals(password)) {
+        if (TextHelper.authenticationPasswordHash(password, user.getPassword())) {
             MongoDBConnect.closeConnection();
             return user;
         } else {
             MongoDBConnect.closeConnection();
             return null;
         }
+    }
+
+    public boolean checkEmail(String email) {
+        MongoDatabase database = MongoDBConnect.getDatabase();
+        MongoCollection<User> collection = database.getCollection("users", User.class);
+
+        Bson filter = Filters.eq("email", email);
+        User user = collection.find(filter).first();
+
+        MongoDBConnect.closeConnection();
+
+        return user != null; //  user ton tai => true 
     }
 
 }
