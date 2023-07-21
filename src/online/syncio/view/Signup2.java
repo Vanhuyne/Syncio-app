@@ -22,21 +22,17 @@ import online.syncio.model.User;
 import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
 
-/**
- *
- * @author DELL
- */
-public class Signup extends javax.swing.JFrame {
+public class Signup2 extends javax.swing.JFrame {
 
-    List<User> listUsers = new ArrayList<>();
     int otp = -1;
 
-    public Signup() {
+    public Signup2() {
         initComponents();
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
+        
         addPlaceholderText(txtUser, "Username");
-        addPlaceholderText(txtEmail, "Huy@gmail.com");
+        addPlaceholderText(txtEmail, "Email");
         addPlaceholderText(txtPassword, "Password");
         addPlaceholderText(txtPassword2, "Password");
         addPlaceholderText(txtOTP, "OTP");
@@ -246,6 +242,7 @@ public class Signup extends javax.swing.JFrame {
 
         UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
         User user = userDAO.authentication(username, password);
+        
         //txtEmail
         if (email.isEmpty() || email.equalsIgnoreCase("email")) {
             setError.add("Please enter Email");
@@ -394,14 +391,18 @@ public class Signup extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Signup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Signup2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Signup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Signup2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Signup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Signup2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Signup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Signup2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -410,7 +411,7 @@ public class Signup extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Signup().setVisible(true);
+                new Signup2().setVisible(true);
             }
         });
     }

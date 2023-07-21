@@ -66,17 +66,23 @@ public class LoginController {
         else {
             User user = userDAO.authentication(username, password);
             if (user != null ) {
-                LoggedInUser.setCurrentUser(user); //set loggedin user
-//                GlassPanePopup.showPopup(new MyDialog("Success", "Logged in successfully"), "dialog");
-                // check role
-                if (LoggedInUser.isAdmin()) {
-//                    new AdminHome();
-                } else {
-                    new Main().setVisible(true);
-                    login.dispose();
+                if(user.getFlag() == 1) {
+                    GlassPanePopup.showPopup(new MyDialog("Account Unavailable", " We're sorry, but your account is currently unavailable.\nPlease try again later or contact support for assistance."), "dialog");
                 }
-            } else {
-                GlassPanePopup.showPopup(new MyDialog("Error", "Wrong account or password"), "dialog");
+                else {
+                    LoggedInUser.setCurrentUser(user); //set loggedin user
+
+                    // check role
+                    if (LoggedInUser.isAdmin()) {
+                        //new AdminHome();
+                    } else {
+                        new Main().setVisible(true);
+                        login.dispose();
+                    }
+                }
+            }
+            else {
+                GlassPanePopup.showPopup(new MyDialog("Login Error", "Incorrect username or password. Please try again."), "dialog");
             }
 
         }

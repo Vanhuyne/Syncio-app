@@ -16,21 +16,20 @@ import org.bson.types.ObjectId;
 public class UserDAOImpl implements UserDAO {
 
     private MongoDatabase database;
-    List<User> listUser = new ArrayList<>();
 
     public UserDAOImpl(MongoDatabase database) {
         this.database = database;
     }
 
+    
+    
     @Override
     public boolean add(User user) {
-        MongoDatabase database = MongoDBConnect.getDatabase();
         MongoCollection<User> collection = database.getCollection("users", User.class);
         try {
-
             InsertOneResult result = collection.insertOne(user);
+            System.out.println("Inserted a User with the following id: " + result.getInsertedId().asObjectId().getValue());
 
-            MongoDBConnect.closeConnection();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,6 +37,8 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
+    
+    
     @Override
     public boolean updateByID(User t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -48,65 +49,73 @@ public class UserDAOImpl implements UserDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
+    
     @Override
     public User getByID(String userID) {
         MongoCollection<User> users = database.getCollection("users", User.class);
         return users.find(eq("_id", new ObjectId(userID))).first();
     }
+    
+    
 
     @Override
     public List<User> getAll() {
-        // Lấy kết nối và collection từ MongoDBConnect
-        MongoDatabase database = MongoDBConnect.getDatabase();
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
+        List<User> lUser = new ArrayList<>();
         try {
             FindIterable<User> users = collection.find();
 
             // listUser
             for (User user : users) {
-                listUser.add(user);
+                lUser.add(user);
             }
-            MongoDBConnect.closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return listUser;
+        return lUser;
     }
 
+    
+    
     public User authentication(String username, String password) {
-        MongoDatabase database = MongoDBConnect.getDatabase();
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
-        Bson filter = Filters.eq("username", username);
-        User user = collection.find(filter).first();
+        User user = collection.find(eq("username", username)).first();
 
-        if (user == null) {
-            MongoDBConnect.closeConnection();
-            return null;
+        // check password
+        if(user != null) {
+            if (TextHelper.authenticationPasswordHash(password, user.getPassword())) {
+                return user;
+            }
         }
         
-        // check password
-        if (TextHelper.authenticationPasswordHash(password, user.getPassword())) {
-            MongoDBConnect.closeConnection();
-            return user;
-        } else {
-            MongoDBConnect.closeConnection();
-            return null;
-        }
+        return null;
     }
 
+    
+    
     public boolean checkEmail(String email) {
-        MongoDatabase database = MongoDBConnect.getDatabase();
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
         Bson filter = Filters.eq("email", email);
         User user = collection.find(filter).first();
 
-        MongoDBConnect.closeConnection();
-
         return user != null; //  user ton tai => true 
+    }
+
+    
+    
+    @Override
+    public boolean checkUsername(String username) {
+        MongoCollection<User> users = database.getCollection("users", User.class);
+        
+        Bson filter = Filters.eq("username", username);
+        User user = users.find(filter).first();
+
+        return user != null; //  username ton tai => true 
     }
 
 }

@@ -4,6 +4,8 @@ import com.lambdaworks.crypto.SCryptUtil;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -45,32 +47,41 @@ public class TextHelper {
      * @param textField       the text field to add placeholder text to
      * @param placeholderText the placeholder text to be displayed
      */
+    private static Map<JTextField, String> textFieldPlaceholders = new HashMap<>();
+
     public static void addPlaceholderText(JTextField textField, String placeholderText) {
         // Save the default foreground color of the text field
         Color defaultColor = textField.getForeground();
-        
-        // Set the placeholder text
-        textField.setText(placeholderText);
-        textField.setForeground(Color.GRAY);
 
-        // Add a focus listener to handle the placeholder text
-        textField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(placeholderText)) {
-                    textField.setText("");
-                    textField.setForeground(defaultColor);
-                }
-            }
+        // Set the current placeholder text for the specific text field
+        if (placeholderText != null) {
+            textFieldPlaceholders.put(textField, placeholderText);
+            textField.setText(placeholderText);
+            textField.setForeground(Color.GRAY);
 
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textField.getText().isEmpty()) {
-                    textField.setForeground(Color.GRAY);
-                    textField.setText(placeholderText);
+            // Add a focus listener to handle the placeholder text
+            textField.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    String currentText = textField.getText();
+                    String placeholderText = textFieldPlaceholders.get(textField);
+                    if (currentText.equals(placeholderText)) {
+                        textField.setText("");
+                        textField.setForeground(defaultColor);
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    String currentText = textField.getText();
+                    if (currentText.isEmpty()) {
+                        String placeholderText = textFieldPlaceholders.get(textField);
+                        textField.setForeground(Color.GRAY);
+                        textField.setText(placeholderText);
+                    }
+                }
+            });
+        }
     }
     
     /**

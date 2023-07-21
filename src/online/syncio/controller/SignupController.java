@@ -1,84 +1,158 @@
 package online.syncio.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.utils.SendEmail;
+import online.syncio.utils.TextHelper;
+import online.syncio.utils.Validator;
 import online.syncio.view.Login;
+import online.syncio.view.Signup;
 import online.syncio.view.Main;
 
-public class LoginController {
+public class SignupController {
 
-    private Login login;
+    private Signup signup;
     private UserDAO userDAO;
+    private String us; 
 
     
     
-    public LoginController(Login login) {
-        this.login = login;
+    public SignupController(Signup signup) {
+        this.signup = signup;
 
-        userDAO = this.login.getUserDAO();
+        userDAO = this.signup.getUserDAO();
     }
 
     
     
-    public void loginAuthentication() {
-        MyTextField txtUser = login.getTxtUser();
-        MyPasswordField txtPassword = login.getTxtPassword();
+    public void signupAuthentication(int type) {
+        // 0: sigup and 1: otp verification
         
-        String username = txtUser.getText();
+        MyTextField txtEmail = signup.getTxtEmail();
+        MyTextField txtUsername = signup.getTxtUsername();
+        MyPasswordField txtPassword = signup.getTxtPassword();
+        MyPasswordField txtPasswordConfirm = signup.getTxtPasswordConfirm();
+        
+        String email = txtEmail.getText();
+        String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
+        String passwordConfirm = new String(txtPasswordConfirm.getPassword());
 
-        Set<String> setError = new HashSet<String>();
-        
-        //txtUser
-        if (username.isEmpty() || username.equalsIgnoreCase("username")) {
-            setError.add("Please enter a username");
-            txtUser.requestFocus();
-        } else if (!username.matches("[a-zA-Z0-9]+")) {
-            setError.add("Username can only contain the characters [a-zA-Z0-9]");
-            txtUser.requestFocus();
-        }
-        
-        //txtPassword
-        if (password.isEmpty() || password.equalsIgnoreCase("password")) {
-            setError.add("Please enter a password");
-            txtPassword.requestFocus();
-        } else if (!password.matches("[a-zA-Z0-9]+")) {
-            setError.add("Password does not contain special characters");
-            txtPassword.requestFocus();
-        }
-        
-        if (!setError.isEmpty()) {
-            //neu co loi => hien thi loi
-            String errors = "";
-            for (String error : setError) {
-                errors += error + "<br>";
+        //signup or verification email
+        if (type == 0) {
+            //sign up
+            us = username; //save current username
+            
+            //validate
+            ArrayList<String> errors = new ArrayList<>();
+            errors.add(Validator.email((JTextField)txtEmail, "Email", email, false, "Email"));
+            errors.add(Validator.allowNumberText((JTextField)txtUsername, "Username", username, false, "Username"));
+            errors.add(Validator.allowNumberText((JTextField)txtPassword, "Password", password, false, "Password"));
+            errors.add(Validator.allowNumberText((JTextField)txtPasswordConfirm, "Password Confirm", passwordConfirm, false, "Password Confirm"));
+            if(!password.equals(passwordConfirm)) errors.add("Password and Password Confirm don't match.");
+            
+            Collections.reverse(errors);
+            String e = "";
+            for(String s : errors) e += s;
+
+            //co loi
+            if(!e.isEmpty()) {
+                GlassPanePopup.showPopup(new MyDialog("Error", e), "dialog");
+                return;
             }
-            GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
 
-        } // dang nhap thanh cong
-        else {
-            User user = userDAO.authentication(username, password);
-            if (user != null ) {
-                LoggedInUser.setCurrentUser(user); //set loggedin user
-//                GlassPanePopup.showPopup(new MyDialog("Success", "Logged in successfully"), "dialog");
-                // check role
-                if (LoggedInUser.isAdmin()) {
-//                    new AdminHome();
-                } else {
-                    new Main().setVisible(true);
-                    login.dispose();
+            //check exist
+            if (userDAO.checkEmail(email)) {
+                GlassPanePopup.showPopup(new MyDialog("Email Address Already Taken", "The email address you entered is already taken.\nPlease use a different email address."), "dialog");
+                txtEmail.requestFocus();
+                return;
+            }
+            else if (userDAO.checkUsername(username)) {
+                GlassPanePopup.showPopup(new MyDialog("Username Already Taken", "The username you've chosen is already taken.\nPlease select a different username."), "dialog");
+                return;
+            }
+        
+            //gui email
+            int o = (int) (Math.random() * 900000) + 100000;
+            signup.setOtp(o);
+            String subject = "WELCOME TO SYNCIO";
+            String recipientName = email;
+            String content = "<tr>\n"
+                      + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
+                      + "<h4>" + subject + "</h4>\n"
+                      + "<br>\n"
+                      + "Dear " + recipientName + ",<br>\n"
+                      + "Thank you for creating your personal account on SYNCIO.<br>\n"
+                      + "<br><br>\n"
+                      + "Your OTP code is:\n"
+                      + "<br><br>\n"
+                      + "<h2>" + o + "</h2>\n"
+                      + "</td>\n"
+                      + "</tr>\n"
+                      + "<tr>\n"
+                      + "<td>\n"
+                      + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
+                      + "</td>\n"
+                      + "</tr>\n";
+
+            boolean sendStatus = SendEmail.sendFormat(email, email, subject, content);
+
+            if (!sendStatus) {
+                GlassPanePopup.showPopup(new MyDialog("Error", "An error occurred while sending the email"), "dialog");
+                return;
+            }
+            else {
+                //chuyen sang verification
+                
+                TextHelper.addPlaceholderText(signup.getTxtUsername(), "OTP");
+                signup.getLblTitle().setText("Email Verification");
+                signup.getBtnSignup().setText("Verify");
+                signup.getPnlPassword().setVisible(false);
+                signup.getTxtEmail().setEditable(false);
+                GlassPanePopup.showPopup(new MyDialog("Email Sent with OTP", "We have sent an email with OTP code.\nIf you haven't received the email, please check your spam folder.\nYour OTP will expire when you close the app."), "dialog");
+                txtUsername.requestFocus();
+            }
+        }
+        else if (type == 1) {
+            //verification
+            
+            String otp = txtUsername.getText();
+
+            //validate
+            if(otp.matches("[0-9]{6}")) { // match
+                if(otp.equals(signup.getOtp() + "")) {
+                    // hash password
+                    password = TextHelper.HashPassword(password);
+
+                    boolean result = userDAO.add(new User(us, password, email, null, 0, 0, null));
+
+                    if (result) {
+                        signup.dispose();
+                        new Login().setVisible(true);
+                        GlassPanePopup.showPopup(new MyDialog("Success", "SignUp Success."), "dialog");
+                    }
                 }
-            } else {
-                GlassPanePopup.showPopup(new MyDialog("Error", "Wrong account or password"), "dialog");
+                else {
+                    GlassPanePopup.showPopup(new MyDialog("Error", "Wrong OTP"), "dialog");
+                }
             }
-
+            else { //empty, wrong format
+                GlassPanePopup.showPopup(new MyDialog("Error", "Please enter OTP (6 digits long)"), "dialog");
+                txtUsername.requestFocus();
+            }
         }
+        
     }
 }
