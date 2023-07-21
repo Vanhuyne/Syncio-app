@@ -6,11 +6,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Year;
 import java.util.Base64;
+import online.syncio.config.Account;
 
 public class SendEmail {
     public static boolean send(String toRecipient, String recipientName, String subject, String body) {
         String url = "https://api.elasticemail.com/v2/email/send";
-        String apiKey = "FEE7C772E79AA83098363CEB89509257DE0C13DE3DE0D6E627CAA04E1F0FBB47494CE49E178799D17AB2E0BFA61B1BB9";
+        String apiKey = Account.API_KEY_SENDEMAIL;
 
         String from = "nguyenduong07122003@gmail.com";
         String senderName = "Syncio";
@@ -54,7 +55,7 @@ public class SendEmail {
     
     public static boolean sendOrderStatusEmail(String toRecipient, String recipientName, String subject, String content) {
         String url = "https://api.elasticemail.com/v2/email/send";
-        String apiKey = "FEE7C772E79AA83098363CEB89509257DE0C13DE3DE0D6E627CAA04E1F0FBB47494CE49E178799D17AB2E0BFA61B1BB9";
+        String apiKey = Account.API_KEY_SENDEMAIL;
 
         String from = "nguyenduong07122003@gmail.com";
         String senderName = "Syncio";
@@ -208,7 +209,7 @@ public class SendEmail {
     
     public static boolean sendFormat(String toRecipient, String recipientName, String subject, String content) {
         String url = "https://api.elasticemail.com/v2/email/send";
-        String apiKey = "FEE7C772E79AA83098363CEB89509257DE0C13DE3DE0D6E627CAA04E1F0FBB47494CE49E178799D17AB2E0BFA61B1BB9";
+        String apiKey = Account.API_KEY_SENDEMAIL;
         String from = "nguyenduong07122003@gmail.com";
         String senderName = "Syncio";
         String body = "<html>\n" +
