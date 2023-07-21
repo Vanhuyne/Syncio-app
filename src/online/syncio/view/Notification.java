@@ -1,17 +1,11 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
+import online.syncio.component.ConnectionPanel;
 
-public class Notification extends javax.swing.JPanel {
+public class Notification extends ConnectionPanel {
 
-    private Main main;
-    private MongoDatabase database;
-
-    public Notification(Main main) {
-        this.main = main;
-        this.database = this.main.getDatabase();
-
+    public Notification() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
     }

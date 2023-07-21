@@ -1,22 +1,11 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
 import online.syncio.controller.LoginController;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.LoggedInUser;
-import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
 import online.syncio.utils.TextHelper;
 
@@ -24,35 +13,25 @@ public class Login extends javax.swing.JFrame {
 
     private static Main main;
     private LoginController controller;
-    private MongoDatabase database;
-    private UserDAO userDAO;
-    
-    
 
     public Login() {
-        this.database = MongoDBConnect.getDatabase();
-        
-        userDAO = new UserDAOImpl(database);
-
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        
+
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
         TextHelper.addPlaceholderText(txtUser, "Username");
         TextHelper.addPlaceholderText(txtPassword, "Password");
 
         txtUser.requestFocus();
-        
+
         this.controller = new LoginController(this);
-        
+
         //press Enter => click btnLogin
         ActionHelper.assignEnterKeyListener(btnLogin, txtUser, txtPassword);
     }
 
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -205,11 +184,6 @@ public class Login extends javax.swing.JFrame {
         new Signup().setVisible(true);
     }//GEN-LAST:event_lblCreateAccountMousePressed
 
-  
-  
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -218,27 +192,15 @@ public class Login extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
     }
 
-    
-    
     public MyPasswordField getTxtPassword() {
         return txtPassword;
     }
@@ -246,12 +208,6 @@ public class Login extends javax.swing.JFrame {
     public MyTextField getTxtUser() {
         return txtUser;
     }
-    
-    public UserDAO getUserDAO() {
-        return userDAO;
-    }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnLogin;

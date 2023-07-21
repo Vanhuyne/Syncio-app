@@ -1,17 +1,11 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
+import online.syncio.component.ConnectionPanel;
 
-public class Search extends javax.swing.JPanel {
+public class Search extends ConnectionPanel {
 
-    private Main main;
-    private MongoDatabase database;
-
-    public Search(Main main) {
-        this.main = main;
-        this.database = this.main.getDatabase();
-
+    public Search() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
     }
