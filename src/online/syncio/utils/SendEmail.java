@@ -274,10 +274,6 @@ public class SendEmail {
                     "                transition: .2s;\n" +
                     "            }\n" +
                     "\n" +
-                    "            span {\n" +
-                    "                text-decoration: underline;\n" +
-                    "            }\n" +
-                    "\n" +
                     "        </style>\n" +
                     "    </head>\n" +
                     "\n" +
@@ -285,7 +281,7 @@ public class SendEmail {
                     "        <table>\n" +
                     "            <tbody>\n" +
                     "                <tr>\n" +
-                    "                    <th>LOL MANAGEMENT</th>\n" +
+                    "                    <th>SYNCIO</th>\n" +
                     "                </tr>\n" +
                     "\n" +
                         content +

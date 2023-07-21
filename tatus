@@ -1,0 +1,62 @@
+[33mcommit 9da889dd0d716f1230496919d3bb0bfe6630d609[m[33m ([m[1;36mHEAD -> [m[1;32mduong[m[33m, [m[1;32mmaster[m[33m)[m
+Author: duong123 <nguyenduong07122003@gmail.com>
+Date:   Fri Jul 21 01:44:17 2023 +0700
+
+    chuyen Login -> Controller, gop code Duong-Huy, sua model
+
+[33mcommit 80e9335f110030e3cbe8a4c8a9ad573bb5d5461e[m
+Merge: 33436ac 49a3aa5
+Author: duong123 <nguyenduong07122003@gmail.com>
+Date:   Thu Jul 20 11:14:26 2023 +0700
+
+    Merge branch 'master' of https://github.com/ngduong123/Syncio
+
+[33mcommit 49a3aa560262674eb8a26998c815ffbc5889a744[m
+Merge: 213caba 044a564
+Author: Thuận <88152896+ThuanNDQ@users.noreply.github.com>
+Date:   Thu Jul 20 10:59:37 2023 +0700
+
+    Merge pull request #40 from Vanhuyne/huyVanThan
+    
+    Merge Huy commit, add log in panel
+
+[33mcommit 044a56478217cfd4c45f282bdc15cebd3b6dd4e1[m
+Author: van huy <thanvanhuyy@gmail.com>
+Date:   Thu Jul 20 10:39:42 2023 +0700
+
+    huy
+
+[33mcommit f17f1eab5ac5544ed028afb824faea871402c6e0[m
+Author: van huy <thanvanhuyy@gmail.com>
+Date:   Thu Jul 20 10:38:36 2023 +0700
+
+    huy
+
+[33mcommit 33436aceffde53edc4bacc5b4a984bab0610eb23[m
+Author: duong123 <nguyenduong07122003@gmail.com>
+Date:   Thu Jul 20 00:04:55 2023 +0700
+
+    add ChamCong feature
+
+[33mcommit 213caba41fd5c73bdfcf81e43154b4ee86921700[m
+Author: Duro <Duro@THINKPAD-DURO.netis.cc>
+Date:   Wed Jul 19 20:59:37 2023 +0700
+
+    Build MVC model for project, still not great.
+    Change the directory for some files and create new folders for easy
+    management.
+    Add new JLabel for loading image only.
+    Add new UI for Profile, other users's profile and change profile's
+    information
+
+[33mcommit 3c398c928af82cf200fca3eaca204cdeb5e906e5[m
+Author: duong123 <nguyenduong07122003@gmail.com>
+Date:   Wed Jul 19 02:00:23 2023 +0700
+
+    fix component
+
+[33mcommit 74941f06e85f90a5210cef7b35524647ff09cbea[m
+Author: duong123 <nguyenduong07122003@gmail.com>
+Date:   Fri Jul 7 20:08:26 2023 +0700
+
+    create-Post
