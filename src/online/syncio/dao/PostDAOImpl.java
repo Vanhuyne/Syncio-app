@@ -3,6 +3,7 @@ package online.syncio.dao;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertOneResult;
+import java.util.ArrayList;
 import java.util.List;
 import online.syncio.model.Post;
 
@@ -48,9 +49,20 @@ public class PostDAOImpl implements PostDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
+    
     @Override
     public List<Post> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+        List<Post> lPost = new ArrayList<>();
+        
+        try {    
+            posts.find().into(lPost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return lPost;
     }
 
 }
