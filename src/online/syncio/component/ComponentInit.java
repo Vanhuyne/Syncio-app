@@ -84,20 +84,32 @@ public class ComponentInit {
         component.setFont(component.getFont().deriveFont(14f));
         component.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        if (component instanceof JTable) {
+            applyProperties((JTable) component);
+        }
+
+        if (component instanceof JButton) {
+            applyProperties((JButton) component);
+        }
+
+        if (component instanceof JComboBox) {
+            applyProperties((JComboBox<?>) component);
+        }
+
+        if (component instanceof JTextArea) {
+            applyProperties((JTextArea) component);
+        }
+
+        if (component instanceof JPasswordField) {
+            applyProperties((JPasswordField) component);
+        }
+
+        if (component instanceof JTextField) {
+            applyProperties((JTextField) component);
+        }
+
         if (component instanceof JLabel) {
             applyProperties((JLabel) component);
-        } else if (component instanceof JTextField) {
-            applyProperties((JTextField) component);
-        } else if (component instanceof JPasswordField) {
-            applyProperties((JPasswordField) component);
-        } else if (component instanceof JTextArea) {
-            applyProperties((JTextArea) component);
-        } else if (component instanceof JComboBox) {
-            applyProperties((JComboBox<?>) component);
-        } else if (component instanceof JButton) {
-            applyProperties((JButton) component);
-        } else if (component instanceof JTable) {
-            applyProperties((JTable) component);
         }
 
     }

@@ -79,7 +79,14 @@ public class CreateNewPost extends javax.swing.JPanel {
     }
 
     public void imageSelected(boolean isSelected) {
-        if (isSelected) {
+        if (!isSelected) {
+            lblImage.setVisible(true);
+            btnSelectImage.setVisible(true);
+            btnRemoveImage.setVisible(false);
+            lblCountImage.setVisible(false);
+            btnPrev.setVisible(false);
+            btnNext.setVisible(false);
+        } else {
             lblImage.setVisible(false);
             btnSelectImage.setVisible(false);
             btnRemoveImage.setVisible(true);
@@ -91,16 +98,6 @@ public class CreateNewPost extends javax.swing.JPanel {
                 btnPrev.setVisible(true);
                 btnNext.setVisible(true);
             }
-        }
-        else {
-            lblImage.setVisible(true);
-            btnSelectImage.setVisible(true);
-            btnRemoveImage.setVisible(false);
-            lblCountImage.setVisible(false);
-            rdoNormal.setVisible(false);
-            rdoGrayscale.setVisible(false);
-            btnPrev.setVisible(false);
-            btnNext.setVisible(false);
         }
 
         pnlLeft.revalidate();
