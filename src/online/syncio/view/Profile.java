@@ -119,7 +119,7 @@ public class Profile extends ConnectionPanel {
 
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
         CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
-        c.show(this.main.getPnlTabContent(), "editProfile");
+        c.show(this.main.getPnlTabContent(), "editprofile");
     }//GEN-LAST:event_btnEditProfileActionPerformed
 
     public void loadUserData(User user) {
