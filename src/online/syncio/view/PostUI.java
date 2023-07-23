@@ -1,10 +1,18 @@
 package online.syncio.view;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.model.Updates;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -15,65 +23,96 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
+import online.syncio.model.LoggedInUser;
+import online.syncio.model.Post;
+import online.syncio.model.User;
+import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.TimeHelper;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 public class PostUI extends javax.swing.JPanel {
+
     private MongoDatabase database = MongoDBConnect.getDatabase();
     private PostDAO postDAO = new PostDAOImpl(database);
     private UserDAO userDAO = new UserDAOImpl(database);
     private boolean isLiked;
-    private int totalLike = 0;
-    
+    private String userID;
+    private String postID;
+    private int totalLike;
+
     ImageIcon liked = new ImageIcon();
     ImageIcon unliked = new ImageIcon();
-    
-    public PostUI(String postID) {
+
+    public PostUI(String postID, String userID) {
+        this.userID = userID;
+        this.postID = postID;
+        postDAO.getByID(postID);
         initComponents();
-        showInfoPost(postID);
+        
         try {
             liked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-red_24px.png")));
             unliked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        isLiked = false;
+        showInfoPost(postID);
+        
     }
 
-    
     private void showInfoPost(String postID) {
         online.syncio.model.Post post = postDAO.getByID(postID);
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
         txtCaption.setText(post.getCaption());
+        lblTotalLike.setText(post.getlLike().size()+" likes");
         
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+        ObjectId objectId = new ObjectId(postID);
+        Bson filter = Filters.eq("_id", objectId);
+
+        // Tạo filter để kiểm tra xem trong mảng lLike có phần tử nào có followerID là userID hay không
+        Bson likeFilter = Filters.elemMatch("lLike", Filters.eq("followerID", userID));
+
+        // Thực hiện combo chuỗi liên hoàn filter của document và filter của mảng lLike
+        Bson combinedFilter = Filters.and(filter, likeFilter);
+
+        // Thực hiện truy vấn và kiểm tra xem document có chứa followerID là userID hay không
+        Post result = posts.find(combinedFilter).projection(Projections.include("_id")).first();
+
+        // Chốt hạ. Kết liễu đối thủ
+        if (result != null) {
+            lblHeart.setIcon(liked);
+            isLiked = true;
+        } else {
+            lblHeart.setIcon(unliked);
+            isLiked = false;
+        }
+
         pnlImages.setSize(400, 400);
-        if(post.getlPhoto().size() > 0) {
+        if (post.getlPhoto().size() > 0) {
             pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getlPhoto().get(0)));
             int imgHeight = pnlImages.getImgHeight();
-            
-            if(imgHeight > 300) {
+
+            if (imgHeight > 300) {
                 pnlImages.setPreferredSize(new Dimension(400, 400));
-            }
-            else if(imgHeight > 300) {
+            } else if (imgHeight > 300) {
                 pnlImages.setPreferredSize(new Dimension(400, 300));
-            }
-            else if(imgHeight > 200) {
+            } else if (imgHeight > 200) {
                 pnlImages.setPreferredSize(new Dimension(400, 200));
-            }
-            else {
+            } else {
                 pnlImages.setPreferredSize(new Dimension(400, 100));
             }
-        }
-        else {
+        } else {
             pnlImages.setPreferredSize(new Dimension(0, 0));
             pnlImages.setImg("");
         }
     }
 
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -265,17 +304,31 @@ public class PostUI extends javax.swing.JPanel {
     }//GEN-LAST:event_lblCommentMouseClicked
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
+
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+
+        ObjectId objectId = new ObjectId(postID);
+        Bson filter = Filters.eq("_id", objectId);
+
+        // Tạo mảng lLike mới, chẳng hạn lLikeToAdd là một ArrayList<UserIDAndDate> chứa các phần tử mới cần thêm vào
+        UserIDAndDate u = new UserIDAndDate(userID, TimeHelper.getCurrentDateTime());
+        ArrayList<UserIDAndDate> l = new ArrayList<>();
+        l.add(u);
+
         if (isLiked) {
             lblHeart.setIcon(unliked);
             isLiked = false;
-            totalLike--;
-            lblTotalLike.setText(totalLike + " likes");
+            Bson c = Filters.eq("followerID", userID);
+            Bson update = Updates.pull("lLike", c);
+            posts.updateOne(filter, update);
+
         } else if (isLiked == false) {
             lblHeart.setIcon(liked);
             isLiked = true;
-            totalLike++;
-            lblTotalLike.setText(totalLike + " likes");
+            Bson update = Updates.pushEach("lLike", l);
+            posts.updateOne(filter, update);
         }
+
     }//GEN-LAST:event_lblHeartMousePressed
 
 

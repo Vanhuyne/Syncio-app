@@ -94,7 +94,7 @@ public class Home extends ConnectionPanel {
 
         for (int i = startIndex; i <= endIndex && i < lPostID.size(); i++) {
             String postID = lPostID.get(i);
-            feedPanel.add(new PostUI(postID));
+            feedPanel.add(new PostUI(postID, currentUserID));
         }
         feedPanel.revalidate();
         feedPanel.repaint();

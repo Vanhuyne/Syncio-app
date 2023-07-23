@@ -8,6 +8,7 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
+import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.CreateNewPost;
