@@ -8,19 +8,20 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
+import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
-import online.syncio.view.PopupCreateNewPost;
+import online.syncio.view.CreateNewPost;
 import org.bson.types.Binary;
 
 public class CreateNewPostController {
 
-    private PopupCreateNewPost popup;
+    private CreateNewPost popup;
     private PostDAO postDAO;
     private UserDAO userDAO;
 
     
     
-    public CreateNewPostController(PopupCreateNewPost popup) {
+    public CreateNewPostController(CreateNewPost popup) {
         this.popup = popup;
 
         postDAO = this.popup.getPostDAO();
@@ -30,17 +31,26 @@ public class CreateNewPostController {
     
     
     public void uploadPost() {
-        String userID = LoggedInUser.getCurrentUser().getUsername();
+        String userID = LoggedInUser.getCurrentUser().getIdAsString();
         String caption = "";
 
         try {
             caption = popup.getTxtCaption().getDocument().getText(0, popup.getTxtCaption().getDocument().getLength()).trim();
+            if(caption.equalsIgnoreCase("Write a caption...")) caption = "";
         } catch (BadLocationException ex) {
+            ex.printStackTrace();
         }
 
         ArrayList<Binary> lPhoto = new ArrayList<>();
-        for (String photo : popup.getImagePaths()) {
-            lPhoto.add(new Binary(ImageHelper.readAsByte(photo)));
+        ArrayList<String> imagePaths = new ArrayList<>();
+        imagePaths = popup.getImagePaths();
+        for(int i = 0; i < imagePaths.size(); i++) {
+            if(popup.getImageFilter().get(i) == 1) {
+                lPhoto.add(new Binary(ImageHelper.readAsByte(ImageFilter.toGrayScale(ImageHelper.stringToBufferedImage(imagePaths.get(i))))));
+            }
+            else {
+                lPhoto.add(new Binary(ImageHelper.readAsByte(imagePaths.get(i))));
+            }
         }
 
         if ((caption.equals("") || caption.equalsIgnoreCase(popup.getTxtCaption().getPlaceholder())) && lPhoto.isEmpty()) {

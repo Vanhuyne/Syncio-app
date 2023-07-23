@@ -4,6 +4,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.Sorts;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -49,24 +50,14 @@ public class Home extends ConnectionPanel {
             currentUser = LoggedInUser.getCurrentUser();
             currentUserID = currentUser.getIdAsString();
 
-            for(UserIDAndDate u : currentUser.getFollowers()) {
-                getPostOfFollowerID(u.getFollowerID());
-//                System.out.println(u.getDateFollowed());
-//                System.out.println(u.getFollowerID());
+            MongoCollection<Post> posts = postDAO.getAllByCollection();
+            FindIterable<Post> findIterable = posts.find().sort(Sorts.descending("datePosted"));
+            for(Post post : findIterable) {
+                if(currentUser.getFollowers().stream().anyMatch(user -> user.getFollowerID().equals(post.getUserID()))) {
+                    lPostID.add(post.getIdAsString());
+                }
             }
             
-
-
-
-
-//            // lấy ra danh dách các ID đang được follow
-//            getListFollowerID(curUserID);
-//
-//            //  với mỗi follower sẽ lấy ra list postID của follower đó
-//            for (String followerID : lFollowerID) {
-//                getPostOfFollowerID(followerID);
-//            }
-//
             // set box layout để các post nằm chồng lên nhau theo trục Y
             feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
@@ -89,7 +80,8 @@ public class Home extends ConnectionPanel {
                 }
             });
             
-        } else {
+        }
+        else {
             System.out.println("chưa đăng nhập");
         }
 
@@ -102,8 +94,7 @@ public class Home extends ConnectionPanel {
 
         for (int i = startIndex; i <= endIndex && i < lPostID.size(); i++) {
             String postID = lPostID.get(i);
-            JPanel postPanel = createPostPanel(postID);
-            feedPanel.add(postPanel);
+            feedPanel.add(new PostUI(postID));
         }
         feedPanel.revalidate();
         feedPanel.repaint();
@@ -112,37 +103,7 @@ public class Home extends ConnectionPanel {
         //GlassPanePopup.closePopup("loadmore");
     }
 
-    private JPanel createPostPanel(String postID) {
-        PostUI postPanel = new PostUI(postID);
-        return postPanel;
-    }
-
-    private List getListFollowerID(String curUserID) {
-        ArrayList<UserIDAndDate> list = currentUser.getFollowers();
-
-        if (list != null) {
-            for (UserIDAndDate l : list) {
-                lFollowerID.add(l.getFollowerID());
-            }
-            return lFollowerID;
-        }
-
-        return null;
-    }
-
-    private List getPostOfFollowerID(String followerID) {
-        List<Post> list = new ArrayList<>();
-        list = postDAO.getAll();
-        System.out.println("co");
-        MongoDatabase database = MongoDBConnect.getDatabase();
-        MongoCollection<Document> collection = database.getCollection("posts");
-        FindIterable<Document> findIterable = collection.find(eq("userID", followerID));
-        for (Document document : findIterable) {
-            String postID = document.getObjectId("_id").toString();
-            lPostID.add(postID);
-        }
-        return lPostID;
-    }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -157,37 +118,30 @@ public class Home extends ConnectionPanel {
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setRoundBottomRight(20);
+        pnlMain.setLayout(new java.awt.BorderLayout());
 
+        scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        feedPanel.setBackground(new java.awt.Color(255, 255, 255));
+        feedPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 340, 0, 340));
+        feedPanel.setMaximumSize(new java.awt.Dimension(1080, 679));
+        feedPanel.setMinimumSize(new java.awt.Dimension(1080, 679));
 
         javax.swing.GroupLayout feedPanelLayout = new javax.swing.GroupLayout(feedPanel);
         feedPanel.setLayout(feedPanelLayout);
         feedPanelLayout.setHorizontalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 645, Short.MAX_VALUE)
+            .addGap(0, 1080, Short.MAX_VALUE)
         );
         feedPanelLayout.setVerticalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 677, Short.MAX_VALUE)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
 
         scrollPane.setViewportView(feedPanel);
 
-        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
-        pnlMain.setLayout(pnlMainLayout);
-        pnlMainLayout.setHorizontalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(336, 336, 336)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(329, Short.MAX_VALUE))
-        );
-        pnlMainLayout.setVerticalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        pnlMain.add(scrollPane, java.awt.BorderLayout.CENTER);
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

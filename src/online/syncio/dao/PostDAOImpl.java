@@ -2,10 +2,13 @@ package online.syncio.dao;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
 import online.syncio.model.Post;
+import org.bson.types.ObjectId;
 
 public class PostDAOImpl implements PostDAO {
     private MongoDatabase database;
@@ -44,9 +47,12 @@ public class PostDAOImpl implements PostDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
+    
     @Override
-    public Post getByID(String entityID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Post getByID(String postID) {
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+        return posts.find(eq("_id", new ObjectId(postID))).first();
     }
 
     
@@ -57,12 +63,19 @@ public class PostDAOImpl implements PostDAO {
         List<Post> lPost = new ArrayList<>();
         
         try {    
-            posts.find().into(lPost);
+            posts.find().sort(Sorts.descending("datePosted")).into(lPost);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
         return lPost;
+    }
+
+    
+    
+    @Override
+    public MongoCollection<Post> getAllByCollection() {
+        return database.getCollection("posts", Post.class);
     }
 
 }

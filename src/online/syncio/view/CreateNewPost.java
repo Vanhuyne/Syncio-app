@@ -22,10 +22,13 @@ import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
+import online.syncio.utils.ImageFilter;
+import online.syncio.utils.ImageHelper;
 
-public class PopupCreateNewPost extends javax.swing.JPanel {
+public class CreateNewPost extends javax.swing.JPanel {
 
     private ArrayList<String> imagePaths = new ArrayList<>();
+    private ArrayList<Integer> imageFilter = new ArrayList<>();
     private int imageIndex = 0;
 
     private Main main;
@@ -34,7 +37,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
-    public PopupCreateNewPost(Main main) {
+    public CreateNewPost(Main main) {
         this.main = main;
         this.database = main.getDatabase();
 
@@ -81,16 +84,21 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
             btnSelectImage.setVisible(false);
             btnRemoveImage.setVisible(true);
             lblCountImage.setVisible(true);
+            rdoNormal.setVisible(true);
+            rdoGrayscale.setVisible(true);
             if (imagePaths.size() > 1) {
                 lblCountImage.setText(imageIndex + 1 + "/" + imagePaths.size());
                 btnPrev.setVisible(true);
                 btnNext.setVisible(true);
             }
-        } else {
+        }
+        else {
             lblImage.setVisible(true);
             btnSelectImage.setVisible(true);
             btnRemoveImage.setVisible(false);
             lblCountImage.setVisible(false);
+            rdoNormal.setVisible(false);
+            rdoGrayscale.setVisible(false);
             btnPrev.setVisible(false);
             btnNext.setVisible(false);
         }
@@ -103,22 +111,48 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         if (i >= 0 && i < imagePaths.size()) {
             imageIndex = i;
             lblCountImage.setText(imageIndex + 1 + "/" + imagePaths.size());
-            pnlLeft.setImg(imagePaths.get(i));
+            
+            if(imageFilter.get(i) == 0) {
+                rdoNormal.setSelected(true);
+            }
+            else if(imageFilter.get(i) == 1) {
+                rdoGrayscale.setSelected(true);
+            }
+            
+            if(rdoGrayscale.isSelected()) {
+                pnlLeft.setImg(ImageFilter.toGrayScale2(ImageHelper.stringToBufferedImage(imagePaths.get(i))));
+            }
+            else {
+                pnlLeft.setImg(imagePaths.get(i));
+            }
+            
             pnlLeft.revalidate();
             pnlLeft.repaint();
         }
+    }
+    
+    public void updateFilter(int i) {
+        if(imageIndex == -1) return;
+        
+        if(rdoNormal.isSelected()) imageFilter.set(i, 0);
+        if(rdoGrayscale.isSelected()) imageFilter.set(i, 1);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        filterGroup = new javax.swing.ButtonGroup();
         pnlMain = new online.syncio.component.MyPanel();
         pnlTop = new online.syncio.component.MyPanel();
         btnClose = new online.syncio.component.MyButton();
         lblTitle = new online.syncio.component.MyLabel();
         btnShare = new online.syncio.component.MyButton();
         pnlContent = new online.syncio.component.MyPanel();
+        pnlLeftContainer = new online.syncio.component.MyPanel();
+        pnlFilter = new online.syncio.component.MyPanel();
+        rdoGrayscale = new online.syncio.component.MyRadioButton();
+        rdoNormal = new online.syncio.component.MyRadioButton();
         pnlLeft = new online.syncio.component.MyPanel();
         btnSelectImage = new online.syncio.component.MyButton();
         btnRemoveImage = new online.syncio.component.MyButton();
@@ -212,9 +246,62 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         pnlContent.setRoundBottomRight(10);
         pnlContent.setLayout(new java.awt.BorderLayout());
 
+        pnlLeftContainer.setBackground(new java.awt.Color(255, 255, 255));
+        pnlLeftContainer.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
+        pnlLeftContainer.setPreferredSize(new java.awt.Dimension(466, 472));
+        pnlLeftContainer.setRoundBottomLeft(10);
+        pnlLeftContainer.setLayout(new java.awt.BorderLayout());
+
+        pnlFilter.setBackground(new java.awt.Color(255, 255, 255));
+        pnlFilter.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)));
+        pnlFilter.setMaximumSize(new java.awt.Dimension(0, 46));
+        pnlFilter.setMinimumSize(new java.awt.Dimension(0, 46));
+        pnlFilter.setPreferredSize(new java.awt.Dimension(0, 46));
+
+        filterGroup.add(rdoGrayscale);
+        rdoGrayscale.setText("Grayscale");
+        rdoGrayscale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoGrayscaleActionPerformed(evt);
+            }
+        });
+
+        filterGroup.add(rdoNormal);
+        rdoNormal.setText("Normal");
+        rdoNormal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoNormalActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlFilterLayout = new javax.swing.GroupLayout(pnlFilter);
+        pnlFilter.setLayout(pnlFilterLayout);
+        pnlFilterLayout.setHorizontalGroup(
+            pnlFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFilterLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(rdoNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(rdoGrayscale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(278, Short.MAX_VALUE))
+        );
+        pnlFilterLayout.setVerticalGroup(
+            pnlFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlFilterLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(pnlFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rdoGrayscale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rdoNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlLeftContainer.add(pnlFilter, java.awt.BorderLayout.SOUTH);
+
         pnlLeft.setBackground(new java.awt.Color(255, 255, 255));
         pnlLeft.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
-        pnlLeft.setPreferredSize(new java.awt.Dimension(466, 472));
+        pnlLeft.setMaximumSize(new java.awt.Dimension(465, 465));
+        pnlLeft.setMinimumSize(new java.awt.Dimension(465, 465));
+        pnlLeft.setPreferredSize(new java.awt.Dimension(465, 465));
         pnlLeft.setRoundBottomLeft(10);
 
         btnSelectImage.setBackground(new java.awt.Color(0, 149, 246));
@@ -272,19 +359,21 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         pnlLeftLayout.setHorizontalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlLeftLayout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlLeftLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(122, 122, 122))
-                    .addComponent(btnRemoveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(127, 127, 127))
+                    .addGroup(pnlLeftLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRemoveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(10, 10, 10))
             .addGroup(pnlLeftLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlLeftLayout.createSequentialGroup()
                         .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(401, 401, 401)
@@ -304,19 +393,21 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
 
-        pnlContent.add(pnlLeft, java.awt.BorderLayout.LINE_START);
+        pnlLeftContainer.add(pnlLeft, java.awt.BorderLayout.NORTH);
+
+        pnlContent.add(pnlLeftContainer, java.awt.BorderLayout.WEST);
 
         pnlRight.setBackground(new java.awt.Color(255, 255, 255));
         pnlRight.setRoundBottomRight(10);
         pnlRight.setLayout(new java.awt.BorderLayout());
 
         lblAccount.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10)));
-        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile.png"))); // NOI18N
+        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblAccount.setText(" 56duong");
         lblAccount.setMaximumSize(new java.awt.Dimension(57, 54));
         lblAccount.setMinimumSize(new java.awt.Dimension(57, 54));
@@ -327,7 +418,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         pnlIcon.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10)));
         pnlIcon.setMaximumSize(new java.awt.Dimension(170, 90));
         pnlIcon.setMinimumSize(new java.awt.Dimension(170, 90));
-        pnlIcon.setPreferredSize(new java.awt.Dimension(57, 50));
+        pnlIcon.setPreferredSize(new java.awt.Dimension(57, 46));
         pnlIcon.setRoundBottomRight(10);
         pnlIcon.setLayout(new java.awt.GridLayout(1, 0, 0, 10));
 
@@ -488,16 +579,6 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         addEmoji(lblOK, new Color(255, 204, 0));
     }//GEN-LAST:event_lblOKMousePressed
 
-    private void btnSelectImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectImageActionPerformed
-        uploadImage();
-    }//GEN-LAST:event_btnSelectImageActionPerformed
-
-    private void btnRemoveImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveImageActionPerformed
-        pnlLeft.setImg("");
-        imagePaths.clear();
-        imageSelected(false);
-    }//GEN-LAST:event_btnRemoveImageActionPerformed
-
     private void lblLikeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLikeMousePressed
         addEmoji(lblLike, new Color(255, 204, 0));
     }//GEN-LAST:event_lblLikeMousePressed
@@ -534,6 +615,22 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         controller.uploadPost();
     }//GEN-LAST:event_btnShareActionPerformed
 
+    private void txtCaptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCaptionKeyReleased
+        showCaptionLength();
+    }//GEN-LAST:event_txtCaptionKeyReleased
+
+    private void btnSelectImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectImageActionPerformed
+        uploadImage();
+    }//GEN-LAST:event_btnSelectImageActionPerformed
+
+    private void btnRemoveImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveImageActionPerformed
+        pnlLeft.setImg("");
+        imagePaths.clear();
+        imageFilter.clear();
+        imageIndex = -1;
+        imageSelected(false);
+    }//GEN-LAST:event_btnRemoveImageActionPerformed
+
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         selectImage(imageIndex + 1);
     }//GEN-LAST:event_btnNextActionPerformed
@@ -542,9 +639,15 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         selectImage(imageIndex - 1);
     }//GEN-LAST:event_btnPrevActionPerformed
 
-    private void txtCaptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCaptionKeyReleased
-        showCaptionLength();
-    }//GEN-LAST:event_txtCaptionKeyReleased
+    private void rdoGrayscaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoGrayscaleActionPerformed
+        updateFilter(imageIndex);
+        selectImage(imageIndex);
+    }//GEN-LAST:event_rdoGrayscaleActionPerformed
+
+    private void rdoNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoNormalActionPerformed
+        updateFilter(imageIndex);
+        selectImage(imageIndex);
+    }//GEN-LAST:event_rdoNormalActionPerformed
 
     public void uploadImage() {
         JFileChooser fc = new JFileChooser();
@@ -556,13 +659,16 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         int result = fc.showOpenDialog(null);
 
         if (result == JFileChooser.APPROVE_OPTION) {
+            imageIndex = 0;
+            
             File[] files = fc.getSelectedFiles();
 
             for (File file : files) {
                 imagePaths.add(file.getAbsolutePath());
+                imageFilter.add(0);
             }
 
-            pnlLeft.setImg(imagePaths.get(imageIndex));
+            selectImage(imageIndex);
             imageSelected(true);
         }
     }
@@ -581,6 +687,10 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
         return imagePaths;
     }
 
+    public ArrayList<Integer> getImageFilter() {
+        return imageFilter;
+    }
+
     public PostDAO getPostDAO() {
         return postDAO;
     }
@@ -596,6 +706,7 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
     private online.syncio.component.MyButton btnRemoveImage;
     private online.syncio.component.MyButton btnSelectImage;
     private online.syncio.component.MyButton btnShare;
+    private javax.swing.ButtonGroup filterGroup;
     private online.syncio.component.MyLabel lblAccount;
     private online.syncio.component.MyLabel lblCamera;
     private online.syncio.component.MyLabel lblCountImage;
@@ -611,11 +722,15 @@ public class PopupCreateNewPost extends javax.swing.JPanel {
     private online.syncio.component.MyPanel myPanel1;
     private online.syncio.component.MyScrollPane myScrollPane2;
     private online.syncio.component.MyPanel pnlContent;
+    private online.syncio.component.MyPanel pnlFilter;
     private online.syncio.component.MyPanel pnlIcon;
     private online.syncio.component.MyPanel pnlLeft;
+    private online.syncio.component.MyPanel pnlLeftContainer;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlRight;
     private online.syncio.component.MyPanel pnlTop;
+    private online.syncio.component.MyRadioButton rdoGrayscale;
+    private online.syncio.component.MyRadioButton rdoNormal;
     private online.syncio.component.MyTextPane txtCaption;
     // End of variables declaration//GEN-END:variables
 }

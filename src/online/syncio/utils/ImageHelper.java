@@ -5,12 +5,17 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.bson.types.Binary;
 
 /**
  * The ImageHelper class provides utility methods for handling and manipulating images.
@@ -53,6 +58,19 @@ public class ImageHelper {
         Graphics2D bGr = bimage.createGraphics();
         bGr.drawImage(image, 0, 0, null);
         bGr.dispose();
+        
+        return bimage;
+    }
+    
+    public static BufferedImage stringToBufferedImage(String imagePath) {
+        File file = new File(imagePath);
+        BufferedImage bimage = null;
+        
+        try {
+            bimage = ImageIO.read(file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         
         return bimage;
     }
@@ -125,5 +143,18 @@ public class ImageHelper {
         }
         
         return imageBytes;
+    }
+    
+    
+    
+    public static BufferedImage readBinaryAsBufferedImage(Binary binary) {
+        byte[] byteArray = binary.getData();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
+        try {
+            return ImageIO.read(inputStream);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 } 

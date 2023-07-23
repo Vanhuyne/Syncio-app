@@ -148,7 +148,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlRight.setLayout(new java.awt.BorderLayout());
 
         lblAccount.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10)));
-        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile.png"))); // NOI18N
+        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblAccount.setText(" 56duong");
         lblAccount.setMaximumSize(new java.awt.Dimension(57, 54));
         lblAccount.setMinimumSize(new java.awt.Dimension(57, 54));
@@ -272,6 +272,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         myPanel1.setPreferredSize(new java.awt.Dimension(278, 407));
         myPanel1.setLayout(new java.awt.BorderLayout());
 
+        lblCountNumber.setBackground(new java.awt.Color(254, 255, 255));
         lblCountNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 10));
         lblCountNumber.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCountNumber.setText(" ");
