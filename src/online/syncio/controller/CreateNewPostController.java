@@ -20,8 +20,6 @@ public class CreateNewPostController {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
-    
-    
     public CreateNewPostController(CreateNewPost popup) {
         this.popup = popup;
 
@@ -29,15 +27,15 @@ public class CreateNewPostController {
         userDAO = this.popup.getUserDAO();
     }
 
-    
-    
     public void uploadPost() {
         String userID = LoggedInUser.getCurrentUser().getIdAsString();
         String caption = "";
 
         try {
             caption = popup.getTxtCaption().getDocument().getText(0, popup.getTxtCaption().getDocument().getLength()).trim();
-            if(caption.equalsIgnoreCase("Write a caption...")) caption = "";
+            if (caption.equalsIgnoreCase("Write a caption...")) {
+                caption = "";
+            }
         } catch (BadLocationException ex) {
             ex.printStackTrace();
         }
@@ -45,11 +43,10 @@ public class CreateNewPostController {
         ArrayList<Binary> lPhoto = new ArrayList<>();
         ArrayList<String> imagePaths = new ArrayList<>();
         imagePaths = popup.getImagePaths();
-        for(int i = 0; i < imagePaths.size(); i++) {
-            if(popup.getImageFilter().get(i) == 1) {
+        for (int i = 0; i < imagePaths.size(); i++) {
+            if (popup.getImageFilter().get(i) == 1) {
                 lPhoto.add(new Binary(ImageHelper.readAsByte(ImageFilter.toGrayScale(ImageHelper.stringToBufferedImage(imagePaths.get(i))))));
-            }
-            else {
+            } else {
                 lPhoto.add(new Binary(ImageHelper.readAsByte(imagePaths.get(i))));
             }
         }
@@ -58,7 +55,7 @@ public class CreateNewPostController {
             GlassPanePopup.showPopup(new MyDialog("Error", "Please select an image or add a caption before sharing the post"), "dialog");
             return;
         }
-     
+
         if (userDAO.getByID(LoggedInUser.getCurrentUser().getIdAsString()) == null) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
             return;

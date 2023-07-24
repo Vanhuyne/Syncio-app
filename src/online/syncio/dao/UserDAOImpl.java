@@ -70,6 +70,7 @@ public class UserDAOImpl implements UserDAO {
         return lUser;
     }
 
+    @Override
     public User authentication(String username, String password) {
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
@@ -85,6 +86,7 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    @Override
     public boolean checkEmail(String email) {
         MongoCollection<User> collection = database.getCollection("users", User.class);
 
