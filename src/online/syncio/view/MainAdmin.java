@@ -12,19 +12,19 @@ import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import static online.syncio.view.Main.curTab;
 
-public final class Main extends javax.swing.JFrame {
+public final class MainAdmin extends javax.swing.JFrame {
 
     private MongoDatabase database;
     private User currentUser;
 
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
-    private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
 
-    public Main() {
+    public MainAdmin() {
         setUndecorated(true);
         initComponents();
         GlassPanePopup.install(this);
@@ -33,8 +33,7 @@ public final class Main extends javax.swing.JFrame {
     }
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(), new Search(), new Message(), new Notification(),
-            new Profile(), new OtherUserProfile(), new EditProfile()};
+        connectionPanelList = new ConnectionPanel[]{new ManagementDashboard(), new ManagementUser(), new ManagementHiddenPost(), new ManagementReportedPost(), new Profile(), new OtherUserProfile(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -44,13 +43,13 @@ public final class Main extends javax.swing.JFrame {
             pnl.setConnection(this);
         }
 
-        btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
+        btnMenuList = new MyButton[]{btnDashboard, btnUser, btnHiddenPost, btnReportedPost, btnProfile};
 
         for (MyButton btn : btnMenuList) {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
-                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+                if (!LoggedInUser.isAdmin()) {
                     dispose();
                     new Login().setVisible(true);
                     GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
@@ -61,6 +60,8 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    
+    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -76,10 +77,8 @@ public final class Main extends javax.swing.JFrame {
         prevTab = curTab;
         curTab = newTab;
 
-        if (!newTab.equals("create")) {
-            CardLayout c = (CardLayout) pnlTabContent.getLayout();
-            c.show(pnlTabContent, curTab);
-        }
+        CardLayout c = (CardLayout) pnlTabContent.getLayout();
+        c.show(pnlTabContent, curTab);
     }
 
     public void showTab(String newTab, MyButton btn) {
@@ -93,11 +92,9 @@ public final class Main extends javax.swing.JFrame {
 
         prevTab = curTab;
         curTab = newTab;
-
-        if (!newTab.equals("create")) {
-            CardLayout c = (CardLayout) pnlTabContent.getLayout();
-            c.show(pnlTabContent, curTab);
-        }
+        
+        CardLayout c = (CardLayout) pnlTabContent.getLayout();
+        c.show(pnlTabContent, curTab);
     }
 
     @SuppressWarnings("unchecked")
@@ -107,11 +104,10 @@ public final class Main extends javax.swing.JFrame {
         pnlMain = new online.syncio.component.MyPanel();
         pnlTitleBar = new online.syncio.component.WindowTitleBar();
         pnlLeftMenu = new online.syncio.component.MyPanel();
-        btnHome = new online.syncio.component.MyButton();
-        btnSearch = new online.syncio.component.MyButton();
-        btnMessage = new online.syncio.component.MyButton();
-        btnNotification = new online.syncio.component.MyButton();
-        btnCreate = new online.syncio.component.MyButton();
+        btnDashboard = new online.syncio.component.MyButton();
+        btnUser = new online.syncio.component.MyButton();
+        btnHiddenPost = new online.syncio.component.MyButton();
+        btnReportedPost = new online.syncio.component.MyButton();
         btnProfile = new online.syncio.component.MyButton();
         pnlTabContent = new online.syncio.component.MyPanel();
 
@@ -142,75 +138,57 @@ public final class Main extends javax.swing.JFrame {
         pnlLeftMenu.setRoundBottomLeft(20);
         pnlLeftMenu.setLayout(new javax.swing.BoxLayout(pnlLeftMenu, javax.swing.BoxLayout.Y_AXIS));
 
-        btnHome.setBackground(null);
-        btnHome.setBorder(javax.swing.BorderFactory.createEmptyBorder(30, 15, 5, 0));
-        btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/home_28px.png"))); // NOI18N
-        btnHome.setText(" Home");
-        btnHome.setBorderThickness(0);
-        btnHome.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
-        btnHome.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnHome.setMaximumSize(new java.awt.Dimension(200, 60));
-        btnHome.setMinimumSize(new java.awt.Dimension(200, 60));
-        btnHome.setName("home"); // NOI18N
-        btnHome.setPreferredSize(new java.awt.Dimension(200, 50));
-        pnlLeftMenu.add(btnHome);
+        btnDashboard.setBackground(null);
+        btnDashboard.setBorder(javax.swing.BorderFactory.createEmptyBorder(30, 15, 5, 0));
+        btnDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/dashboard_28px.png"))); // NOI18N
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setBorderThickness(0);
+        btnDashboard.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnDashboard.setMaximumSize(new java.awt.Dimension(200, 60));
+        btnDashboard.setMinimumSize(new java.awt.Dimension(200, 60));
+        btnDashboard.setName("home"); // NOI18N
+        btnDashboard.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlLeftMenu.add(btnDashboard);
 
-        btnSearch.setBackground(null);
-        btnSearch.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/search_28px.png"))); // NOI18N
-        btnSearch.setText(" Search");
-        btnSearch.setBorderThickness(0);
-        btnSearch.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
-        btnSearch.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnSearch.setMaximumSize(new java.awt.Dimension(200, 50));
-        btnSearch.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnSearch.setName("search"); // NOI18N
-        btnSearch.setPreferredSize(new java.awt.Dimension(200, 50));
-        pnlLeftMenu.add(btnSearch);
+        btnUser.setBackground(null);
+        btnUser.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
+        btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/management-user_28px.png"))); // NOI18N
+        btnUser.setText("User");
+        btnUser.setBorderThickness(0);
+        btnUser.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnUser.setMaximumSize(new java.awt.Dimension(200, 50));
+        btnUser.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnUser.setName("search"); // NOI18N
+        btnUser.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlLeftMenu.add(btnUser);
 
-        btnMessage.setBackground(null);
-        btnMessage.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
-        btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/message_28px.png"))); // NOI18N
-        btnMessage.setText(" Messages");
-        btnMessage.setBorderThickness(0);
-        btnMessage.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
-        btnMessage.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnMessage.setMaximumSize(new java.awt.Dimension(200, 50));
-        btnMessage.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnMessage.setName("message"); // NOI18N
-        btnMessage.setPreferredSize(new java.awt.Dimension(200, 50));
-        pnlLeftMenu.add(btnMessage);
+        btnHiddenPost.setBackground(null);
+        btnHiddenPost.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
+        btnHiddenPost.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/hidden-post_28px.png"))); // NOI18N
+        btnHiddenPost.setText("Hidden Post");
+        btnHiddenPost.setBorderThickness(0);
+        btnHiddenPost.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnHiddenPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnHiddenPost.setMaximumSize(new java.awt.Dimension(200, 50));
+        btnHiddenPost.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnHiddenPost.setName("message"); // NOI18N
+        btnHiddenPost.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlLeftMenu.add(btnHiddenPost);
 
-        btnNotification.setBackground(null);
-        btnNotification.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
-        btnNotification.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/notification_28px.png"))); // NOI18N
-        btnNotification.setText(" Notifications");
-        btnNotification.setBorderThickness(0);
-        btnNotification.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
-        btnNotification.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnNotification.setMaximumSize(new java.awt.Dimension(200, 50));
-        btnNotification.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnNotification.setName("notification"); // NOI18N
-        btnNotification.setPreferredSize(new java.awt.Dimension(200, 50));
-        pnlLeftMenu.add(btnNotification);
-
-        btnCreate.setBackground(null);
-        btnCreate.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
-        btnCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/create_28px.png"))); // NOI18N
-        btnCreate.setText(" Create");
-        btnCreate.setBorderThickness(0);
-        btnCreate.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
-        btnCreate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnCreate.setMaximumSize(new java.awt.Dimension(200, 50));
-        btnCreate.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnCreate.setName("create"); // NOI18N
-        btnCreate.setPreferredSize(new java.awt.Dimension(200, 50));
-        btnCreate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateActionPerformed(evt);
-            }
-        });
-        pnlLeftMenu.add(btnCreate);
+        btnReportedPost.setBackground(null);
+        btnReportedPost.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
+        btnReportedPost.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/reported-post_28px.png"))); // NOI18N
+        btnReportedPost.setText("Reported Post");
+        btnReportedPost.setBorderThickness(0);
+        btnReportedPost.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnReportedPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnReportedPost.setMaximumSize(new java.awt.Dimension(200, 50));
+        btnReportedPost.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnReportedPost.setName("notification"); // NOI18N
+        btnReportedPost.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlLeftMenu.add(btnReportedPost);
 
         btnProfile.setBackground(null);
         btnProfile.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 15, 5, 0));
@@ -238,14 +216,8 @@ public final class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        btnHome.doClick();
+        btnDashboard.doClick();
     }//GEN-LAST:event_formWindowOpened
-
-    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        if (LoggedInUser.getCurrentUser() != null) {
-            GlassPanePopup.showPopup(new CreateNewPost(this), "createnewpost");
-        }
-    }//GEN-LAST:event_btnCreateActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -261,13 +233,14 @@ public final class Main extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         //</editor-fold>
         java.awt.EventQueue.invokeLater(() -> {
-            new Main().setVisible(true);
+            new MainAdmin().setVisible(true);
         });
     }
 
@@ -290,12 +263,11 @@ public final class Main extends javax.swing.JFrame {
         return currentUser;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private online.syncio.component.MyButton btnCreate;
-    private online.syncio.component.MyButton btnHome;
-    private online.syncio.component.MyButton btnMessage;
-    private online.syncio.component.MyButton btnNotification;
+    private online.syncio.component.MyButton btnDashboard;
+    private online.syncio.component.MyButton btnHiddenPost;
     private online.syncio.component.MyButton btnProfile;
-    private online.syncio.component.MyButton btnSearch;
+    private online.syncio.component.MyButton btnReportedPost;
+    private online.syncio.component.MyButton btnUser;
     private online.syncio.component.MyPanel pnlLeftMenu;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlTabContent;

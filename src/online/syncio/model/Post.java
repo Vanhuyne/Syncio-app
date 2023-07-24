@@ -3,6 +3,7 @@ package online.syncio.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import online.syncio.utils.TimeHelper;
 import org.bson.types.Binary;
@@ -15,8 +16,8 @@ public class Post {
     private String datePosted = TimeHelper.getCurrentDateTime();
     public List<Binary> lPhoto;
     private List<UserIDAndDate> lLike = new ArrayList<>();
-    private HashMap<UserIDAndDate, String> mComment = new HashMap<>();
-    private HashMap<UserIDAndDate, Integer> mReport = new HashMap<>();
+    private Map<String, UserIDAndDate> mComment = new HashMap<>();
+    private Map<String, UserIDAndDate> mReport = new HashMap<>();
 
     public Post() {
     }
@@ -36,18 +37,8 @@ public class Post {
         return id;
     }
 
-    public Post setId(ObjectId id) {
+    public void setId(ObjectId id) {
         this.id = id;
-        return this;
-    }
-    
-    public String getIdAsString() {
-        return id.toString();
-    }
-
-    public Post setIdAsString(String id) {
-        this.id = new ObjectId(id);
-        return this;
     }
     
     public String getUserID() {
@@ -71,9 +62,8 @@ public class Post {
         return datePosted;
     }
 
-    public Post setDatePosted(String datePosted) {
+    public void setDatePosted(String datePosted) {
         this.datePosted = datePosted;
-        return this;
     }
     
     public List<Binary> getLPhoto() {
@@ -92,19 +82,19 @@ public class Post {
         this.lLike = lLike;
     }
 
-    public HashMap<UserIDAndDate, String> getMComment() {
+    public Map<String, UserIDAndDate> getMComment() {
         return mComment;
     }
 
-    public void setMComment(HashMap<UserIDAndDate, String> mComment) {
+    public void setMComment(Map<String, UserIDAndDate> mComment) {
         this.mComment = mComment;
     }
 
-    public HashMap<UserIDAndDate, Integer> getMReport() {
+    public Map<String, UserIDAndDate> getMReport() {
         return mReport;
     }
 
-    public void setMReport(HashMap<UserIDAndDate, Integer> mReport) {
+    public void setMReport(Map<String, UserIDAndDate> mReport) {
         this.mReport = mReport;
     }
     

@@ -3,12 +3,17 @@ package online.syncio.dao;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
 import online.syncio.model.Post;
+import online.syncio.model.UserIDAndDate;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 public class PostDAOImpl implements PostDAO {
@@ -85,4 +90,26 @@ public class PostDAOImpl implements PostDAO {
 
         return postList;
     }
+
+    
+    
+    @Override
+    public boolean addLike(String postID, String userID) {
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+        Bson likeFilter = Filters.eq( "_id", new ObjectId(postID)); //get document
+        Bson add = Updates.push("lLike", new UserIDAndDate(userID));
+        posts.updateOne(likeFilter, add);
+        return true;
+    }
+
+    @Override
+    public boolean removeLike(String postID, String userID) {
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class); //get collection
+        Bson likeFilter = Filters.eq( "_id", new ObjectId(postID)); //get document
+        Bson delete = Updates.pull("lLike", new Document("userID", userID));
+        posts.updateOne(likeFilter, delete);
+        
+        return true;
+    }
+
 }

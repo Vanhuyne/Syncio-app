@@ -39,10 +39,10 @@ public class PostUI extends javax.swing.JPanel {
     private MongoDatabase database = MongoDBConnect.getDatabase();
     private PostDAO postDAO = new PostDAOImpl(database);
     private UserDAO userDAO = new UserDAOImpl(database);
-    private boolean isLiked;
     private String userID;
     private String postID;
     private int totalLike;
+    private int imageIndex = 0;
 
     ImageIcon liked = new ImageIcon();
     ImageIcon unliked = new ImageIcon();
@@ -62,42 +62,58 @@ public class PostUI extends javax.swing.JPanel {
         showInfoPost(postID);
         
     }
+    
+    
+    
+    public boolean isLiked() {
+        // Check if any documents matched the condition
+        if (postDAO.getByID(postID).getLLike().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    
+    
+    public void updateLike() {
+        if(isLiked()) {
+            lblHeart.setIcon(unliked);
+            postDAO.removeLike(postID, userID);
+        }
+        else {
+            lblHeart.setIcon(liked);
+            postDAO.addLike(postID, userID);
+        }
+        
+        Post post = postDAO.getByID(postID);
+        lblTotalLike.setText(post.getLLike().size()+" likes");
+    }
 
     
     
     private void showInfoPost(String postID) {
-        online.syncio.model.Post post = postDAO.getByID(postID);
+        Post post = postDAO.getByID(postID);
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
         txtCaption.setText(post.getCaption());
         lblTotalLike.setText(post.getLLike().size()+" likes");
-        
-        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
-        ObjectId objectId = new ObjectId(postID);
-        Bson filter = Filters.eq("_id", objectId);
-
-        // Tạo filter để kiểm tra xem trong mảng lLike có phần tử nào có followerID là userID hay không
-        Bson likeFilter = Filters.elemMatch("lLike", Filters.eq("followerID", userID));
-
-        // Thực hiện combo chuỗi liên hoàn filter của document và filter của mảng lLike
-        Bson combinedFilter = Filters.and(filter, likeFilter);
-
-        // Thực hiện truy vấn và kiểm tra xem document có chứa followerID là userID hay không
-        Post result = posts.find(combinedFilter).projection(Projections.include("_id")).first();
-
-        // Chốt hạ. Kết liễu đối thủ
-        if (result != null) {
+        if (isLiked()) {
             lblHeart.setIcon(liked);
-            isLiked = true;
-        } else {
-            lblHeart.setIcon(unliked);
-            isLiked = false;
         }
-
+        
+        //raito
         pnlImages.setSize(400, 400);
         if (post.getLPhoto().size() > 0) {
-            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(0)));
+            if(post.getLPhoto().size() <= 1) {
+                btnNext.setVisible(false);
+                btnPrev.setVisible(false);
+            }
+            
+            imageIndex = 0;
+            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(imageIndex)));
             int imgHeight = pnlImages.getImgHeight();
 
             if (imgHeight > 300) {
@@ -109,11 +125,27 @@ public class PostUI extends javax.swing.JPanel {
             } else {
                 pnlImages.setPreferredSize(new Dimension(400, 100));
             }
-        } else {
+        }
+        else {
             pnlImages.setPreferredSize(new Dimension(0, 0));
             pnlImages.setImg("");
         }
     }
+    
+    
+    
+    public void selectImage(int i) {
+        Post post = postDAO.getByID(postID);
+        if (i >= 0 && i < post.getLPhoto().size()) {
+            imageIndex = i;
+            lblCountImage.setText(imageIndex + 1 + "/" + post.getLPhoto().size());
+            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(i)));
+            pnlImages.revalidate();
+            pnlImages.repaint();
+        }
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -132,6 +164,9 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername2 = new javax.swing.JLabel();
         lblViewAllCmt = new javax.swing.JLabel();
         pnlImages = new online.syncio.component.MyPanel();
+        btnNext = new online.syncio.component.MyButton();
+        btnPrev = new online.syncio.component.MyButton();
+        lblCountImage = new online.syncio.component.MyLabel();
         txtCaption = new online.syncio.component.MyTextPane();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -170,20 +205,6 @@ public class PostUI extends javax.swing.JPanel {
         lblComment.setMaximumSize(new java.awt.Dimension(20, 49));
         lblComment.setMinimumSize(new java.awt.Dimension(20, 49));
         lblComment.setPreferredSize(new java.awt.Dimension(20, 49));
-        lblComment.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblCommentMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblCommentMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblCommentMouseExited(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblCommentMousePressed(evt);
-            }
-        });
 
         lblTotalLike.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         lblTotalLike.setText("0 likes");
@@ -210,15 +231,57 @@ public class PostUI extends javax.swing.JPanel {
         pnlImages.setMinimumSize(new java.awt.Dimension(400, 400));
         pnlImages.setPreferredSize(new java.awt.Dimension(400, 400));
 
+        btnNext.setBackground(null);
+        btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/next_24px.png"))); // NOI18N
+        btnNext.setBorderThickness(0);
+        btnNext.setRadius(24);
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        btnPrev.setBackground(null);
+        btnPrev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/previous_24px.png"))); // NOI18N
+        btnPrev.setBorderThickness(0);
+        btnPrev.setRadius(24);
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        lblCountImage.setBackground(new Color(0f, 0f, 0f, 0f));
+        lblCountImage.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 10));
+        lblCountImage.setForeground(new java.awt.Color(219, 219, 219));
+        lblCountImage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout pnlImagesLayout = new javax.swing.GroupLayout(pnlImages);
         pnlImages.setLayout(pnlImagesLayout);
         pnlImagesLayout.setHorizontalGroup(
             pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlImagesLayout.createSequentialGroup()
+                .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlImagesLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlImagesLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10))
         );
         pnlImagesLayout.setVerticalGroup(
             pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(pnlImagesLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(161, 161, 161)
+                .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(184, Short.MAX_VALUE))
         );
 
         txtCaption.setEditable(false);
@@ -232,29 +295,25 @@ public class PostUI extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addComponent(lblDateCreated))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblDateCreated))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblTotalLike, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblViewAllCmt))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lblUsername2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtCaption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                        .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTotalLike, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblViewAllCmt))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(lblUsername2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(txtCaption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(lblDateCreated))
@@ -272,21 +331,9 @@ public class PostUI extends javax.swing.JPanel {
                 .addComponent(txtCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
                 .addComponent(lblViewAllCmt)
-                .addGap(10, 10, 10))
+                .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lblCommentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblCommentMousePressed
-
-    private void lblCommentMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMouseEntered
-        lblComment.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_lblCommentMouseEntered
-
-    private void lblCommentMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMouseExited
-        lblComment.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_lblCommentMouseExited
 
     private void lblViewAllCmtMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseEntered
         lblViewAllCmt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -301,48 +348,24 @@ public class PostUI extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lblViewAllCmtMouseClicked
 
-    private void lblCommentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMouseClicked
-        GlassPanePopup.showPopup(new PostDetailUI(), "postdetail");
-    }//GEN-LAST:event_lblCommentMouseClicked
-
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
-        
-//        Bson filter = Filters.eq("_id", 1);
-//        Bson update = Updates.push("qty", 17);
-//        FindOneAndUpdateOptions options = new FindOneAndUpdateOptions()
-//                                            .returnDocument(ReturnDocument.AFTER);
-//        Document result = collection.findOneAndUpdate(filter, update, options);
-//        System.out.println(result.toJson());
-        
-//        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
-//
-//        ObjectId objectId = new ObjectId(postID);
-//        Bson filter = Filters.eq("_id", objectId);
-//
-//        // Tạo mảng lLike mới, chẳng hạn lLikeToAdd là một ArrayList<UserIDAndDate> chứa các phần tử mới cần thêm vào
-//        UserIDAndDate u = new UserIDAndDate(userID, TimeHelper.getCurrentDateTime());
-//        ArrayList<UserIDAndDate> l = new ArrayList<>();
-//        l.add(u);
-//
-//        if (isLiked) {
-//            lblHeart.setIcon(unliked);
-//            isLiked = false;
-//            Bson c = Filters.eq("followerID", userID);
-//            Bson update = Updates.pull("lLike", c);
-//            posts.updateOne(filter, update);
-//
-//        } else if (isLiked == false) {
-//            lblHeart.setIcon(liked);
-//            isLiked = true;
-//            Bson update = Updates.pushEach("lLike", l);
-//            posts.updateOne(filter, update);
-//        }
-
+        updateLike();
     }//GEN-LAST:event_lblHeartMousePressed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        selectImage(imageIndex + 1);
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        selectImage(imageIndex - 1);
+    }//GEN-LAST:event_btnPrevActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private online.syncio.component.MyButton btnNext;
+    private online.syncio.component.MyButton btnPrev;
     private online.syncio.component.MyLabel lblComment;
+    private online.syncio.component.MyLabel lblCountImage;
     private javax.swing.JLabel lblDateCreated;
     private online.syncio.component.MyLabel lblHeart;
     private javax.swing.JLabel lblTotalLike;

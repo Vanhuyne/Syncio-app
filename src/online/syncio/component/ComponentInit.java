@@ -60,6 +60,7 @@ public class ComponentInit {
     }
 
     public static void applyProperties(JRadioButton radioButton) {
+        radioButton.setFocusPainted(false);
         radioButton.setBorderPainted(false);
         radioButton.setForeground(Color.BLACK);
     }
