@@ -11,13 +11,16 @@ import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
+import online.syncio.model.User;
 
 public final class Main extends javax.swing.JFrame {
 
     private MongoDatabase database;
+    private User currentUser;
 
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
+    private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
 
@@ -27,12 +30,19 @@ public final class Main extends javax.swing.JFrame {
         GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
+    }
 
+    public void addComponents() {
         connectionPanelList = new ConnectionPanel[]{new Home(), new Search(), new Message(), new Notification(),
             new Profile(), new OtherUserProfile(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
-        addTab();
+
+        for (ConnectionPanel pnl : connectionPanelList) {
+            String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
+            pnlTabContent.add(pnl, pnlName);
+            pnl.setConnection(this);
+        }
 
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
@@ -46,17 +56,8 @@ public final class Main extends javax.swing.JFrame {
                     GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
                     return;
                 }
-
                 showTab(name1, btn1);
             });
-        }
-    }
-
-    public void addTab() {
-        for (ConnectionPanel pnl : connectionPanelList) {
-            String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
-            pnlTabContent.add(pnl, pnlName);
-            pnl.setConnection(this);
         }
     }
 
@@ -242,7 +243,8 @@ public final class Main extends javax.swing.JFrame {
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         if (LoggedInUser.getCurrentUser() != null) {
-            GlassPanePopup.showPopup(new PopupCreateNewPost(this), "createnewpost");
+            GlassPanePopup.showPopup(new CreateNewPost(this), "createnewpost");
+            GlassPanePopup.showPopup(popupCreate, "createnewpost");
         }
     }//GEN-LAST:event_btnCreateActionPerformed
 
@@ -278,10 +280,16 @@ public final class Main extends javax.swing.JFrame {
         return database;
     }
 
-    public void setDatabase(MongoDatabase database) {
+    public void setConnection(MongoDatabase database, User user) {
         this.database = database;
+        this.currentUser = user;
+
+        addComponents();
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

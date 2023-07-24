@@ -13,10 +13,6 @@ public class UserIDAndDate {
         this.userID = userID;
         this.date = date;
     }
-    
-    public UserIDAndDate(String userID) {
-        this.userID = userID;
-    }
 
     public String getUserID() {
         return userID;

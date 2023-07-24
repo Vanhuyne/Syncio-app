@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class MyRoundLabel extends JLabel {
 
-    private Image defaultImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile.png")).getImage();
+    private Image defaultImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png")).getImage();
 
     public MyRoundLabel() {
         setPreferredSize(new Dimension(128, 128));
