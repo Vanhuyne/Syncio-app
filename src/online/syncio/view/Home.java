@@ -42,7 +42,7 @@ public class Home extends ConnectionPanel {
     public Home() {
         userDAO = new UserDAOImpl(database);
         postDAO = new PostDAOImpl(database);
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
@@ -52,12 +52,12 @@ public class Home extends ConnectionPanel {
 
             MongoCollection<Post> posts = postDAO.getAllByCollection();
             FindIterable<Post> findIterable = posts.find().sort(Sorts.descending("datePosted"));
-            for(Post post : findIterable) {
-                if(currentUser.getFollowers().stream().anyMatch(user -> user.getFollowerID().equals(post.getUserID()))) {
+            for (Post post : findIterable) {
+                if (currentUser.getFollowers().stream().anyMatch(user -> user.getFollowerID().equals(post.getUserID()))) {
                     lPostID.add(post.getIdAsString());
                 }
             }
-            
+
             // set box layout để các post nằm chồng lên nhau theo trục Y
             feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
@@ -79,9 +79,8 @@ public class Home extends ConnectionPanel {
                     }
                 }
             });
-            
-        }
-        else {
+
+        } else {
             System.out.println("chưa đăng nhập");
         }
 
@@ -102,8 +101,6 @@ public class Home extends ConnectionPanel {
         curIndex += 5; // Tăng chỉ số hiện tại lên 5
         //GlassPanePopup.closePopup("loadmore");
     }
-
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
