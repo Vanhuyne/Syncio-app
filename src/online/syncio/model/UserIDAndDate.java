@@ -3,31 +3,31 @@ package online.syncio.model;
 import online.syncio.utils.TimeHelper;
 
 public class UserIDAndDate {
-    public String followerID;
-    public String dateFollowed = TimeHelper.getCurrentDateTime();
+    public String userID;
+    public String date = TimeHelper.getCurrentDateTime();
 
     public UserIDAndDate() {
     }
 
-    public UserIDAndDate(String followerID, String dateFollowed) {
-        this.followerID = followerID;
-        this.dateFollowed = dateFollowed;
+    public UserIDAndDate(String userID, String date) {
+        this.userID = userID;
+        this.date = date;
     }
 
-    public String getFollowerID() {
-        return followerID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setFollowerID(String followerID) {
-        this.followerID = followerID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public String getDateFollowed() {
-        return dateFollowed;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateFollowed(String dateFollowed) {
-        this.dateFollowed = dateFollowed;
+    public void setDate(String date) {
+        this.date = date;
     }
     
 }
