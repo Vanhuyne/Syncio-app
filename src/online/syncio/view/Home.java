@@ -55,7 +55,7 @@ public class Home extends ConnectionPanel {
 
             for(Post post : findIterable) {
                 if(currentUser.getFollowers().stream().anyMatch(user -> user.getUserID().equals(post.getUserID()))) {
-                    lPostID.add(post.getIdAsString());
+                    lPostID.add(post.getId().toString());
                 }
             }
 
@@ -87,6 +87,8 @@ public class Home extends ConnectionPanel {
 
     }
 
+    
+    
     private void loadMorePosts() {
         //GlassPanePopup.showPopup(new LoadingMore(), "loadmore");
         int startIndex = curIndex; // Lưu chỉ số bắt đầu của lPostID
