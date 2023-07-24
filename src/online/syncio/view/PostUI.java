@@ -71,7 +71,7 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
         txtCaption.setText(post.getCaption());
-        lblTotalLike.setText(post.getlLike().size()+" likes");
+        lblTotalLike.setText(post.getLLike().size()+" likes");
         
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
         ObjectId objectId = new ObjectId(postID);
@@ -96,8 +96,8 @@ public class PostUI extends javax.swing.JPanel {
         }
 
         pnlImages.setSize(400, 400);
-        if (post.getlPhoto().size() > 0) {
-            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getlPhoto().get(0)));
+        if (post.getLPhoto().size() > 0) {
+            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(0)));
             int imgHeight = pnlImages.getImgHeight();
 
             if (imgHeight > 300) {
