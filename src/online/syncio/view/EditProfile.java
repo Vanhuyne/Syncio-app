@@ -69,7 +69,7 @@ public class EditProfile extends ConnectionPanel {
         lblSepratorLine.setPreferredSize(new java.awt.Dimension(2, 1));
 
         lblAccount.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10)));
-        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile.png"))); // NOI18N
+        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblAccount.setText(" 56duong");
         lblAccount.setMaximumSize(new java.awt.Dimension(57, 54));
         lblAccount.setMinimumSize(new java.awt.Dimension(57, 54));

@@ -10,6 +10,13 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.JPanel;
 import online.syncio.utils.ImageHelper;
 
@@ -126,10 +133,25 @@ public class MyPanel extends JPanel {
             g2Border.dispose();
         }
         
-        if(getImg() != null) {
+        if(getImg() != null && getImg().getWidth(null) != -1 && getImg().getHeight(null) != -1) {
             RenderingHints rh = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2.setRenderingHints(rh);
-            grphcs.drawImage(img, 0, 0, null);
+            
+            //center
+            int centerWidth = 0;
+            int centerHeight = 0;
+            int imageWidth = ImageHelper.imageToBufferedImage(getImg()).getWidth();
+            int imageHeight = ImageHelper.imageToBufferedImage(getImg()).getHeight();
+            
+            centerWidth = (imageWidth - getWidth()) / 2;
+            centerHeight = (imageHeight - getHeight()) / 2;
+//            int centerWidth = (getWidth() - ImageHelper.imageToBufferedImage(getImg()).getWidth()) / 2;
+//            int centerHeight = (getHeight() - ImageHelper.imageToBufferedImage(getImg()).getHeight()) / 2;
+            
+//            if(centerWidth < 0) centerWidth = 0;
+//            if(centerHeight < 0) centerHeight = 0;
+            
+            grphcs.drawImage(img, centerWidth * -1, centerHeight * -1, null);
         }
     }
 
@@ -180,17 +202,71 @@ public class MyPanel extends JPanel {
     
     
     private Image img;
+    private int imgHeight;
 
     public Image getImg() {
         return img;
     }
 
+    public int getImgHeight() {
+        return imgHeight;
+    }
+
     public void setImg(Image img) {
-        this.img = ImageHelper.resizing(img, getWidth(), getHeight()).getImage();
+        //realWidth and realHeight are width and height of image after resize (this panel)
+        int realWidth = getWidth();
+        int realHeight = getHeight();
+        
+        BufferedImage bImg = ImageHelper.imageToBufferedImage(img); //convert to BufferedImage
+                
+        if(!img.equals("") && getWidth() != 0 && getHeight() != 0) {
+            //original_width and original_height are original size of image
+            double originalWidth = bImg.getWidth();
+            double originalHeight = bImg.getHeight();
+
+            double raitoWidth = 1.000;
+            raitoWidth = originalWidth / (double)getWidth();
+            
+            realWidth = (int) (originalWidth / raitoWidth);
+            realHeight = (int) (originalHeight / raitoWidth);
+            this.imgHeight = realHeight;
+            this.img = ImageHelper.resizing(img, realWidth, realHeight).getImage();
+        }
+        else {
+            this.img = null;
+        }
     }
     
+    
+    
     public void setImg(String img) {
-        this.img = ImageHelper.resizing(img, getWidth(), getHeight()).getImage();
+        //realWidth and realHeight are width and height of image after resize
+        int realWidth = getWidth();
+        int realHeight = getHeight();
+        
+        BufferedImage bImg = null;
+        try {
+            if(!img.equals("") && getWidth() != 0 && getHeight() != 0) {
+                bImg = ImageIO.read(new File(img)); //convert to BufferedImage
+                
+                //original_width and original_height are original size of image
+                double originalWidth = bImg.getWidth();
+                double originalHeight = bImg.getHeight();
+
+                double raitoWidth = 1.000;
+                raitoWidth = originalWidth / (double)getWidth();
+
+                realWidth = (int) (originalWidth / raitoWidth);
+                realHeight = (int) (originalHeight / raitoWidth);
+                this.imgHeight = realHeight;
+                this.img = ImageHelper.resizing(img, realWidth, realHeight).getImage();
+            }
+            else {
+                this.img = null;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 

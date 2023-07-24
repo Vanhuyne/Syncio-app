@@ -18,6 +18,7 @@ public final class Main extends javax.swing.JFrame {
 
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
+    private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
 
@@ -242,7 +243,8 @@ public final class Main extends javax.swing.JFrame {
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         if (LoggedInUser.getCurrentUser() != null) {
-            GlassPanePopup.showPopup(new PopupCreateNewPost(this), "createnewpost");
+            GlassPanePopup.showPopup(new CreateNewPost(this), "createnewpost");
+            GlassPanePopup.showPopup(popupCreate, "createnewpost");
         }
     }//GEN-LAST:event_btnCreateActionPerformed
 
