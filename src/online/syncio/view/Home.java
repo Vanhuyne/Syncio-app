@@ -53,7 +53,7 @@ public class Home extends ConnectionPanel {
             MongoCollection<Post> posts = postDAO.getAllByCollection();
             FindIterable<Post> findIterable = posts.find().sort(Sorts.descending("datePosted"));
             for(Post post : findIterable) {
-                if(currentUser.getFollowers().stream().anyMatch(user -> user.getFollowerID().equals(post.getUserID()))) {
+                if(currentUser.getFollowers().stream().anyMatch(user -> user.getUserID().equals(post.getUserID()))) {
                     lPostID.add(post.getIdAsString());
                 }
             }

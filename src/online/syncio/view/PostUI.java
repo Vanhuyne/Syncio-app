@@ -63,6 +63,8 @@ public class PostUI extends javax.swing.JPanel {
         
     }
 
+    
+    
     private void showInfoPost(String postID) {
         online.syncio.model.Post post = postDAO.getByID(postID);
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
@@ -304,30 +306,37 @@ public class PostUI extends javax.swing.JPanel {
     }//GEN-LAST:event_lblCommentMouseClicked
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
-
-        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
-
-        ObjectId objectId = new ObjectId(postID);
-        Bson filter = Filters.eq("_id", objectId);
-
-        // Tạo mảng lLike mới, chẳng hạn lLikeToAdd là một ArrayList<UserIDAndDate> chứa các phần tử mới cần thêm vào
-        UserIDAndDate u = new UserIDAndDate(userID, TimeHelper.getCurrentDateTime());
-        ArrayList<UserIDAndDate> l = new ArrayList<>();
-        l.add(u);
-
-        if (isLiked) {
-            lblHeart.setIcon(unliked);
-            isLiked = false;
-            Bson c = Filters.eq("followerID", userID);
-            Bson update = Updates.pull("lLike", c);
-            posts.updateOne(filter, update);
-
-        } else if (isLiked == false) {
-            lblHeart.setIcon(liked);
-            isLiked = true;
-            Bson update = Updates.pushEach("lLike", l);
-            posts.updateOne(filter, update);
-        }
+        
+//        Bson filter = Filters.eq("_id", 1);
+//        Bson update = Updates.push("qty", 17);
+//        FindOneAndUpdateOptions options = new FindOneAndUpdateOptions()
+//                                            .returnDocument(ReturnDocument.AFTER);
+//        Document result = collection.findOneAndUpdate(filter, update, options);
+//        System.out.println(result.toJson());
+        
+//        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+//
+//        ObjectId objectId = new ObjectId(postID);
+//        Bson filter = Filters.eq("_id", objectId);
+//
+//        // Tạo mảng lLike mới, chẳng hạn lLikeToAdd là một ArrayList<UserIDAndDate> chứa các phần tử mới cần thêm vào
+//        UserIDAndDate u = new UserIDAndDate(userID, TimeHelper.getCurrentDateTime());
+//        ArrayList<UserIDAndDate> l = new ArrayList<>();
+//        l.add(u);
+//
+//        if (isLiked) {
+//            lblHeart.setIcon(unliked);
+//            isLiked = false;
+//            Bson c = Filters.eq("followerID", userID);
+//            Bson update = Updates.pull("lLike", c);
+//            posts.updateOne(filter, update);
+//
+//        } else if (isLiked == false) {
+//            lblHeart.setIcon(liked);
+//            isLiked = true;
+//            Bson update = Updates.pushEach("lLike", l);
+//            posts.updateOne(filter, update);
+//        }
 
     }//GEN-LAST:event_lblHeartMousePressed
 
