@@ -1,5 +1,6 @@
 package online.syncio.dao;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.eq;
@@ -11,12 +12,13 @@ import online.syncio.model.Post;
 import org.bson.types.ObjectId;
 
 public class PostDAOImpl implements PostDAO {
+
     private MongoDatabase database;
 
     public PostDAOImpl(MongoDatabase database) {
         this.database = database;
     }
-    
+
     @Override
     public boolean add(Post post) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
@@ -26,8 +28,7 @@ public class PostDAOImpl implements PostDAO {
             System.out.println("Inserted a Post with the following id: " + result.getInsertedId().asObjectId().getValue());
 
             return true;
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Failed to insert into MongoDB: " + ex.getMessage());
             ex.printStackTrace();
         }
@@ -35,8 +36,6 @@ public class PostDAOImpl implements PostDAO {
         return false;
     }
 
-    
-    
     @Override
     public boolean updateByID(Post t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -47,35 +46,43 @@ public class PostDAOImpl implements PostDAO {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
-    
     @Override
     public Post getByID(String postID) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
         return posts.find(eq("_id", new ObjectId(postID))).first();
     }
 
-    
-    
     @Override
     public List<Post> getAll() {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
         List<Post> lPost = new ArrayList<>();
-        
-        try {    
+
+        try {
             posts.find().sort(Sorts.descending("datePosted")).into(lPost);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return lPost;
     }
 
-    
-    
     @Override
     public MongoCollection<Post> getAllByCollection() {
         return database.getCollection("posts", Post.class);
     }
 
+    @Override
+    public List<Post> getAllByUserID(String userID) {
+        MongoCollection<Post> collection = database.getCollection("posts", Post.class);
+
+        List<Post> postList = new ArrayList<>();
+
+        FindIterable<Post> posts = collection.find(eq("userID", userID));
+
+        for (Post p : posts) {
+            postList.add(p);
+        }
+
+        return postList;
+    }
 }

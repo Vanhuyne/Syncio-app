@@ -4,12 +4,17 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import online.syncio.component.ConnectionPanel;
-import online.syncio.model.User;
+import online.syncio.component.MyLabel;
+import online.syncio.component.MyProfileFollowLabel;
+import online.syncio.component.MyRoundLabel;
+import online.syncio.controller.ProfileController;
 import online.syncio.resources.fonts.MyFont;
 
 public class Profile extends ConnectionPanel {
 
-    private Font regularFont = new MyFont().getSFProDisplayRegular(), boldFont = new MyFont().getSFProDisplayBold();
+    private final Font regularFont = new MyFont().getSFProDisplayRegular();
+
+    private ProfileController profileController;
 
     public Profile() {
         initComponents();
@@ -52,13 +57,10 @@ public class Profile extends ConnectionPanel {
         lblUsername.setFont(new java.awt.Font("SF Pro Display Medium", 0, 18)); // NOI18N
 
         lblPostNum.setText("0 posts");
-        lblPostNum.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
 
         lblFollowerNum.setText("10 followers");
-        lblFollowerNum.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
 
         lblFollowingNum.setText("5 following");
-        lblFollowingNum.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
 
         lblPost.setText("POSTS");
         lblPost.setFont(regularFont);
@@ -122,8 +124,33 @@ public class Profile extends ConnectionPanel {
         c.show(this.main.getPnlTabContent(), "editprofile");
     }//GEN-LAST:event_btnEditProfileActionPerformed
 
-    public void loadUserData(User user) {
+    @Override
+    public void setConnection(Main main) {
+        this.main = main;
+        this.database = main.getDatabase();
 
+        profileController = new ProfileController(this);
+        profileController.setCurrentUser(main.getCurrentUser());
+    }
+
+    public MyRoundLabel getLblAvatar() {
+        return lblAvatar;
+    }
+
+    public MyProfileFollowLabel getLblFollowerNum() {
+        return lblFollowerNum;
+    }
+
+    public MyProfileFollowLabel getLblFollowingNum() {
+        return lblFollowingNum;
+    }
+
+    public MyProfileFollowLabel getLblPostNum() {
+        return lblPostNum;
+    }
+
+    public MyLabel getLblUsername() {
+        return lblUsername;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
