@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,5 +97,15 @@ public class UserDAOImpl implements UserDAO {
         User user = userCollection.find(filter).first();
 
         return user != null; //  username ton tai => true
+    }
+
+    @Override
+    public int updateByEmail(String password, String email) {
+        MongoCollection<User> users = database.getCollection("users", User.class);
+
+        Bson filter = Filters.eq("email", email);
+        Bson update = Updates.set("password", password);
+
+        return (int) users.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)    }
     }
 }

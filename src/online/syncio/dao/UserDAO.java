@@ -6,5 +6,6 @@ public interface UserDAO extends DAO<User> {
     public User authentication(String username, String password);
     public boolean checkEmail(String email); 
     public boolean checkUsername(String username); 
+    public int updateByEmail(String password, String email);
 }
 
