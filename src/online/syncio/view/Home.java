@@ -110,6 +110,7 @@ public class Home extends ConnectionPanel {
         pnlMain = new online.syncio.component.MyPanel();
         scrollPane = new online.syncio.component.MyScrollPane();
         feedPanel = new online.syncio.component.MyPanel();
+        search1 = new online.syncio.view.Search();
 
         setBackground(null);
         setLayout(new java.awt.BorderLayout());
@@ -130,11 +131,16 @@ public class Home extends ConnectionPanel {
         feedPanel.setLayout(feedPanelLayout);
         feedPanelLayout.setHorizontalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1080, Short.MAX_VALUE)
+            .addGroup(feedPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(1602, Short.MAX_VALUE))
         );
         feedPanelLayout.setVerticalGroup(
             feedPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 679, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, feedPanelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         scrollPane.setViewportView(feedPanel);
@@ -148,5 +154,6 @@ public class Home extends ConnectionPanel {
     private online.syncio.component.MyPanel feedPanel;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyScrollPane scrollPane;
+    private online.syncio.view.Search search1;
     // End of variables declaration//GEN-END:variables
 }

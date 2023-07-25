@@ -33,7 +33,7 @@ public final class Main extends javax.swing.JFrame {
     }
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(), new Search(), new Message(), new Notification(),
+        connectionPanelList = new ConnectionPanel[]{new Home(), new Message(), new Notification(),
             new Profile(), new OtherUserProfile(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
@@ -47,16 +47,23 @@ public final class Main extends javax.swing.JFrame {
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
         for (MyButton btn : btnMenuList) {
+
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
+
                 if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
                     dispose();
                     new Login().setVisible(true);
                     GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
                     return;
                 }
-                showTab(name1, btn1);
+
+                if (btn.getName().trim().toLowerCase().equals("search")) {
+                    showTab("home");
+                } else {
+                    showTab(name1, btn1);
+                }
             });
         }
     }
