@@ -105,5 +105,4 @@ public class UserDAOImpl implements UserDAO {
 
         return user != null; //  username ton tai => true
     }
-
 }

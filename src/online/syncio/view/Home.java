@@ -3,7 +3,6 @@ package online.syncio.view;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.Sorts;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
@@ -11,10 +10,8 @@ import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import online.syncio.component.ConnectionPanel;
-import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
@@ -23,8 +20,6 @@ import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
-import online.syncio.model.UserIDAndDate;
-import org.bson.Document;
 
 public class Home extends ConnectionPanel {
 
@@ -53,42 +48,45 @@ public class Home extends ConnectionPanel {
             MongoCollection<Post> posts = postDAO.getAllByCollection();
             FindIterable<Post> findIterable = posts.find().sort(Sorts.descending("datePosted"));
 
-            for(Post post : findIterable) {
-                if(currentUser.getFollowers().stream().anyMatch(user -> user.getUserID().equals(post.getUserID()))) {
+            for (Post post : findIterable) {
+                if (currentUser.getFollowers().stream().anyMatch(user -> user.getUserID().equals(post.getUserID()))) {
                     lPostID.add(post.getId().toString());
                 }
             }
 
             // set box layout để các post nằm chồng lên nhau theo trục Y
             feedPanel.setLayout(new BoxLayout(feedPanel, BoxLayout.Y_AXIS));
+
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
             scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
             // sự kiện lăn chuột (load thêm post)
             scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
                 public void adjustmentValueChanged(AdjustmentEvent e) {
                     // lấy thanh cuộn dọc từ đối tượng AdjustmentEvent
                     JScrollBar scrollBar = (JScrollBar) e.getSource();
+
                     // lấy kích thước hiển thị
                     int extent = scrollBar.getModel().getExtent();
+
                     // lấy giá trị tối đa
                     int maximum = scrollBar.getModel().getMaximum();
+
                     // lấy giá trị hiện tại
                     int value = scrollBar.getValue();
+
                     // kiểm tra nếu đã cuộn đến cuối thì load thêm post
                     if (value + extent >= maximum) {
                         loadMorePosts();
                     }
                 }
             });
-
         } else {
             System.out.println("chưa đăng nhập");
         }
 
     }
 
-    
-    
     private void loadMorePosts() {
         //GlassPanePopup.showPopup(new LoadingMore(), "loadmore");
         int startIndex = curIndex; // Lưu chỉ số bắt đầu của lPostID
