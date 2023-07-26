@@ -18,22 +18,6 @@ public class EditProfile extends ConnectionPanel {
     public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-
-        changeLabelList = new MyLabel[]{lblChangeUsername, lblChangePassword, lblChangeEmail, lblChangeBio};
-
-        for (MyLabel lbl : changeLabelList) {
-            lbl.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    lbl.setFont(boldFont);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    lbl.setFont(regularFont);
-                }
-            });
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -68,7 +52,6 @@ public class EditProfile extends ConnectionPanel {
         lblSepratorLine.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(228, 228, 228), 2));
         lblSepratorLine.setPreferredSize(new java.awt.Dimension(2, 1));
 
-        lblAccount.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(15, 10, 15, 10)));
         lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblAccount.setText(" 56duong");
         lblAccount.setMaximumSize(new java.awt.Dimension(57, 54));
@@ -80,33 +63,39 @@ public class EditProfile extends ConnectionPanel {
         lblSepratorLine1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(228, 228, 228), 2));
         lblSepratorLine1.setPreferredSize(new java.awt.Dimension(2, 1));
 
-        lblLogout.setForeground(new java.awt.Color(255, 0, 0));
+        lblLogout.setForeground(new java.awt.Color(237, 73, 86));
         lblLogout.setText("Logout");
-        lblLogout.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        lblLogout.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
+        lblLogout.setFontBold(2);
 
         lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUsername.setText("Username");
 
         txtUsername.setBackground(new java.awt.Color(240, 243, 245));
         txtUsername.setText("duong_user");
+        txtUsername.setBorderColor(new java.awt.Color(240, 243, 245));
 
-        lblChangeUsername.setForeground(new java.awt.Color(51, 204, 255));
+        lblChangeUsername.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeUsername.setText("Change");
+        lblChangeUsername.setFontBold(2);
 
         lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPassword.setText("Password");
 
-        lblChangePassword.setForeground(new java.awt.Color(51, 204, 255));
+        lblChangePassword.setForeground(new java.awt.Color(0, 149, 246));
         lblChangePassword.setText("Change");
+        lblChangePassword.setFontBold(2);
 
         lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblEmail.setText("Email");
 
         txtEmail.setBackground(new java.awt.Color(240, 243, 245));
         txtEmail.setText("duongcontact@gmail.com");
+        txtEmail.setBorderColor(new java.awt.Color(240, 243, 245));
 
-        lblChangeEmail.setForeground(new java.awt.Color(51, 204, 255));
+        lblChangeEmail.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeEmail.setText("Change");
+        lblChangeEmail.setFontBold(2);
         lblChangeEmail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 lblChangeEmailMouseEntered(evt);
@@ -119,8 +108,9 @@ public class EditProfile extends ConnectionPanel {
         lblBio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblBio.setText("Bio");
 
-        lblChangeBio.setForeground(new java.awt.Color(51, 204, 255));
+        lblChangeBio.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeBio.setText("Change");
+        lblChangeBio.setFontBold(2);
         lblChangeBio.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 lblChangeBioMouseEntered(evt);
@@ -130,13 +120,18 @@ public class EditProfile extends ConnectionPanel {
             }
         });
 
+        jScrollPane1.setBorder(null);
+
+        txtBio.setBackground(new java.awt.Color(240, 243, 245));
         txtBio.setColumns(20);
-        txtBio.setRows(5);
+        txtBio.setRows(4);
         txtBio.setText("fancy bio\n");
+        txtBio.setBorderColor(new java.awt.Color(240, 243, 245));
         jScrollPane1.setViewportView(txtBio);
 
         txtPassword.setBackground(new java.awt.Color(240, 243, 245));
         txtPassword.setText("matKhauSieuCapVjpPr0");
+        txtPassword.setBorderColor(new java.awt.Color(240, 243, 245));
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -148,13 +143,13 @@ public class EditProfile extends ConnectionPanel {
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 712, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 738, Short.MAX_VALUE)
                         .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
             .addComponent(lblSepratorLine1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(315, 315, 315)
+                .addGap(303, 303, 303)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -163,8 +158,8 @@ public class EditProfile extends ConnectionPanel {
                 .addGap(25, 25, 25)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(40, 40, 40)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -86,6 +86,8 @@ public class CreateNewPost extends javax.swing.JPanel {
             lblCountImage.setVisible(false);
             btnPrev.setVisible(false);
             btnNext.setVisible(false);
+            rdoGrayscale.setVisible(false);
+            rdoNormal.setVisible(false);
         } else {
             lblImage.setVisible(false);
             btnSelectImage.setVisible(false);

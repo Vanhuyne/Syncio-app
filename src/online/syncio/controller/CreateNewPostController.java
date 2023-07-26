@@ -8,7 +8,6 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
-import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.CreateNewPost;
@@ -41,7 +40,7 @@ public class CreateNewPostController {
         }
 
         ArrayList<Binary> lPhoto = new ArrayList<>();
-        ArrayList<String> imagePaths = new ArrayList<>();
+        var imagePaths = new ArrayList<String>();
         imagePaths = popup.getImagePaths();
         for (int i = 0; i < imagePaths.size(); i++) {
             if (popup.getImageFilter().get(i) == 1) {
