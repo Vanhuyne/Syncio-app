@@ -3,9 +3,9 @@ package online.syncio.view;
 import java.awt.Color;
 import online.syncio.component.ConnectionPanel;
 
-public class Search extends ConnectionPanel {
+public class ManagementUser extends ConnectionPanel {
 
-    public Search() {
+    public ManagementUser() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
     }
@@ -15,37 +15,37 @@ public class Search extends ConnectionPanel {
     private void initComponents() {
 
         pnlMain = new online.syncio.component.MyPanel();
-        jLabel1 = new javax.swing.JLabel();
+        myLabel1 = new online.syncio.component.MyLabel();
 
         setLayout(new java.awt.BorderLayout());
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setRoundBottomRight(20);
 
-        jLabel1.setText("Thuan");
+        myLabel1.setText("Management User");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(jLabel1)
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addGap(379, 379, 379)
+                .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(589, Short.MAX_VALUE))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(177, 177, 177)
-                .addComponent(jLabel1)
-                .addContainerGap(486, Short.MAX_VALUE))
+                .addGap(298, 298, 298)
+                .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(363, Short.MAX_VALUE))
         );
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private online.syncio.component.MyLabel myLabel1;
     private online.syncio.component.MyPanel pnlMain;
     // End of variables declaration//GEN-END:variables
 }

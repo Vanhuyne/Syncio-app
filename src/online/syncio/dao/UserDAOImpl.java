@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +17,17 @@ import org.bson.types.ObjectId;
 public class UserDAOImpl implements UserDAO {
 
     private MongoDatabase database;
+    private MongoCollection<User> userCollection;
 
     public UserDAOImpl(MongoDatabase database) {
         this.database = database;
+        userCollection = database.getCollection("users", User.class);
     }
 
     @Override
     public boolean add(User user) {
-        MongoCollection<User> collection = database.getCollection("users", User.class);
         try {
-            InsertOneResult result = collection.insertOne(user);
+            InsertOneResult result = userCollection.insertOne(user);
             System.out.println("Inserted a User with the following id: " + result.getInsertedId().asObjectId().getValue());
 
             return true;
@@ -47,17 +49,14 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getByID(String userID) {
-        MongoCollection<User> users = database.getCollection("users", User.class);
-        return users.find(eq("_id", new ObjectId(userID))).first();
+        return userCollection.find(eq("_id", new ObjectId(userID))).first();
     }
 
     @Override
     public List<User> getAll() {
-        MongoCollection<User> collection = database.getCollection("users", User.class);
-
         List<User> lUser = new ArrayList<>();
         try {
-            FindIterable<User> users = collection.find();
+            FindIterable<User> users = userCollection.find();
 
             // listUser
             for (User user : users) {
@@ -72,9 +71,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User authentication(String username, String password) {
-        MongoCollection<User> collection = database.getCollection("users", User.class);
-
-        User user = collection.find(eq("username", username)).first();
+        User user = userCollection.find(eq("username", username)).first();
 
         // check password
         if (user != null) {
@@ -88,22 +85,27 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean checkEmail(String email) {
-        MongoCollection<User> collection = database.getCollection("users", User.class);
-
         Bson filter = Filters.eq("email", email);
-        User user = collection.find(filter).first();
+        User user = userCollection.find(filter).first();
 
         return user != null; //  user ton tai => true
     }
 
     @Override
     public boolean checkUsername(String username) {
-        MongoCollection<User> users = database.getCollection("users", User.class);
-
         Bson filter = Filters.eq("username", username);
-        User user = users.find(filter).first();
+        User user = userCollection.find(filter).first();
 
         return user != null; //  username ton tai => true
     }
 
+    @Override
+    public int updateByEmail(String password, String email) {
+        MongoCollection<User> users = database.getCollection("users", User.class);
+
+        Bson filter = Filters.eq("email", email);
+        Bson update = Updates.set("password", password);
+
+        return (int) users.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)    }
+    }
 }

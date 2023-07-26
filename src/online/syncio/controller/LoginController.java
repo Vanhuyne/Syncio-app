@@ -14,6 +14,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.view.Login;
 import online.syncio.view.Main;
+import online.syncio.view.MainAdmin;
 
 public class LoginController {
 
@@ -68,7 +69,11 @@ public class LoginController {
 
                 // check role
                 if (LoggedInUser.isAdmin()) {
-                    //new AdminHome();
+                    MainAdmin mainAdmin = new MainAdmin();
+                    mainAdmin.setConnection(this.database, user);
+                    mainAdmin.setVisible(true);
+
+                    login.dispose();
                 } else {
                     Main main = new Main();
                     main.setConnection(this.database, user);

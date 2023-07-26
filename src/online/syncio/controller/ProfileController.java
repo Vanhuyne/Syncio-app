@@ -20,6 +20,7 @@ public class ProfileController {
 
     public ProfileController(Profile profile) {
         this.profile = profile;
+
         userDAO = new UserDAOImpl(profile.database);
         postDAO = new PostDAOImpl(profile.database);
     }
@@ -31,20 +32,10 @@ public class ProfileController {
     }
 
     public void loadUserData() {
-//        if (currentUser.getAvatar() != null) {
-//            byte[] avt = currentUser.getAvatar();
-//            Image avatar = ImageHelper.byteToImage(avt);
-//
-//            profile.getLblAvatar().setIcon(ImageHelper.resizing(avatar,
-//                    profile.getLblAvatar().getWidth(),
-//                    profile.getLblAvatar().getHeight()));
-//        }
-
         String username = currentUser.getUsername();
         profile.getLblUsername().setText(username);
 
         int postNum = postList.size();
-        System.out.println(postNum);
         profile.getLblPostNum().setText(postNum + " posts");
 
         int followers = currentUser.getFollowers().size();
