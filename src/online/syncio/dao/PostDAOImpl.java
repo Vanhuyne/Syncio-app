@@ -5,12 +5,15 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import online.syncio.model.Post;
+import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -101,6 +104,25 @@ public class PostDAOImpl implements PostDAO {
         Bson delete = Updates.pull("lLike", new Document("userID", userID));
         postCollection.updateOne(likeFilter, delete);
         return true;
+    }
+
+    
+    
+    @Override
+    public FindIterable<Post> getAllPostOfFollowers(User user) {
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+
+        // Get the list of follower IDs from the user object
+        List<String> followerIds = new ArrayList<>();
+        for (UserIDAndDate userIDAndDate : user.getFollowers()) {
+            followerIds.add(userIDAndDate.getUserID());
+        }
+
+        // Create a filter to find posts where the userID matches any of the follower IDs
+        Bson filter = in("userID", followerIds);
+
+        // Execute the query and return the result
+        return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
 
 }

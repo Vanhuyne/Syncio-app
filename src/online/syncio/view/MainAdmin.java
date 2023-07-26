@@ -4,6 +4,7 @@ import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
@@ -12,6 +13,7 @@ import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import static online.syncio.view.Main.connectionPanelList;
 import static online.syncio.view.Main.curTab;
 
 public final class MainAdmin extends javax.swing.JFrame {
@@ -39,6 +41,7 @@ public final class MainAdmin extends javax.swing.JFrame {
 
         for (ConnectionPanel pnl : connectionPanelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
+            System.out.println(pnlName);
             pnlTabContent.add(pnl, pnlName);
             pnl.setConnection(this);
         }
@@ -147,7 +150,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnDashboard.setMaximumSize(new java.awt.Dimension(200, 60));
         btnDashboard.setMinimumSize(new java.awt.Dimension(200, 60));
-        btnDashboard.setName("home"); // NOI18N
+        btnDashboard.setName("managementdashboard"); // NOI18N
         btnDashboard.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnDashboard);
 
@@ -160,7 +163,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnUser.setMaximumSize(new java.awt.Dimension(200, 50));
         btnUser.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnUser.setName("search"); // NOI18N
+        btnUser.setName("managementuser"); // NOI18N
         btnUser.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnUser);
 
@@ -173,7 +176,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnHiddenPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnHiddenPost.setMaximumSize(new java.awt.Dimension(200, 50));
         btnHiddenPost.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnHiddenPost.setName("message"); // NOI18N
+        btnHiddenPost.setName("managementhiddenpost"); // NOI18N
         btnHiddenPost.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnHiddenPost);
 
@@ -186,7 +189,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnReportedPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnReportedPost.setMaximumSize(new java.awt.Dimension(200, 50));
         btnReportedPost.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnReportedPost.setName("notification"); // NOI18N
+        btnReportedPost.setName("managementreportedpost"); // NOI18N
         btnReportedPost.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnReportedPost);
 

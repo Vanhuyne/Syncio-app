@@ -291,7 +291,7 @@
         <Container class="online.syncio.component.MyPanel" name="pnlTabContent">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="null" type="code"/>
+              <Connection code="new Color(0f, 0f, 0f, 0f)" type="code"/>
             </Property>
             <Property name="roundBottomRight" type="int" value="20"/>
           </Properties>
