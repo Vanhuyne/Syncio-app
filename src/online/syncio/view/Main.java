@@ -234,7 +234,7 @@ public final class Main extends javax.swing.JFrame {
 
         pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.LINE_START);
 
-        pnlTabContent.setBackground(null);
+        pnlTabContent.setBackground(new Color(0f, 0f, 0f, 0f));
         pnlTabContent.setRoundBottomRight(20);
         pnlTabContent.setLayout(new java.awt.CardLayout());
         pnlMain.add(pnlTabContent, java.awt.BorderLayout.CENTER);

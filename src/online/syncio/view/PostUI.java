@@ -41,6 +41,7 @@ public class PostUI extends javax.swing.JPanel {
     private UserDAO userDAO = new UserDAOImpl(database);
     private String userID;
     private String postID;
+    private Post post;
     private int totalLike;
     private int imageIndex = 0;
 
@@ -50,7 +51,7 @@ public class PostUI extends javax.swing.JPanel {
     public PostUI(String postID, String userID) {
         this.userID = userID;
         this.postID = postID;
-        postDAO.getByID(postID);
+        post = postDAO.getByID(postID);
         initComponents();
         
         try {
@@ -59,15 +60,15 @@ public class PostUI extends javax.swing.JPanel {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        showInfoPost(postID);
         
+        showInfoPost(postID);
     }
     
     
     
     public boolean isLiked() {
         // Check if any documents matched the condition
-        if (postDAO.getByID(postID).getLLike().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+        if (post.getLLike().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
             return true;
         }
         else {
@@ -83,18 +84,18 @@ public class PostUI extends javax.swing.JPanel {
             postDAO.removeLike(postID, userID);
         }
         else {
+            post.getLLike().add(new UserIDAndDate(userID));
             lblHeart.setIcon(liked);
             postDAO.addLike(postID, userID);
         }
         
-        Post post = postDAO.getByID(postID);
+        post = postDAO.getByID(postID);
         lblTotalLike.setText(post.getLLike().size()+" likes");
     }
 
     
     
     private void showInfoPost(String postID) {
-        Post post = postDAO.getByID(postID);
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
@@ -135,7 +136,7 @@ public class PostUI extends javax.swing.JPanel {
     
     
     public void selectImage(int i) {
-        Post post = postDAO.getByID(postID);
+//        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getLPhoto().size()) {
             imageIndex = i;
             lblCountImage.setText(imageIndex + 1 + "/" + post.getLPhoto().size());
