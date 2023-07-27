@@ -11,7 +11,6 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
@@ -117,6 +116,9 @@ public class PostDAOImpl implements PostDAO {
         for (UserIDAndDate userIDAndDate : user.getFollowers()) {
             followerIds.add(userIDAndDate.getUserID());
         }
+        
+        // add itself
+        followerIds.add(user.getId().toString());
 
         // Create a filter to find posts where the userID matches any of the follower IDs
         Bson filter = in("userID", followerIds);

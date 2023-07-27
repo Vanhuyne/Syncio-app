@@ -5,12 +5,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.JTextArea;
+import online.syncio.utils.TextHelper;
 
 public class MyTextArea extends JTextArea {
     private int radius = 5;
     private Color borderColor = new Color(219, 219, 219);
     private int borderThickness = 1;
     private int fontBold = 1;
+    private String placeholder;
 
     
     
@@ -50,6 +52,15 @@ public class MyTextArea extends JTextArea {
     public void setFontBold(int fontBold) {
         this.fontBold = fontBold;
         setFont(ComponentInit.fontStyle(getFontBold(), this));
+    }
+    
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+        TextHelper.addPlaceholderText(this, placeholder);
     }
     
 

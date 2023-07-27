@@ -60,12 +60,12 @@ public class MyRadioButton extends JRadioButton {
 
             @Override
             public int getIconWidth() {
-                return 18;
+                return 16;
             }
 
             @Override
             public int getIconHeight() {
-                return 18;
+                return 16;
             }
         });
     }

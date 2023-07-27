@@ -6,6 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -83,6 +84,46 @@ public class TextHelper {
             });
         }
     }
+    
+    
+    
+    private static Map<JTextArea, String> textAreaPlaceholders = new HashMap<>();
+    public static void addPlaceholderText(JTextArea textArea, String placeholderText) {
+        // Save the default foreground color of the text field
+        Color defaultColor = textArea.getForeground();
+
+        // Set the current placeholder text for the specific text field
+        if (placeholderText != null) {
+            textAreaPlaceholders.put(textArea, placeholderText);
+            textArea.setText(placeholderText);
+            textArea.setForeground(Color.GRAY);
+
+            // Add a focus listener to handle the placeholder text
+            textArea.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    String currentText = textArea.getText();
+                    String placeholderText = textAreaPlaceholders.get(textArea);
+                    if (currentText.equals(placeholderText)) {
+                        textArea.setText("");
+                        textArea.setForeground(defaultColor);
+                    }
+                }
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    String currentText = textArea.getText();
+                    if (currentText.isEmpty()) {
+                        String placeholderText = textAreaPlaceholders.get(textArea);
+                        textArea.setForeground(Color.GRAY);
+                        textArea.setText(placeholderText);
+                    }
+                }
+            });
+        }
+    }
+    
+    
     
     /**
      * Adds placeholder text to the specified text field.

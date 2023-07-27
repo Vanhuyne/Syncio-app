@@ -71,9 +71,9 @@ public class EditProfile extends ConnectionPanel {
         lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUsername.setText("Username");
 
-        txtUsername.setBackground(new java.awt.Color(240, 243, 245));
+        txtUsername.setBackground(new java.awt.Color(239, 239, 239));
         txtUsername.setText("duong_user");
-        txtUsername.setBorderColor(new java.awt.Color(240, 243, 245));
+        txtUsername.setBorderColor(new java.awt.Color(239, 239, 239));
 
         lblChangeUsername.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeUsername.setText("Change");
@@ -89,9 +89,9 @@ public class EditProfile extends ConnectionPanel {
         lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblEmail.setText("Email");
 
-        txtEmail.setBackground(new java.awt.Color(240, 243, 245));
+        txtEmail.setBackground(new java.awt.Color(239, 239, 239));
         txtEmail.setText("duongcontact@gmail.com");
-        txtEmail.setBorderColor(new java.awt.Color(240, 243, 245));
+        txtEmail.setBorderColor(new java.awt.Color(239, 239, 239));
 
         lblChangeEmail.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeEmail.setText("Change");
@@ -122,16 +122,16 @@ public class EditProfile extends ConnectionPanel {
 
         jScrollPane1.setBorder(null);
 
-        txtBio.setBackground(new java.awt.Color(240, 243, 245));
+        txtBio.setBackground(new java.awt.Color(239, 239, 239));
         txtBio.setColumns(20);
         txtBio.setRows(4);
         txtBio.setText("fancy bio\n");
-        txtBio.setBorderColor(new java.awt.Color(240, 243, 245));
+        txtBio.setBorderColor(new java.awt.Color(239, 239, 239));
         jScrollPane1.setViewportView(txtBio);
 
-        txtPassword.setBackground(new java.awt.Color(240, 243, 245));
+        txtPassword.setBackground(new java.awt.Color(239, 239, 239));
         txtPassword.setText("matKhauSieuCapVjpPr0");
-        txtPassword.setBorderColor(new java.awt.Color(240, 243, 245));
+        txtPassword.setBorderColor(new java.awt.Color(239, 239, 239));
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
