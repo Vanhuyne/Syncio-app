@@ -43,6 +43,12 @@ public class Profile extends ConnectionPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setMaximumSize(new java.awt.Dimension(1080, 679));
+        scrollPane.setMinimumSize(new java.awt.Dimension(1080, 679));
+        scrollPane.setPreferredSize(new java.awt.Dimension(1080, 679));
+
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setRoundBottomRight(20);
 
@@ -70,6 +76,9 @@ public class Profile extends ConnectionPanel {
 
         lblPost.setText("POSTS");
         lblPost.setFont(regularFont);
+
+        pnlProfilePost.setBackground(new java.awt.Color(255, 255, 255));
+        pnlProfilePost.setOpaque(true);
 
         lblBio.setText("adele.com");
 
@@ -101,7 +110,7 @@ public class Profile extends ConnectionPanel {
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblSepratorLine, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
                             .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addContainerGap(148, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lblPost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -128,14 +137,14 @@ public class Profile extends ConnectionPanel {
                 .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(lblPost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addGap(5, 5, 5)
+                .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67))
         );
 
         scrollPane.setViewportView(pnlMain);
 
-        add(scrollPane, java.awt.BorderLayout.PAGE_START);
+        add(scrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileActionPerformed
