@@ -11,7 +11,6 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
@@ -81,7 +80,8 @@ public class PostDAOImpl implements PostDAO {
     public List<Post> getAllByUserID(String userID) {
         List<Post> postList = new ArrayList<>();
 
-        FindIterable<Post> posts = postCollection.find(eq("userID", userID));
+        FindIterable<Post> posts = postCollection.find(eq("userID", userID))
+                .sort(Sorts.ascending("datePosted"));
 
         for (Post p : posts) {
             postList.add(p);
@@ -106,8 +106,6 @@ public class PostDAOImpl implements PostDAO {
         return true;
     }
 
-    
-    
     @Override
     public FindIterable<Post> getAllPostOfFollowers(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
