@@ -14,10 +14,13 @@ import org.bson.types.Binary;
 public class ProfilePostPanel extends JPanel {
 
     private final int COLUMNS = 3;
-    private int cellWidth = 0;
+    private int panelWidth = 800;
+    private int gap = 4;
+    private int cellWidth = (panelWidth - (gap * (COLUMNS - 1))) / COLUMNS;
 
     private List<Post> userPosts;
     private JPanel contentPanel; // New panel to hold the components
+    private int numRows = 0;
 
     public ProfilePostPanel() {
         this.setOpaque(false);
@@ -25,21 +28,26 @@ public class ProfilePostPanel extends JPanel {
         // Initialize the content panel
         contentPanel = new JPanel();
         contentPanel.setOpaque(false);
-        contentPanel.setPreferredSize(new Dimension(800, 600));
-        contentPanel.setLayout(new GridLayout(0, COLUMNS, 10, 10));
+        contentPanel.setPreferredSize(new Dimension(panelWidth, cellWidth));
+        contentPanel.setLayout(new GridLayout(0, COLUMNS, gap, gap));
 
         add(contentPanel, BorderLayout.CENTER);
     }
 
     private void loadUserPost() {
         contentPanel.removeAll(); // Use contentPanel instead of "this"
+        numRows = 0; // Reset the number of rows
 
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
             for (Post p : userPosts) {
                 SwingUtilities.invokeLater(() -> {
                     contentPanel.add(createPostPanel(p)); // Use contentPanel instead of "this"
-
+                    numRows++;
+                    
+                    if(numRows % COLUMNS > 0) {
+                        contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), (Math.ceilDiv(numRows, COLUMNS)) * cellWidth));
+                    }
                 });
                 contentPanel.revalidate(); // Use contentPanel instead of "this"
                 contentPanel.repaint(); // Use contentPanel instead of "this"
