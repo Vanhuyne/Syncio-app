@@ -167,7 +167,7 @@ public class ChamCong extends javax.swing.JFrame {
         pnlContainer = new online.syncio.component.MyPanel();
         pnlMain = new online.syncio.component.MyPanel();
         txtTask = new online.syncio.component.MyTextField();
-        cboMember = new online.syncio.component.MyComboBox();
+        cboMember = new online.syncio.component.MyComboBoxSuggestionsAutocomplete();
         tblTask = new online.syncio.component.MyScrollPaneWithTable();
         btnAdd = new online.syncio.component.MyButton();
         pnlTitleBar = new online.syncio.component.WindowTitleBar();
@@ -299,7 +299,7 @@ public class ChamCong extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnAdd;
-    private online.syncio.component.MyComboBox cboMember;
+    private online.syncio.component.MyComboBoxSuggestionsAutocomplete cboMember;
     private online.syncio.component.MyPanel pnlContainer;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.WindowTitleBar pnlTitleBar;

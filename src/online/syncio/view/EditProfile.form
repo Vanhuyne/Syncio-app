@@ -52,7 +52,7 @@
                       <Component id="lblEmail" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblPassword" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblUsername" alignment="1" pref="63" max="32767" attributes="0"/>
-                      <Component id="lblBio" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblBio" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -193,11 +193,11 @@
         <Component class="online.syncio.component.MyTextField" name="txtUsername">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="duong_user"/>
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
           </Properties>
         </Component>
@@ -234,11 +234,11 @@
         <Component class="online.syncio.component.MyTextField" name="txtEmail">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="duongcontact@gmail.com"/>
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
           </Properties>
         </Component>
@@ -250,10 +250,6 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
-          <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeEmailMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeEmailMouseExited"/>
-          </Events>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblBio">
           <Properties>
@@ -269,10 +265,6 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
-          <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMouseExited"/>
-          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <Properties>
@@ -289,13 +281,13 @@
             <Component class="online.syncio.component.MyTextArea" name="txtBio">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="f5" green="f3" red="f0" type="rgb"/>
+                  <Color blue="ef" green="ef" red="ef" type="rgb"/>
                 </Property>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" value="fancy bio&#xa;"/>
                 <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="f5" green="f3" red="f0" type="rgb"/>
+                  <Color blue="ef" green="ef" red="ef" type="rgb"/>
                 </Property>
               </Properties>
             </Component>
@@ -304,11 +296,11 @@
         <Component class="online.syncio.component.MyPasswordField" name="txtPassword">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="matKhauSieuCapVjpPr0"/>
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f5" green="f3" red="f0" type="rgb"/>
+              <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
           </Properties>
         </Component>

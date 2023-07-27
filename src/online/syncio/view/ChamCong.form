@@ -99,7 +99,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="online.syncio.component.MyComboBox" name="cboMember">
+            <Component class="online.syncio.component.MyComboBoxSuggestionsAutocomplete" name="cboMember">
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboMemberItemStateChanged"/>
               </Events>

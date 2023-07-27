@@ -41,7 +41,6 @@ public final class MainAdmin extends javax.swing.JFrame {
 
         for (ConnectionPanel pnl : connectionPanelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
-            System.out.println(pnlName);
             pnlTabContent.add(pnl, pnlName);
             pnl.setConnection(this);
         }
