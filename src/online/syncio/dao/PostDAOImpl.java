@@ -80,7 +80,8 @@ public class PostDAOImpl implements PostDAO {
     public List<Post> getAllByUserID(String userID) {
         List<Post> postList = new ArrayList<>();
 
-        FindIterable<Post> posts = postCollection.find(eq("userID", userID));
+        FindIterable<Post> posts = postCollection.find(eq("userID", userID))
+                .sort(Sorts.ascending("datePosted"));
 
         for (Post p : posts) {
             postList.add(p);
@@ -105,8 +106,6 @@ public class PostDAOImpl implements PostDAO {
         return true;
     }
 
-    
-    
     @Override
     public FindIterable<Post> getAllPostOfFollowers(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);

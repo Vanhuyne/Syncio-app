@@ -11,12 +11,10 @@ import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
-import online.syncio.model.User;
 
 public final class Main extends javax.swing.JFrame {
 
     private MongoDatabase database;
-    private User currentUser;
 
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
@@ -286,16 +284,12 @@ public final class Main extends javax.swing.JFrame {
         return database;
     }
 
-    public void setConnection(MongoDatabase database, User user) {
+    public void setConnection(MongoDatabase database) {
         this.database = database;
-        this.currentUser = user;
 
         addComponents();
     }
 
-    public User getCurrentUser() {
-        return currentUser;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

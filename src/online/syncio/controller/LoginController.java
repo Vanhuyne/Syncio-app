@@ -76,7 +76,7 @@ public class LoginController {
                     login.dispose();
                 } else {
                     Main main = new Main();
-                    main.setConnection(this.database, user);
+                    main.setConnection(this.database);
                     main.setVisible(true);
 
                     login.dispose();

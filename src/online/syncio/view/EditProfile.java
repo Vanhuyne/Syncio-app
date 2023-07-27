@@ -2,10 +2,10 @@ package online.syncio.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.MyLabel;
+import online.syncio.model.LoggedInUser;
+import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
 
 public class EditProfile extends ConnectionPanel {
@@ -15,9 +15,25 @@ public class EditProfile extends ConnectionPanel {
     private MyLabel[] changeLabelList;
     private Main main;
 
+    private User currentUser = LoggedInUser.getCurrentUser();
+
     public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
+        loadUserData();
+    }
+
+    public void loadUserData() {
+        lblAccount.setText(currentUser.getUsername());
+        txtUsername.setText(currentUser.getUsername());
+        txtPassword.setText(currentUser.getPassword());
+        txtEmail.setText(currentUser.getEmail());
+
+        try {
+            txtBio.setText(currentUser.getBio());
+        } catch (NullPointerException e) {
+            txtBio.setText("");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -96,14 +112,6 @@ public class EditProfile extends ConnectionPanel {
         lblChangeEmail.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeEmail.setText("Change");
         lblChangeEmail.setFontBold(2);
-        lblChangeEmail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblChangeEmailMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblChangeEmailMouseExited(evt);
-            }
-        });
 
         lblBio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblBio.setText("Bio");
@@ -111,14 +119,6 @@ public class EditProfile extends ConnectionPanel {
         lblChangeBio.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeBio.setText("Change");
         lblChangeBio.setFontBold(2);
-        lblChangeBio.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblChangeBioMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblChangeBioMouseExited(evt);
-            }
-        });
 
         jScrollPane1.setBorder(null);
 
@@ -154,7 +154,7 @@ public class EditProfile extends ConnectionPanel {
                     .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                    .addComponent(lblBio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblBio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(25, 25, 25)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -210,22 +210,6 @@ public class EditProfile extends ConnectionPanel {
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lblChangeEmailMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeEmailMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblChangeEmailMouseEntered
-
-    private void lblChangeEmailMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeEmailMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblChangeEmailMouseExited
-
-    private void lblChangeBioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeBioMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblChangeBioMouseEntered
-
-    private void lblChangeBioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeBioMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lblChangeBioMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;

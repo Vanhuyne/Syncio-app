@@ -52,7 +52,7 @@
                       <Component id="lblEmail" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblPassword" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblUsername" alignment="1" pref="63" max="32767" attributes="0"/>
-                      <Component id="lblBio" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblBio" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -250,10 +250,6 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
-          <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeEmailMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeEmailMouseExited"/>
-          </Events>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblBio">
           <Properties>
@@ -269,10 +265,6 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
-          <Events>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMouseExited"/>
-          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <Properties>
