@@ -11,13 +11,7 @@ import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JScrollBar;
+
 import javax.swing.SwingUtilities;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;

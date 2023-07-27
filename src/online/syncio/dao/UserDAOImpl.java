@@ -128,8 +128,8 @@ public class UserDAOImpl implements UserDAO {
         return user != null; //  user ton tai => true
     }
     
-    
 
+  
     @Override
     public boolean checkUsername(String username) {
         Bson filter = Filters.eq("username", username);

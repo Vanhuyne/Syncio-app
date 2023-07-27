@@ -86,6 +86,11 @@ public class Login extends javax.swing.JFrame {
 
         lblForgetPassword.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblForgetPassword.setText("FORGOT PASSWORD");
+        lblForgetPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblForgetPasswordMouseClicked(evt);
+            }
+        });
 
         lblCreateAccount.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblCreateAccount.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -183,6 +188,11 @@ public class Login extends javax.swing.JFrame {
         dispose();
         new Signup().setVisible(true);
     }//GEN-LAST:event_lblCreateAccountMousePressed
+
+    private void lblForgetPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblForgetPasswordMouseClicked
+        dispose();
+        new Forgot().setVisible(true);
+    }//GEN-LAST:event_lblForgetPasswordMouseClicked
 
     public static void main(String args[]) {
         try {
