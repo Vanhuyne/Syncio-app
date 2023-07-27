@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyLabel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
@@ -346,7 +347,6 @@ public class PostUI extends javax.swing.JPanel {
 
     private void lblViewAllCmtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseClicked
         GlassPanePopup.showPopup(new PostDetailUI(), "postdetail");
-
     }//GEN-LAST:event_lblViewAllCmtMouseClicked
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
@@ -361,6 +361,15 @@ public class PostUI extends javax.swing.JPanel {
         selectImage(imageIndex - 1);
     }//GEN-LAST:event_btnPrevActionPerformed
 
+    public MyLabel getLblComment() {
+        return lblComment;
+    }
+
+    public MyLabel getLblHeart() {
+        return lblHeart;
+    }
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;

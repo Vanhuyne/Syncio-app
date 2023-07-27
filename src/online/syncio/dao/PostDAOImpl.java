@@ -115,6 +115,9 @@ public class PostDAOImpl implements PostDAO {
         for (UserIDAndDate userIDAndDate : user.getFollowers()) {
             followerIds.add(userIDAndDate.getUserID());
         }
+        
+        // add itself
+        followerIds.add(user.getId().toString());
 
         // Create a filter to find posts where the userID matches any of the follower IDs
         Bson filter = in("userID", followerIds);
