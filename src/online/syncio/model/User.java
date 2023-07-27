@@ -1,6 +1,7 @@
 package online.syncio.model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import online.syncio.utils.TimeHelper;
 import org.bson.types.ObjectId;
 
@@ -129,4 +130,19 @@ public class User {
     }
     
     
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(bio, user.bio) && Objects.equals(role, user.role) && Objects.equals(flag, user.flag) && Objects.equals(followers, user.followers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, email, bio, role, dateCreated, flag, followers);
+    }
 }
