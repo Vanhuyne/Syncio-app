@@ -4,7 +4,6 @@ import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
@@ -13,8 +12,6 @@ import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
-import static online.syncio.view.Main.connectionPanelList;
-import static online.syncio.view.Main.curTab;
 
 public final class MainAdmin extends javax.swing.JFrame {
 
@@ -62,8 +59,6 @@ public final class MainAdmin extends javax.swing.JFrame {
         }
     }
 
-    
-    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -94,7 +89,7 @@ public final class MainAdmin extends javax.swing.JFrame {
 
         prevTab = curTab;
         curTab = newTab;
-        
+
         CardLayout c = (CardLayout) pnlTabContent.getLayout();
         c.show(pnlTabContent, curTab);
     }
