@@ -1,9 +1,7 @@
 package online.syncio.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import online.syncio.utils.TimeHelper;
 import org.bson.types.Binary;
@@ -14,23 +12,23 @@ public class Post {
     private String userID;
     private String caption;
     private String datePosted = TimeHelper.getCurrentDateTime();
-    public List<Binary> lPhoto;
-    private List<UserIDAndDate> lLike = new ArrayList<>();
-    private Map<String, UserIDAndDate> mComment = new HashMap<>();
-    private Map<String, UserIDAndDate> mReport = new HashMap<>();
+    public List<Binary> photoList;
+    private List<UserIDAndDate> likeList = new ArrayList<>();
+    private List<UserIDAndDateAndText> commentList = new ArrayList<>();
+    private List<UserIDAndDateAndText> reportList = new ArrayList<>();
 
     public Post() {
     }
 
-    public Post(String userID, List<UserIDAndDate> lLike) {
+    public Post(String userID, List<UserIDAndDate> likeList) {
         this.userID = userID;
-        this.lLike = lLike;
+        this.likeList = likeList;
     }
 
     public Post(String userID, String caption, ArrayList<Binary> lPhoto) {
         this.userID = userID;
         this.caption = caption;
-        this.lPhoto = lPhoto;
+        this.photoList = lPhoto;
     }
 
     public ObjectId getId() {
@@ -65,37 +63,37 @@ public class Post {
     public void setDatePosted(String datePosted) {
         this.datePosted = datePosted;
     }
-    
-    public List<Binary> getLPhoto() {
-        return lPhoto;
+
+    public List<Binary> getPhotoList() {
+        return photoList;
     }
 
-    public void setLPhoto(ArrayList<Binary> lPhoto) {
-        this.lPhoto = lPhoto;
+    public void setPhotoList(List<Binary> photoList) {
+        this.photoList = photoList;
     }
 
-    public List<UserIDAndDate> getLLike() {
-        return lLike;
+    public List<UserIDAndDate> getLikeList() {
+        return likeList;
     }
 
-    public void setLLike(List<UserIDAndDate> lLike) {
-        this.lLike = lLike;
+    public void setLikeList(List<UserIDAndDate> likeList) {
+        this.likeList = likeList;
     }
 
-    public Map<String, UserIDAndDate> getMComment() {
-        return mComment;
+    public List<UserIDAndDateAndText> getCommentList() {
+        return commentList;
     }
 
-    public void setMComment(Map<String, UserIDAndDate> mComment) {
-        this.mComment = mComment;
+    public void setCommentList(List<UserIDAndDateAndText> commentList) {
+        this.commentList = commentList;
     }
 
-    public Map<String, UserIDAndDate> getMReport() {
-        return mReport;
+    public List<UserIDAndDateAndText> getReportList() {
+        return reportList;
     }
 
-    public void setMReport(Map<String, UserIDAndDate> mReport) {
-        this.mReport = mReport;
+    public void setReportList(List<UserIDAndDateAndText> reportList) {
+        this.reportList = reportList;
     }
     
     
@@ -107,10 +105,10 @@ public class Post {
         sb.append(", userID=").append(userID);
         sb.append(", caption=").append(caption);
         sb.append(", datePosted=").append(datePosted);
-        sb.append(", lPhoto=").append(lPhoto);
-        sb.append(", lLike=").append(lLike);
-        sb.append(", mComment=").append(mComment);
-        sb.append(", mReport=").append(mReport);
+        sb.append(", photoList=").append(photoList);
+        sb.append(", likeList=").append(likeList);
+        sb.append(", commentList=").append(commentList);
+        sb.append(", reportList=").append(reportList);
         sb.append('}');
         return sb.toString();
     }
@@ -122,12 +120,12 @@ public class Post {
         if (o == null || getClass() != o.getClass())
             return false;
         Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(userID, post.userID) && Objects.equals(caption, post.caption) && Objects.equals(datePosted, post.datePosted) && Objects.equals(lPhoto, post.lPhoto) && Objects.equals(lLike, post.lLike) && Objects.equals(mComment, post.mComment) && Objects.equals(mReport, post.mReport);
+        return Objects.equals(id, post.id) && Objects.equals(userID, post.userID) && Objects.equals(caption, post.caption) && Objects.equals(datePosted, post.datePosted) && Objects.equals(photoList, post.photoList) && Objects.equals(likeList, post.likeList) && Objects.equals(commentList, post.commentList) && Objects.equals(reportList, post.reportList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userID, caption, datePosted, lPhoto, lLike, mComment, mReport);
+        return Objects.hash(id, userID, caption, datePosted, photoList, likeList, commentList, reportList);
     }
 }
 

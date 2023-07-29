@@ -69,7 +69,7 @@ public class ProfilePostPanel extends JPanel {
 
         postPanel.setBackground(Color.WHITE);
 
-        List<Binary> photoList = post.getLPhoto();
+        List<Binary> photoList = post.getPhotoList();
 
         if (!photoList.isEmpty()) {
             postPanel.setImg(ImageHelper.readBinaryAsBufferedImage(photoList.get(0)));
