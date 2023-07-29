@@ -3,16 +3,21 @@ package online.syncio.view;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.MyLabel;
 import online.syncio.component.MyProfileFollowLabel;
-import online.syncio.component.MyRoundLabel;
 import online.syncio.component.ProfilePostPanel;
 import online.syncio.controller.ProfileController;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.utils.ImageHelper;
 
 public class Profile extends ConnectionPanel {
+
+    private Image defaultImage = new javax.swing.ImageIcon(getClass()
+            .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
 
     private final Font regularFont = new MyFont().getSFProDisplayRegular();
 
@@ -22,6 +27,10 @@ public class Profile extends ConnectionPanel {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        lblAvatar.setSize(128, 128);
+        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
+        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
     }
 
     @SuppressWarnings("unchecked")
@@ -30,7 +39,6 @@ public class Profile extends ConnectionPanel {
 
         scrollPane = new online.syncio.component.MyScrollPane();
         pnlMain = new online.syncio.component.MyPanel();
-        lblAvatar = new online.syncio.component.MyRoundLabel();
         btnEditProfile = new online.syncio.component.MyButton();
         lblSepratorLine = new javax.swing.JLabel();
         lblUsername = new online.syncio.component.MyLabel();
@@ -40,6 +48,7 @@ public class Profile extends ConnectionPanel {
         lblPost = new online.syncio.component.MyLabel();
         pnlProfilePost = new online.syncio.component.ProfilePostPanel();
         lblBio = new online.syncio.component.MyLabel();
+        lblAvatar = new online.syncio.component.MyLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -82,6 +91,8 @@ public class Profile extends ConnectionPanel {
 
         lblBio.setText("adele.com");
 
+        lblAvatar.setOpaque(true);
+
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -89,8 +100,8 @@ public class Profile extends ConnectionPanel {
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(189, 189, 189)
+                        .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(60, 60, 60)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlMainLayout.createSequentialGroup()
@@ -121,18 +132,18 @@ public class Profile extends ConnectionPanel {
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlMainLayout.createSequentialGroup()
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                            .addComponent(btnEditProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                            .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEditProfile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(20, 20, 20)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblPostNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblFollowerNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblFollowingNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(20, 20, 20)
-                        .addComponent(lblBio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblBio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(60, 60, 60)
                 .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
@@ -165,7 +176,7 @@ public class Profile extends ConnectionPanel {
         return profileController;
     }
 
-    public MyRoundLabel getLblAvatar() {
+    public MyLabel getLblAvatar() {
         return lblAvatar;
     }
 
@@ -195,7 +206,7 @@ public class Profile extends ConnectionPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnEditProfile;
-    private online.syncio.component.MyRoundLabel lblAvatar;
+    private online.syncio.component.MyLabel lblAvatar;
     private online.syncio.component.MyLabel lblBio;
     private online.syncio.component.MyProfileFollowLabel lblFollowerNum;
     private online.syncio.component.MyProfileFollowLabel lblFollowingNum;

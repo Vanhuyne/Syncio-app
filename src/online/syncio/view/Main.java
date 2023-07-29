@@ -25,9 +25,9 @@ public final class Main extends javax.swing.JFrame {
     public Main() {
         setUndecorated(true);
         initComponents();
-        GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
+        GlassPanePopup.install(this);
     }
 
     public void addComponents() {
@@ -42,10 +42,14 @@ public final class Main extends javax.swing.JFrame {
             pnl.setConnection(this);
         }
 
+        pnlSearch.setConnection(this);
+
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
         for (MyButton btn : btnMenuList) {
-
+            if (btn.getName().trim().equalsIgnoreCase("search")) {
+                continue;
+            }
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
@@ -118,6 +122,8 @@ public final class Main extends javax.swing.JFrame {
         btnNotification = new online.syncio.component.MyButton();
         btnCreate = new online.syncio.component.MyButton();
         btnProfile = new online.syncio.component.MyButton();
+        layeredPane = new javax.swing.JLayeredPane();
+        pnlSearch = new online.syncio.view.SearchUserPanel();
         pnlTabContent = new online.syncio.component.MyPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -171,6 +177,11 @@ public final class Main extends javax.swing.JFrame {
         btnSearch.setMinimumSize(new java.awt.Dimension(200, 50));
         btnSearch.setName("search"); // NOI18N
         btnSearch.setPreferredSize(new java.awt.Dimension(200, 50));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
         pnlLeftMenu.add(btnSearch);
 
         btnMessage.setBackground(null);
@@ -232,10 +243,18 @@ public final class Main extends javax.swing.JFrame {
 
         pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.LINE_START);
 
+        pnlSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 2));
+        layeredPane.add(pnlSearch);
+        pnlSearch.setBounds(0, 0, 318, 680);
+
         pnlTabContent.setBackground(new Color(0f, 0f, 0f, 0f));
+        pnlTabContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(219, 219, 219)));
         pnlTabContent.setRoundBottomRight(20);
         pnlTabContent.setLayout(new java.awt.CardLayout());
-        pnlMain.add(pnlTabContent, java.awt.BorderLayout.CENTER);
+        layeredPane.add(pnlTabContent);
+        pnlTabContent.setBounds(0, 0, 1080, 680);
+
+        pnlMain.add(layeredPane, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
@@ -251,6 +270,14 @@ public final class Main extends javax.swing.JFrame {
             GlassPanePopup.showPopup(new CreateNewPost(this), "createnewpost");
         }
     }//GEN-LAST:event_btnCreateActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        if (pnlSearch.isVisible()) {
+            pnlSearch.setVisible(false);
+        } else {
+            pnlSearch.setVisible(true);
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -297,8 +324,10 @@ public final class Main extends javax.swing.JFrame {
     private online.syncio.component.MyButton btnNotification;
     private online.syncio.component.MyButton btnProfile;
     private online.syncio.component.MyButton btnSearch;
+    private javax.swing.JLayeredPane layeredPane;
     private online.syncio.component.MyPanel pnlLeftMenu;
     private online.syncio.component.MyPanel pnlMain;
+    private online.syncio.view.SearchUserPanel pnlSearch;
     private online.syncio.component.MyPanel pnlTabContent;
     private online.syncio.component.WindowTitleBar pnlTitleBar;
     // End of variables declaration//GEN-END:variables

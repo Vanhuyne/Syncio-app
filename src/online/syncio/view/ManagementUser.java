@@ -16,32 +16,33 @@ import online.syncio.model.User;
 import online.syncio.utils.Export;
 
 public class ManagementUser extends ConnectionPanel {
+
     private ManagementUserController controller;
     DefaultTableModel model;
     private UserDAO userDAO;
     private FindIterable<User> lUser;
     ManagementUser managementUser;
-    
+
     public ManagementUser() {
         this.database = MongoDBConnect.getDatabase();
         this.userDAO = new UserDAOImpl(database);
         this.managementUser = this;
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        
+
         //table
         //tao model
         model = new DefaultTableModel();
 
         // Set the table model to the tblAlbum table
         tblUser.setModel(model);
-        
+
         //disable table editing
-        tblUser.setDefaultEditor(Object.class, null); 
-        
+        tblUser.setDefaultEditor(Object.class, null);
+
         //table header
-        String [] colNames = {"ID", "Email", "Username", "Following", "Post", "Date Created", "Role", "Status"};
+        String[] colNames = {"ID", "Email", "Username", "Following", "Post", "Date Created", "Role", "Status"};
         model.setColumnIdentifiers(colNames);
 
         //column width
@@ -53,10 +54,10 @@ public class ManagementUser extends ConnectionPanel {
         tblUser.getColumnModel().getColumn(5).setPreferredWidth(100);
         tblUser.getColumnModel().getColumn(6).setPreferredWidth(10);
         tblUser.getColumnModel().getColumn(7).setPreferredWidth(10);
-        
+
         //data
         fillToTable();
-        
+
         //Double click on Table
         tblUser.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
@@ -64,45 +65,48 @@ public class ManagementUser extends ConnectionPanel {
                 if (mouseEvent.getClickCount() == 2 && tblUser.getSelectedRow() != -1) {
                     new ManagementUserDetail(managementUser, userDAO.getByID(tblUser.getValueAt(tblUser.getSelectedRow(), 0).toString())).setVisible(true);
                 }
-            };
+            }
+        ;
         });
-        
+
         this.controller = new ManagementUserController(this);
     }
-    
-    
-    
+
     public FindIterable find() {
         String searchText = txtSearch.getText().trim();
-        if(searchText.equalsIgnoreCase("Search by email or username") || searchText.isEmpty() || searchText == null) searchText = null;
-        
+        if (searchText.equalsIgnoreCase("Search by email or username") || searchText.isEmpty() || searchText == null) {
+            searchText = null;
+        }
+
         Integer role = null;
-        if(cboRole.getSelectedItem().equals("User")) role = 0;
-        else if(cboRole.getSelectedItem().equals("Admin")) role = 1;
-        
+        if (cboRole.getSelectedItem().equals("User")) {
+            role = 0;
+        } else if (cboRole.getSelectedItem().equals("Admin")) {
+            role = 1;
+        }
+
         Integer status = null;
-        if(cboStatus.getSelectedItem().equals("Active")) status = 0;
-        else if(cboStatus.getSelectedItem().equals("Deactivated")) status = 1;
-        
+        if (cboStatus.getSelectedItem().equals("Active")) {
+            status = 0;
+        } else if (cboStatus.getSelectedItem().equals("Deactivated")) {
+            status = 1;
+        }
+
         return userDAO.getAllByUsernameOrEmailRoleFlag(searchText, role, status);
     }
-    
-    
-    
+
     public void fillToTable() {
         model.setRowCount(0); //clear rows in the table
-        
+
         lUser = find();
 
         //them tung dong vao
-        if(lUser != null) {
-            for(User user : lUser) {
-                model.addRow(new Object[] {user.getId(), user.getEmail(), user.getUsername(), user.getFollowers().size(), userDAO.countPost(user.getId().toString()), user.getDateCreated(), user.getRole()== 0 ? "User" : "Admin", user.getFlag() == 0 ? "Active" : "Deactived"});
+        if (lUser != null) {
+            for (User user : lUser) {
+                model.addRow(new Object[]{user.getId(), user.getEmail(), user.getUsername(), user.getFollowers().size(), userDAO.countPost(user.getId().toString()), user.getDateCreated(), user.getRole() == 0 ? "User" : "Admin", user.getFlag() == 0 ? "Active" : "Deactived"});
             }
         }
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

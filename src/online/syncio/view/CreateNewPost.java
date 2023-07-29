@@ -110,31 +110,35 @@ public class CreateNewPost extends javax.swing.JPanel {
         if (i >= 0 && i < imagePaths.size()) {
             imageIndex = i;
             lblCountImage.setText(imageIndex + 1 + "/" + imagePaths.size());
-            
-            if(imageFilter.get(i) == 0) {
+
+            if (imageFilter.get(i) == 0) {
                 rdoNormal.setSelected(true);
-            }
-            else if(imageFilter.get(i) == 1) {
+            } else if (imageFilter.get(i) == 1) {
                 rdoGrayscale.setSelected(true);
             }
-            
-            if(rdoGrayscale.isSelected()) {
+
+            if (rdoGrayscale.isSelected()) {
                 pnlLeft.setImg(ImageFilter.toGrayScale2(ImageHelper.stringToBufferedImage(imagePaths.get(i))));
-            }
-            else {
+            } else {
                 pnlLeft.setImg(imagePaths.get(i));
             }
-            
+
             pnlLeft.revalidate();
             pnlLeft.repaint();
         }
     }
-    
+
     public void updateFilter(int i) {
-        if(imageIndex == -1) return;
-        
-        if(rdoNormal.isSelected()) imageFilter.set(i, 0);
-        if(rdoGrayscale.isSelected()) imageFilter.set(i, 1);
+        if (imageIndex == -1) {
+            return;
+        }
+
+        if (rdoNormal.isSelected()) {
+            imageFilter.set(i, 0);
+        }
+        if (rdoGrayscale.isSelected()) {
+            imageFilter.set(i, 1);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -659,7 +663,7 @@ public class CreateNewPost extends javax.swing.JPanel {
 
         if (result == JFileChooser.APPROVE_OPTION) {
             imageIndex = 0;
-            
+
             File[] files = fc.getSelectedFiles();
 
             for (File file : files) {
