@@ -69,7 +69,7 @@ public class PostUI extends javax.swing.JPanel {
     
     public boolean isLiked() {
         // Check if any documents matched the condition
-        if (post.getLLike().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+        if (post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
             return true;
         }
         else {
@@ -85,13 +85,13 @@ public class PostUI extends javax.swing.JPanel {
             postDAO.removeLike(postID, userID);
         }
         else {
-            post.getLLike().add(new UserIDAndDate(userID));
+            post.getLikeList().add(new UserIDAndDate(userID));
             lblHeart.setIcon(liked);
             postDAO.addLike(postID, userID);
         }
         
         post = postDAO.getByID(postID);
-        lblTotalLike.setText(post.getLLike().size()+" likes");
+        lblTotalLike.setText(post.getLikeList().size()+" likes");
     }
 
     
@@ -101,21 +101,21 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
         txtCaption.setText(post.getCaption());
-        lblTotalLike.setText(post.getLLike().size()+" likes");
+        lblTotalLike.setText(post.getLikeList().size()+" likes");
         if (isLiked()) {
             lblHeart.setIcon(liked);
         }
         
         //raito
         pnlImages.setSize(400, 400);
-        if (post.getLPhoto().size() > 0) {
-            if(post.getLPhoto().size() <= 1) {
+        if (post.getPhotoList().size() > 0) {
+            if(post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
             }
             
             imageIndex = 0;
-            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(imageIndex)));
+            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(imageIndex)));
             int imgHeight = pnlImages.getImgHeight();
 
             if (imgHeight > 300) {
@@ -138,10 +138,10 @@ public class PostUI extends javax.swing.JPanel {
     
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
-        if (i >= 0 && i < post.getLPhoto().size()) {
+        if (i >= 0 && i < post.getPhotoList().size()) {
             imageIndex = i;
-            lblCountImage.setText(imageIndex + 1 + "/" + post.getLPhoto().size());
-            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getLPhoto().get(i)));
+            lblCountImage.setText(imageIndex + 1 + "/" + post.getPhotoList().size());
+            pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(i)));
             pnlImages.revalidate();
             pnlImages.repaint();
         }

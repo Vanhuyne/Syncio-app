@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -157,4 +159,41 @@ public class ImageHelper {
         }
         return null;
     }
+    
+    
+    
+    public static ImageIcon toRoundImage(ImageIcon image, int size) {
+        Image newImg = image.getImage();
+
+        BufferedImage roundImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = roundImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Create a round shape
+        Ellipse2D.Float ellipse = new Ellipse2D.Float(0, 0, size, size);
+        g2d.clip(ellipse);
+
+        // Draw the image within the round shape
+        g2d.drawImage(newImg, 0, 0, size, size, null);
+        g2d.dispose();
+
+        return new ImageIcon(roundImage);
+    }
+
+    public static ImageIcon toRoundImage(BufferedImage image, int size) {
+        BufferedImage roundImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = roundImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Create a round shape
+        Ellipse2D.Float ellipse = new Ellipse2D.Float(0, 0, size, size);
+        g2d.clip(ellipse);
+
+        // Draw the image within the round shape
+        g2d.drawImage(image, 0, 0, size, size, null);
+        g2d.dispose();
+
+        return new ImageIcon(roundImage);
+    }
+    
 } 
