@@ -30,8 +30,6 @@ public class UserDAOImpl implements UserDAO {
         userCollection = database.getCollection("users", User.class);
     }
 
-    
-    
     @Override
     public boolean add(User user) {
         try {
@@ -45,17 +43,15 @@ public class UserDAOImpl implements UserDAO {
         return false;
     }
 
-    
-    
     @Override
     public boolean updateByID(User user) {
         Bson filter = Filters.eq("_id", user.getId());
-        
+
         Bson updates = Updates.combine(
-                    Updates.set("username", user.getUsername()),
-                    Updates.set("bio", user.getBio()),
-                    Updates.set("flag", user.getFlag()),
-                    Updates.set("role", user.getRole()));
+                Updates.set("username", user.getUsername()),
+                Updates.set("bio", user.getBio()),
+                Updates.set("flag", user.getFlag()),
+                Updates.set("role", user.getRole()));
 
         try {
             UpdateResult result = userCollection.updateOne(filter, updates);
@@ -65,25 +61,19 @@ public class UserDAOImpl implements UserDAO {
         } catch (MongoException me) {
             System.err.println("Unable to update due to an error: " + me);
         }
-        
+
         return false;
     }
 
-    
-    
     @Override
     public boolean deleteByID(String entityID) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
-    
     @Override
     public User getByID(String userID) {
         return userCollection.find(eq("_id", new ObjectId(userID))).first();
     }
-    
-    
 
     @Override
     public List<User> getAll() {
@@ -102,8 +92,6 @@ public class UserDAOImpl implements UserDAO {
         return lUser;
     }
 
-    
-    
     @Override
     public User authentication(String username, String password) {
         User user = userCollection.find(eq("username", username)).first();
@@ -118,8 +106,6 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-    
-    
     @Override
     public boolean checkEmail(String email) {
         Bson filter = Filters.eq("email", email);
@@ -127,9 +113,7 @@ public class UserDAOImpl implements UserDAO {
 
         return user != null; //  user ton tai => true
     }
-    
 
-  
     @Override
     public boolean checkUsername(String username) {
         Bson filter = Filters.eq("username", username);
@@ -138,8 +122,6 @@ public class UserDAOImpl implements UserDAO {
         return user != null; //  username ton tai => true
     }
 
-    
-    
     @Override
     public int updateByEmail(String password, String email) {
         MongoCollection<User> users = database.getCollection("users", User.class);
@@ -149,28 +131,32 @@ public class UserDAOImpl implements UserDAO {
 
         return (int) users.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
     }
-    
-    
 
     @Override
     public MongoCollection<User> getAllByCollection() {
         return database.getCollection("users", User.class);
     }
 
-    
-    
     @Override
     public FindIterable<User> getAllByUsernameOrEmailRoleFlag(String usernameOrEmail, Integer role, Integer flag) {
-        if(usernameOrEmail == null && role == null && flag == null) return userCollection.find();
-        
+        if (usernameOrEmail == null && role == null && flag == null) {
+            return userCollection.find();
+        }
+
         List<Bson> conditions = new ArrayList<>();
 
-        if (role != null) conditions.add(eq("role", role));
-        if (flag != null)conditions.add(eq("flag", flag));
+        if (role != null) {
+            conditions.add(eq("role", role));
+        }
+
+        if (flag != null) {
+            conditions.add(eq("flag", flag));
+        }
+
         if (usernameOrEmail != null) {
             Bson regexQuery = Filters.or(
-                Filters.regex("username", Pattern.quote(usernameOrEmail), "i"), // Case-insensitive
-                Filters.regex("email", Pattern.quote(usernameOrEmail), "i") // Case-insensitive
+                    Filters.regex("username", Pattern.quote(usernameOrEmail), "i"), // Case-insensitive
+                    Filters.regex("email", Pattern.quote(usernameOrEmail), "i") // Case-insensitive
             );
             conditions.add(regexQuery);
         }

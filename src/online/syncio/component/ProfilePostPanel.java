@@ -15,7 +15,7 @@ public class ProfilePostPanel extends JPanel {
 
     private final int COLUMNS = 3;
     private int panelWidth = 800;
-    private int gap = 4;
+    private int gap = 10;
     private int cellWidth = (panelWidth - (gap * (COLUMNS - 1))) / COLUMNS;
 
     private List<Post> userPosts;
@@ -28,7 +28,7 @@ public class ProfilePostPanel extends JPanel {
         // Initialize the content panel
         contentPanel = new JPanel();
         contentPanel.setOpaque(false);
-        contentPanel.setPreferredSize(new Dimension(panelWidth, cellWidth));
+        contentPanel.setPreferredSize(new Dimension(panelWidth, panelWidth));
         contentPanel.setLayout(new GridLayout(0, COLUMNS, gap, gap));
 
         add(contentPanel, BorderLayout.CENTER);
@@ -38,19 +38,19 @@ public class ProfilePostPanel extends JPanel {
         contentPanel.removeAll(); // Use contentPanel instead of "this"
         numRows = 0; // Reset the number of rows
 
-        // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
             for (Post p : userPosts) {
                 SwingUtilities.invokeLater(() -> {
-                    contentPanel.add(createPostPanel(p)); // Use contentPanel instead of "this"
+                    contentPanel.add(createPostPanel(p));
                     numRows++;
-                    
-                    if(numRows % COLUMNS > 0) {
-                        contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), (Math.ceilDiv(numRows, COLUMNS)) * cellWidth));
+
+                    if (numRows % COLUMNS > 0) {
+                        contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(),
+                                (Math.floorDiv(numRows, COLUMNS) * cellWidth)));
                     }
                 });
-                contentPanel.revalidate(); // Use contentPanel instead of "this"
-                contentPanel.repaint(); // Use contentPanel instead of "this"
+                contentPanel.revalidate();
+                contentPanel.repaint();
             }
         });
 
@@ -59,11 +59,6 @@ public class ProfilePostPanel extends JPanel {
     }
 
     private MyPanel createPostPanel(Post post) {
-        if (cellWidth == 0) {
-            int gridWidth = this.getWidth();
-            cellWidth = gridWidth / COLUMNS;
-        }
-
         MyPanel postPanel = new MyPanel();
         postPanel.setSize(new Dimension(cellWidth, cellWidth));
 

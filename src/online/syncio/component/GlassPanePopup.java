@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -18,6 +19,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import net.miginfocom.layout.BoundSize;
 import net.miginfocom.layout.ComponentWrapper;
@@ -71,11 +73,8 @@ public class GlassPanePopup {
         fram.addWindowStateListener(new WindowAdapter() {
             @Override
             public void windowStateChanged(WindowEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        instance.updateLayout();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    instance.updateLayout();
                 });
             }
         });
@@ -145,9 +144,7 @@ public class GlassPanePopup {
             layerPane.setVisible(false);
         }
     }
-    
-    
-    
+
     // Option
     public interface Option {
 
@@ -168,10 +165,8 @@ public class GlassPanePopup {
         public float getAnimate();
 
         void setAnimate(float animate);
-    } 
-    
-    
-    
+    }
+
     // Popup
     public class Popup extends JComponent {
 
@@ -290,9 +285,7 @@ public class GlassPanePopup {
             super.paintComponent(g);
         }
     }
-    
-    
-    
+
     // DefaultOption
     public static class DefaultOption implements Option {
 
@@ -345,9 +338,7 @@ public class GlassPanePopup {
             this.animate = animate;
         }
     }
-    
-    
-    
+
     // DefaultLayoutCallBack
     public static class DefaultLayoutCallBack extends LayoutCallback {
 
