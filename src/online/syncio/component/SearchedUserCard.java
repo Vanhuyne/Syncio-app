@@ -1,5 +1,6 @@
 package online.syncio.component;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -18,6 +19,26 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setPreferredSize(new Dimension(290, 90));
         setMaximumSize(new Dimension(290, 90));
         setMinimumSize(new Dimension(290, 90));
+
+        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
+        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
+
+        lblUsername.setText(user.getUsername().trim());
+        lblFollowers.setText(user.getFollowers().size() + " followers");
+    }
+    
+    
+    
+    public SearchedUserCard(User user, Color backgroundColor) {
+        initComponents();
+        lblAvatar.setSize(60, 60);
+
+        setPreferredSize(new Dimension(290, 90));
+        setMaximumSize(new Dimension(290, 90));
+        setMinimumSize(new Dimension(290, 90));
+        setBackground(backgroundColor);
+        
+        lblAvatar.setBackground(backgroundColor);
 
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));

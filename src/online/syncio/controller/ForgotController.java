@@ -1,6 +1,5 @@
 package online.syncio.controller;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,18 +16,9 @@ import online.syncio.utils.Validator;
 import online.syncio.view.Forgot;
 import online.syncio.view.Login;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author DELL
- */
 public class ForgotController {
     private long otpRequestedTimeMillis;
-    private final long OTP_VALID =    3* 60 * 1000;
+    private final long OTP_VALID = 3 * 60 * 1000;
     private Date otpRequestedTime = new Date();
     private Forgot forgot;
     private UserDAO userDAO;

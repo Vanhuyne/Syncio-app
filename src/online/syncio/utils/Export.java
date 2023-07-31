@@ -29,9 +29,8 @@ public class Export {
      * Exports the specified JPanel to a PNG image file.
      *
      * @param pnl the JPanel to be exported
-     * @param fileName the file name of the exported image (without file extension)
      */
-    public static void panelToImage(JPanel pnl, String fileName) {
+    public static void panelToImage(JPanel pnl) {
         // Create an image of the panel
         BufferedImage image = new BufferedImage(pnl.getWidth(), pnl.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();
@@ -40,7 +39,6 @@ public class Export {
         // Save the image to a file
         try {
             JFileChooser save = new JFileChooser();
-            save.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             
             // disable the "All files" option
             save.setAcceptAllFileFilterUsed(false);
@@ -48,9 +46,18 @@ public class Export {
             int result = save.showSaveDialog(null); //gọi hộp thoại
 
             if(result == JFileChooser.APPROVE_OPTION){
-                String path = save.getSelectedFile().getAbsolutePath();
-                ImageIO.write(image, "PNG", new File(path + "/" + (fileName.isEmpty() ? "Image" : fileName) + ".png"));
-                JOptionPane.showMessageDialog(null, "Export successful to " + (fileName.isEmpty() ? "Image" : fileName) + ".png");
+                File selectedFile = save.getSelectedFile();
+                String fileName = selectedFile.getName(); // get the selected file name
+
+                // Remove the extension part from the file name
+                int dotIndex = fileName.lastIndexOf('.');
+                if (dotIndex > 0) {
+                    fileName = fileName.substring(0, dotIndex);
+                }
+
+                String path = selectedFile.getParent(); // get the selected path
+                ImageIO.write(image, "PNG", new File(path, fileName + ".png"));
+                JOptionPane.showMessageDialog(null, "Export successful to " + fileName + ".png");
             }   
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error exporting: " + ex.getMessage());

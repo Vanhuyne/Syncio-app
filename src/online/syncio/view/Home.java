@@ -1,14 +1,10 @@
 package online.syncio.view;
 
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Sorts;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +32,10 @@ public class Home extends ConnectionPanel {
     private List<String> lFollowerID = new ArrayList<>();
     private int curIndex = 0;
     FindIterable<Post> posts;
+    private boolean stopLoading = false; // Flag to stop loading posts when pnlSearch is visible
 
-    public Home() {
+    public Home(Main main) {
+        this.main = main;
         this.userDAO = new UserDAOImpl(database);
         this.postDAO = new PostDAOImpl(database);
         
@@ -58,6 +56,18 @@ public class Home extends ConnectionPanel {
             System.out.println("chưa đăng nhập");
         }
 
+        
+        // Add an AdjustmentListener to the vertical scrollbar of the scroll pane
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                // Update the position of pnlSearch relative to the pnlHome container
+                main.getPnlSearch().setBounds(main.getPnlSearch().getX(), getY(), main.getPnlSearch().getWidth(), main.getPnlSearch().getHeight());
+                main.getPnlSearch().revalidate();
+                main.getPnlSearch().repaint();
+            }
+        });
+
     }
     
     
@@ -74,25 +84,41 @@ public class Home extends ConnectionPanel {
     
     
     private void loadMorePosts() {
-        // Create a thread for loading and displaying posts
+        // Create a separate thread for loading and displaying posts
         Thread thread = new Thread(() -> {
             for (Post post : posts) {
+                // Check if pnlSearch is visible before adding PostUI components
+                while (isSearchPanelVisible()) {
+                    try {
+                        Thread.sleep(100); // Wait for 100 milliseconds before checking again
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // At this point, pnlSearch is not visible, so continue adding PostUI components
                 PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
                 SwingUtilities.invokeLater(() -> {
-                    removeLoading();
-                    feedPanel.add(postUI);
-                    addLoading();
+                    if (!stopLoading && !isSearchPanelVisible()) {
+                        removeLoading();
+                        feedPanel.add(postUI);
+                        addLoading();
+                        feedPanel.revalidate();
+                        feedPanel.repaint();
+                    }
                 });
-                feedPanel.revalidate();
-                feedPanel.repaint();
             }
-            
-            removeLoading();
         });
 
         // Start the thread
         thread.start();
     }
+
+    public boolean isSearchPanelVisible() {
+        return main.getPnlSearch().isVisible();
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

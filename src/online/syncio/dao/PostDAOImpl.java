@@ -93,7 +93,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public boolean addLike(String postID, String userID) {
         Bson likeFilter = Filters.eq("_id", new ObjectId(postID)); //get document
-        Bson add = Updates.push("lLike", new UserIDAndDate(userID));
+        Bson add = Updates.push("likeList", new UserIDAndDate(userID));
         postCollection.updateOne(likeFilter, add);
         return true;
     }
@@ -101,7 +101,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public boolean removeLike(String postID, String userID) {
         Bson likeFilter = Filters.eq("_id", new ObjectId(postID)); //get document
-        Bson delete = Updates.pull("lLike", new Document("userID", userID));
+        Bson delete = Updates.pull("likeList", new Document("userID", userID));
         postCollection.updateOne(likeFilter, delete);
         return true;
     }

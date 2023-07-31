@@ -3,7 +3,9 @@ package online.syncio.view;
 import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import javax.swing.BorderFactory;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
@@ -14,13 +16,14 @@ import online.syncio.model.LoggedInUser;
 
 public final class Main extends javax.swing.JFrame {
 
+//    SearchUserPanel pnlSearch;
     private MongoDatabase database;
-
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
     private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
+    boolean added = false;
 
     public Main() {
         setUndecorated(true);
@@ -28,10 +31,20 @@ public final class Main extends javax.swing.JFrame {
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
+        
+        pnlSearch.setVisible(false);
+//        pnlSearch = new SearchUserPanel();
+//        pnlSearch.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
+//        pnlSearch.setAlignmentX(1.0F);
+//        pnlSearch.setMaximumSize(new Dimension(540, 679));
+//        pnlSearch.setMinimumSize(new Dimension(540, 679));
+//        pnlSearch.setPreferredSize(new Dimension(540, 679));
     }
+    
+    
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(), new Message(), new Notification(),
+        connectionPanelList = new ConnectionPanel[]{new Home(this), new Message(), new Notification(),
             new Profile(), new OtherUserProfile(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
@@ -47,9 +60,7 @@ public final class Main extends javax.swing.JFrame {
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
         for (MyButton btn : btnMenuList) {
-            if (btn.getName().trim().equalsIgnoreCase("search")) {
-                continue;
-            }
+
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
@@ -61,11 +72,7 @@ public final class Main extends javax.swing.JFrame {
                     return;
                 }
 
-                if (btn.getName().trim().toLowerCase().equals("search")) {
-                    showTab("home");
-                } else {
-                    showTab(name1, btn1);
-                }
+                showTab(name1, btn1);
             });
         }
     }
@@ -115,6 +122,9 @@ public final class Main extends javax.swing.JFrame {
 
         pnlMain = new online.syncio.component.MyPanel();
         pnlTitleBar = new online.syncio.component.WindowTitleBar();
+        pnlContainer = new online.syncio.component.MyPanel();
+        pnlSearch = new online.syncio.view.SearchUserPanel();
+        pnlTabContent = new online.syncio.component.MyPanel();
         pnlLeftMenu = new online.syncio.component.MyPanel();
         btnHome = new online.syncio.component.MyButton();
         btnSearch = new online.syncio.component.MyButton();
@@ -122,9 +132,6 @@ public final class Main extends javax.swing.JFrame {
         btnNotification = new online.syncio.component.MyButton();
         btnCreate = new online.syncio.component.MyButton();
         btnProfile = new online.syncio.component.MyButton();
-        layeredPane = new javax.swing.JLayeredPane();
-        pnlSearch = new online.syncio.view.SearchUserPanel();
-        pnlTabContent = new online.syncio.component.MyPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -143,7 +150,31 @@ public final class Main extends javax.swing.JFrame {
 
         pnlTitleBar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(219, 219, 219)));
         pnlTitleBar.setFrame(this);
-        pnlMain.add(pnlTitleBar, java.awt.BorderLayout.PAGE_START);
+        pnlMain.add(pnlTitleBar, java.awt.BorderLayout.NORTH);
+
+        pnlContainer.setMaximumSize(new java.awt.Dimension(1080, 679));
+        pnlContainer.setMinimumSize(new java.awt.Dimension(1080, 679));
+        pnlContainer.setPreferredSize(new java.awt.Dimension(1080, 679));
+        pnlContainer.setVerifyInputWhenFocusTarget(false);
+        pnlContainer.setLayout(new javax.swing.OverlayLayout(pnlContainer));
+
+        pnlSearch.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 540));
+        pnlSearch.setAlignmentX(1.0F);
+        pnlSearch.setMaximumSize(new java.awt.Dimension(540, 679));
+        pnlSearch.setMinimumSize(new java.awt.Dimension(540, 679));
+        pnlSearch.setPreferredSize(new java.awt.Dimension(540, 679));
+        pnlContainer.add(pnlSearch);
+
+        pnlTabContent.setBackground(new Color(0f, 0f, 0f, 0f));
+        pnlTabContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(219, 219, 219)));
+        pnlTabContent.setMaximumSize(new java.awt.Dimension(1080, 679));
+        pnlTabContent.setMinimumSize(new java.awt.Dimension(1080, 679));
+        pnlTabContent.setPreferredSize(new java.awt.Dimension(1080, 679));
+        pnlTabContent.setRoundBottomRight(20);
+        pnlTabContent.setLayout(new java.awt.CardLayout());
+        pnlContainer.add(pnlTabContent);
+
+        pnlMain.add(pnlContainer, java.awt.BorderLayout.CENTER);
 
         pnlLeftMenu.setBackground(new java.awt.Color(255, 255, 255));
         pnlLeftMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
@@ -241,20 +272,7 @@ public final class Main extends javax.swing.JFrame {
         btnProfile.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnProfile);
 
-        pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.LINE_START);
-
-        pnlSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 2));
-        layeredPane.add(pnlSearch);
-        pnlSearch.setBounds(0, 0, 318, 680);
-
-        pnlTabContent.setBackground(new Color(0f, 0f, 0f, 0f));
-        pnlTabContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(219, 219, 219)));
-        pnlTabContent.setRoundBottomRight(20);
-        pnlTabContent.setLayout(new java.awt.CardLayout());
-        layeredPane.add(pnlTabContent);
-        pnlTabContent.setBounds(0, 0, 1080, 680);
-
-        pnlMain.add(layeredPane, java.awt.BorderLayout.CENTER);
+        pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.WEST);
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
 
@@ -272,11 +290,7 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        if (pnlSearch.isVisible()) {
-            pnlSearch.setVisible(false);
-        } else {
-            pnlSearch.setVisible(true);
-        }
+        pnlSearch.setVisible(!pnlSearch.isVisible());
     }//GEN-LAST:event_btnSearchActionPerformed
 
     public static void main(String args[]) {
@@ -317,6 +331,26 @@ public final class Main extends javax.swing.JFrame {
         addComponents();
     }
 
+    public SearchUserPanel getPnlSearch() {
+        return pnlSearch;
+    }
+
+    public void setPnlSearch(SearchUserPanel pnlSearch) {
+        this.pnlSearch = pnlSearch;
+    }
+
+    public MyPanel getMyPanel1() {
+        return pnlContainer;
+    }
+
+    public void setMyPanel1(MyPanel myPanel1) {
+        this.pnlContainer = myPanel1;
+    }
+    
+    
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;
@@ -324,7 +358,7 @@ public final class Main extends javax.swing.JFrame {
     private online.syncio.component.MyButton btnNotification;
     private online.syncio.component.MyButton btnProfile;
     private online.syncio.component.MyButton btnSearch;
-    private javax.swing.JLayeredPane layeredPane;
+    private online.syncio.component.MyPanel pnlContainer;
     private online.syncio.component.MyPanel pnlLeftMenu;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.view.SearchUserPanel pnlSearch;
