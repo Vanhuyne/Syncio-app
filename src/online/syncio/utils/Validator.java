@@ -53,6 +53,21 @@ public class Validator {
     
     
     
+    public static String allowNumberTextUnderline(JTextComponent txt, String title, String input, Boolean allowNull, String placeholderText) {
+        if(!isNotNull(null, input, placeholderText) && !allowNull) {
+            if(txt != null) txt.requestFocus();
+            return "Please enter " + title + "\n";
+        }
+        else if(isNotNull(null, input, placeholderText) && !input.matches("[a-zA-Z0-9_]+")) {
+            if(txt != null) txt.requestFocus();
+            return title + " should only allow letters, digits and underscores (a-zA-Z0-9_)." + "\n";
+        }
+        
+        return "";
+    }
+    
+    
+    
     /**
      * This method validates whether the input contains only letters, numbers, and/or spaces, and is not blank or equal to a placeholder text.
      * If a placeholder text is provided, the input must also be different from it.
