@@ -12,6 +12,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.utils.OtherHelper;
 import online.syncio.view.Login;
 import online.syncio.view.Main;
 import online.syncio.view.MainAdmin;
@@ -80,6 +81,9 @@ public class LoginController {
                     main.setVisible(true);
 
                     login.dispose();
+                    if(login.getChkRememberMe().isSelected()) {
+                        OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
+                    }
                 }
             }
         } else {

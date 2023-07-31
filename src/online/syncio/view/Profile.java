@@ -169,7 +169,8 @@ public class Profile extends ConnectionPanel {
         this.database = main.getDatabase();
 
         profileController = new ProfileController(this);
-        profileController.setCurrentUser(LoggedInUser.getCurrentUser());
+        
+        if(LoggedInUser.getCurrentUser() != null) profileController.setCurrentUser(LoggedInUser.getCurrentUser());
     }
 
     public ProfileController getProfileController() {

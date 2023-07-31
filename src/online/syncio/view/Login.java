@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyCheckBox;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
@@ -69,6 +70,7 @@ public class Login extends javax.swing.JFrame {
         lblContinue = new online.syncio.component.MyLabel();
         txtPassword = new online.syncio.component.MyPasswordField();
         btnContinueWithGoogle = new online.syncio.component.MyButton();
+        chkRememberMe = new online.syncio.component.MyCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -126,6 +128,11 @@ public class Login extends javax.swing.JFrame {
         lblContinue.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblContinue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblContinue.setText("CONTINUE AS A GUEST");
+        lblContinue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblContinueMousePressed(evt);
+            }
+        });
 
         txtPassword.setText("myPasswordField1");
 
@@ -142,17 +149,20 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        chkRememberMe.setText("Remember me");
+
         javax.swing.GroupLayout pnlFormLayout = new javax.swing.GroupLayout(pnlForm);
         pnlForm.setLayout(pnlFormLayout);
         pnlFormLayout.setHorizontalGroup(
             pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblForgetPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
             .addGroup(pnlFormLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
+                        .addComponent(chkRememberMe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblForgetPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
                         .addGap(0, 132, Short.MAX_VALUE)
                         .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,9 +191,11 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(lblForgetPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
+                .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblForgetPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkRememberMe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(lblCreateAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -281,6 +293,11 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
 
+    private void lblContinueMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinueMousePressed
+        dispose();
+        new Main().setVisible(true);
+    }//GEN-LAST:event_lblContinueMousePressed
+
     
     
     public static void main(String args[]) {
@@ -308,9 +325,16 @@ public class Login extends javax.swing.JFrame {
         return txtUser;
     }
 
+    public MyCheckBox getChkRememberMe() {
+        return chkRememberMe;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnContinueWithGoogle;
     private online.syncio.component.MyButton btnLogin;
+    private online.syncio.component.MyCheckBox chkRememberMe;
     private online.syncio.component.MyLabel lblContinue;
     private online.syncio.component.MyLabel lblCreateAccount;
     private online.syncio.component.MyLabel lblForgetPassword;

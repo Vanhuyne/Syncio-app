@@ -45,10 +45,10 @@ public class SignupController {
         MyPasswordField txtPassword = signup.getTxtPassword();
         MyPasswordField txtPasswordConfirm = signup.getTxtPasswordConfirm();
         
-        String email = txtEmail.getText();
-        String username = txtUsername.getText();
-        String password = new String(txtPassword.getPassword());
-        String passwordConfirm = new String(txtPasswordConfirm.getPassword());
+        String email = txtEmail.getText().trim();
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+        String passwordConfirm = new String(txtPasswordConfirm.getPassword()).trim();
 
         //signup or verification email
         if (type == 0) {
@@ -61,11 +61,11 @@ public class SignupController {
             errors.add(Validator.allowNumberTextUnderline((JTextField)txtUsername, "Username", username, false, "Username"));
             errors.add(Validator.allowNumberText((JTextField)txtPassword, "Password", password, false, "Password"));
             errors.add(Validator.allowNumberText((JTextField)txtPasswordConfirm, "Password Confirm", passwordConfirm, false, "Password Confirm"));
-            if(!password.equals(passwordConfirm)) errors.add("Password and Password Confirm don't match.");
+            if(!password.equals(passwordConfirm)) errors.add("Password and Password Confirm don't match");
+            if(password.length() < 4 || password.length() > 30) errors.add("Your password must contain between 4 and 30 characters");
             
-            Collections.reverse(errors);
             String e = "";
-            for(String s : errors) e += s;
+            for(String s : errors) e += (s != "") ? s + "<br>" : "";
 
             //co loi
             if(!e.isEmpty()) {

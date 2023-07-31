@@ -183,6 +183,9 @@
             </Property>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblLogoutMousePressed"/>
+          </Events>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblUsername">
           <Properties>

@@ -45,7 +45,7 @@ public class Validator {
         }
         else if(isNotNull(null, input, placeholderText) && !input.matches("[a-zA-Z0-9]+")) {
             if(txt != null) txt.requestFocus();
-            return title + " should only allow letters and digits (a-zA-Z0-9)." + "\n";
+            return title + " should only allow letters and digits (a-zA-Z0-9)" + "\n";
         }
         
         return "";
@@ -60,7 +60,7 @@ public class Validator {
         }
         else if(isNotNull(null, input, placeholderText) && !input.matches("[a-zA-Z0-9_]+")) {
             if(txt != null) txt.requestFocus();
-            return title + " should only allow letters, digits and underscores (a-zA-Z0-9_)." + "\n";
+            return title + " should only allow letters, digits and underscores (a-zA-Z0-9_)" + "\n";
         }
         
         return "";

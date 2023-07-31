@@ -12,12 +12,17 @@ import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
+import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
 //    SearchUserPanel pnlSearch;
     private MongoDatabase database;
+    private UserDAO userDAO;
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
     private CreateNewPost popupCreate;
@@ -26,6 +31,9 @@ public final class Main extends javax.swing.JFrame {
     boolean added = false;
 
     public Main() {
+        this.database = MongoDBConnect.getDatabase();
+        this.userDAO = new UserDAOImpl(database);
+        
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -33,12 +41,16 @@ public final class Main extends javax.swing.JFrame {
         GlassPanePopup.install(this);
         
         pnlSearch.setVisible(false);
-//        pnlSearch = new SearchUserPanel();
-//        pnlSearch.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
-//        pnlSearch.setAlignmentX(1.0F);
-//        pnlSearch.setMaximumSize(new Dimension(540, 679));
-//        pnlSearch.setMinimumSize(new Dimension(540, 679));
-//        pnlSearch.setPreferredSize(new Dimension(540, 679));
+        
+        if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
+        }
+        
+        if(LoggedInUser.getCurrentUser() == null) {
+            btnProfile.setText("Log in");
+        }
+        
+        setConnection(database);
     }
     
     
@@ -64,11 +76,11 @@ public final class Main extends javax.swing.JFrame {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
-
+                
                 if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
                     dispose();
                     new Login().setVisible(true);
-                    GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+                    if(!name1.equals("profile")) GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
                     return;
                 }
 
@@ -327,7 +339,6 @@ public final class Main extends javax.swing.JFrame {
 
     public void setConnection(MongoDatabase database) {
         this.database = database;
-
         addComponents();
     }
 

@@ -57,14 +57,6 @@ public class User {
         this.id = id;
     }
     
-    public String getIdAsString() {
-        return id.toString();
-    }
-
-    public void setIdAsString(String id) {
-        this.id = new ObjectId(id);
-    }
-    
     public String getUsername() {
         return username;
     }

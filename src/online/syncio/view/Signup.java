@@ -131,6 +131,11 @@ public class Signup extends javax.swing.JFrame {
         lblContinue.setBorder(BorderFactory.createMatteBorder(0,0,1,0, Color.BLACK));
         lblContinue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblContinue.setText("CONTINUE AS A GUEST");
+        lblContinue.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblContinueMousePressed(evt);
+            }
+        });
 
         pnlPassword.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -244,7 +249,7 @@ public class Signup extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignupActionPerformed
-        int type = evt.getActionCommand().equalsIgnoreCase("signup") ? 0 : 1;
+        int type = evt.getActionCommand().equalsIgnoreCase("sign up") ? 0 : 1;
         controller.signupAuthentication(type);
     }//GEN-LAST:event_btnSignupActionPerformed
 
@@ -316,6 +321,11 @@ public class Signup extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
+
+    private void lblContinueMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinueMousePressed
+        dispose();
+        new Main().setVisible(true);
+    }//GEN-LAST:event_lblContinueMousePressed
     
     
     

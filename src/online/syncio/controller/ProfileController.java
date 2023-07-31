@@ -42,7 +42,7 @@ public class ProfileController {
 
     public void setCurrentUser(User user) {
         this.user = user;
-        this.postList = postDAO.getAllByUserID(user.getIdAsString());
+        this.postList = postDAO.getAllByUserID(user.getId().toString());
 
         loadUserData();
     }

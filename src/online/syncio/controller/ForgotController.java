@@ -33,7 +33,7 @@ public class ForgotController {
     }
      public void forgotAuthentication(String btntype) {
         // btntype -> Acction(String)
-        forgot.getbtnSumbit().setText("get OTP");
+        forgot.getbtnSumbit().setText("Get OTP");
         MyTextField txtEmail = forgot.getTxtEmail();
         MyTextField txtOTP = forgot.getTxtOTP();
         MyPasswordField txtPassword = forgot.getTxtPassword();
@@ -42,7 +42,7 @@ public class ForgotController {
         ArrayList<String> errors = new ArrayList<>();
         if (btntype.equalsIgnoreCase("Get otp")) {
             otpRequestedTimeMillis = this.otpRequestedTime.getTime();
-            System.out.println("get otp " + otpRequestedTimeMillis);
+//            System.out.println("get otp " + otpRequestedTimeMillis);
             
             //get OTP
             String email = txtEmail.getText();
@@ -61,15 +61,7 @@ public class ForgotController {
                
                 //gui email
                 //neu co thi gui
-                if (!userDAO.checkEmail(email)) {
-                    GlassPanePopup.showPopup(new MyDialog("Email Address Already Taken", "The email address you entered is already taken.\nPlease use a different email address."), "dialog");
-                    txtEmail.requestFocus();
-                    return;
-                }
-
-                else {
-                    //co
-
+                if (userDAO.checkEmail(email)) {
                     int o = (int) (Math.random() * 900000) + 100000;
                     otp = o;
                     String subject = "RESET PASSWORD";
@@ -88,7 +80,7 @@ public class ForgotController {
                               + "</tr>\n"
                               + "<tr>\n"
                               + "<td>\n"
-                              + "<p class=\"text-center\">If you did not request to reset your password, please ignore this email, no changes will be made to your account. Another player may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
+                              + "<p class=\"text-center\">If you did not request to reset your password, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
                               + "</td>\n"
                               + "</tr>\n";
                     
@@ -96,14 +88,13 @@ public class ForgotController {
                     
                     //insert OTP into user
                     if (!sendStatus) {
-                        
                         GlassPanePopup.showPopup(new MyDialog("Error system", "An error occurred while sending the email"), "dialog");
                         return;
                     }
                 }
             
                 //sau khi gui => chuyen sang xac nhan otp
-                forgot.getLblNote().setText("<html><p style='text-align: center'>Code sent to gmail has a time limit of 3 minutes.</p></html>");
+                forgot.getLblNote().setText("<html><p style='text-align: center'>We sent an OTP code to reset your password. If you have not received an email, please check your spam folder. Your OTP will expire in 3 minutes.</p></html>");
                 forgot.getTxtEmail().setEnabled(false);
                 forgot.getTxtOTP().setVisible(true);
                 forgot.getTxtOTP().requestFocus();
@@ -112,7 +103,7 @@ public class ForgotController {
         } else if (btntype.equalsIgnoreCase("Verify Code")) {
             
             currentTimeInMillis = System.currentTimeMillis();
-            System.out.println("current "+ currentTimeInMillis);
+//            System.out.println("current "+ currentTimeInMillis);
             //submit otp
             if (txtOTP.getText().equals(otp + "") && txtOTP.getText().matches("[0-9]{6}")) {
                     
