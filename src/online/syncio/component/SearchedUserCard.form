@@ -47,7 +47,6 @@
                       <Component id="lblUsername" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblFollowers" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="8" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="20" max="32767" attributes="0"/>
