@@ -44,13 +44,12 @@ public class Home extends ConnectionPanel {
 
         if (LoggedInUser.isUser()) {
             currentUser = LoggedInUser.getCurrentUser();
-            currentUserID = currentUser.getIdAsString();
-
+            currentUserID = currentUser.getId().toString();
             posts = postDAO.getAllPostOfFollowers(currentUser);
 
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
             scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
+            
             loadMorePosts();
         } else {
             System.out.println("chưa đăng nhập");

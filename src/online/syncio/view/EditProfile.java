@@ -7,6 +7,7 @@ import online.syncio.component.MyLabel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.utils.OtherHelper;
 
 public class EditProfile extends ConnectionPanel {
 
@@ -20,7 +21,9 @@ public class EditProfile extends ConnectionPanel {
     public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        loadUserData();
+        if(currentUser != null) {
+            loadUserData();
+        }
     }
 
     public void loadUserData() {
@@ -83,6 +86,11 @@ public class EditProfile extends ConnectionPanel {
         lblLogout.setText("Logout");
         lblLogout.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
         lblLogout.setFontBold(2);
+        lblLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblLogoutMousePressed(evt);
+            }
+        });
 
         lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUsername.setText("Username");
@@ -210,6 +218,13 @@ public class EditProfile extends ConnectionPanel {
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
+        LoggedInUser.logOut();
+        OtherHelper.deleteSessionValue("LOGGED_IN_USER");
+        OtherHelper.getMainFrame(this).dispose();
+        new Login().setVisible(true);
+    }//GEN-LAST:event_lblLogoutMousePressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;

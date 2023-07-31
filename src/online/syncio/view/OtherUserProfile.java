@@ -50,7 +50,7 @@ public class OtherUserProfile extends ConnectionPanel {
         postDAO = new PostDAOImpl(database);
 
         profileController = new ProfileController(this);
-        profileController.setCurrentUser(LoggedInUser.getCurrentUser());
+        if(LoggedInUser.getCurrentUser() != null) profileController.setCurrentUser(LoggedInUser.getCurrentUser());
     }
 
     public void loadUserData(User user) {
@@ -59,7 +59,7 @@ public class OtherUserProfile extends ConnectionPanel {
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
 
         lblUsername.setText(user.getUsername());
-        lblPostNum.setText(userDAO.countPost(user.getIdAsString()) + " posts");
+        lblPostNum.setText(userDAO.countPost(user.getId().toString()) + " posts");
         lblFollowerNum.setText(user.getFollowers().size() + " followers");
 //        lblFollowingNum.setText(user.getFollowing().size() + " following");
         lblBio.setText(user.getBio());

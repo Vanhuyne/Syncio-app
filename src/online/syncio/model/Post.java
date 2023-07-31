@@ -16,6 +16,7 @@ public class Post {
     private List<UserIDAndDate> likeList = new ArrayList<>();
     private List<UserIDAndDateAndText> commentList = new ArrayList<>();
     private List<UserIDAndDateAndText> reportList = new ArrayList<>();
+    private int flag;
 
     public Post() {
     }
@@ -95,6 +96,14 @@ public class Post {
     public void setReportList(List<UserIDAndDateAndText> reportList) {
         this.reportList = reportList;
     }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
     
     
     
@@ -109,6 +118,7 @@ public class Post {
         sb.append(", likeList=").append(likeList);
         sb.append(", commentList=").append(commentList);
         sb.append(", reportList=").append(reportList);
+        sb.append(", flag=").append(flag);
         sb.append('}');
         return sb.toString();
     }
@@ -120,12 +130,12 @@ public class Post {
         if (o == null || getClass() != o.getClass())
             return false;
         Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(userID, post.userID) && Objects.equals(caption, post.caption) && Objects.equals(datePosted, post.datePosted) && Objects.equals(photoList, post.photoList) && Objects.equals(likeList, post.likeList) && Objects.equals(commentList, post.commentList) && Objects.equals(reportList, post.reportList);
+        return Objects.equals(id, post.id) && Objects.equals(userID, post.userID) && Objects.equals(caption, post.caption) && Objects.equals(datePosted, post.datePosted) && Objects.equals(photoList, post.photoList) && Objects.equals(likeList, post.likeList) && Objects.equals(commentList, post.commentList) && Objects.equals(reportList, post.reportList) && Objects.equals(flag, post.flag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userID, caption, datePosted, photoList, likeList, commentList, reportList);
+        return Objects.hash(id, userID, caption, datePosted, photoList, likeList, commentList, reportList, flag);
     }
 }
 

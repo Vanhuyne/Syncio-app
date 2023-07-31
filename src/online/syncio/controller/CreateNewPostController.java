@@ -27,7 +27,7 @@ public class CreateNewPostController {
     }
 
     public void uploadPost() {
-        String userID = LoggedInUser.getCurrentUser().getIdAsString();
+        String userID = LoggedInUser.getCurrentUser().getId().toString();
         String caption = "";
 
         try {
@@ -55,7 +55,7 @@ public class CreateNewPostController {
             return;
         }
 
-        if (userDAO.getByID(LoggedInUser.getCurrentUser().getIdAsString()) == null) {
+        if (userDAO.getByID(LoggedInUser.getCurrentUser().getId().toString()) == null) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Your account is not available. Cannot add the post.\nPlease try again later."), "dialog");
             return;
         }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -64,6 +65,12 @@ public class ComponentInit {
         radioButton.setBorderPainted(false);
         radioButton.setForeground(Color.BLACK);
     }
+    
+    public static void applyProperties(JCheckBox checkBox) {
+        checkBox.setFocusPainted(false);
+        checkBox.setBorderPainted(false);
+        checkBox.setForeground(Color.BLACK);
+    }
 
     public static void applyProperties(JButton button) {
         button.setFocusPainted(false);
@@ -95,6 +102,10 @@ public class ComponentInit {
 
         if (component instanceof JComboBox) {
             applyProperties((JComboBox<?>) component);
+        }
+        
+        if (component instanceof JCheckBox) {
+            applyProperties((JCheckBox) component);
         }
 
         if (component instanceof JTextArea) {
