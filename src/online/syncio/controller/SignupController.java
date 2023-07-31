@@ -58,7 +58,7 @@ public class SignupController {
             //validate
             ArrayList<String> errors = new ArrayList<>();
             errors.add(Validator.email((JTextField)txtEmail, "Email", email, false, "Email"));
-            errors.add(Validator.allowNumberText((JTextField)txtUsername, "Username", username, false, "Username"));
+            errors.add(Validator.allowNumberTextUnderline((JTextField)txtUsername, "Username", username, false, "Username"));
             errors.add(Validator.allowNumberText((JTextField)txtPassword, "Password", password, false, "Password"));
             errors.add(Validator.allowNumberText((JTextField)txtPasswordConfirm, "Password Confirm", passwordConfirm, false, "Password Confirm"));
             if(!password.equals(passwordConfirm)) errors.add("Password and Password Confirm don't match.");
@@ -141,11 +141,11 @@ public class SignupController {
                     if (result) {
                         signup.dispose();
                         new Login().setVisible(true);
-                        GlassPanePopup.showPopup(new MyDialog("Success", "SignUp Success."), "dialog");
+                        GlassPanePopup.showPopup(new MyDialog("Account Created", "Your account has been successfully created."), "dialog");
                     }
                 }
                 else {
-                    GlassPanePopup.showPopup(new MyDialog("Error", "Wrong OTP"), "dialog");
+                    GlassPanePopup.showPopup(new MyDialog("Wrong OTP Code", "Please enter the correct OTP code."), "dialog");
                 }
             }
             else { //empty, wrong format

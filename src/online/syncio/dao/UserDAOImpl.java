@@ -106,6 +106,8 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
+    
+    
     @Override
     public boolean checkEmail(String email) {
         Bson filter = Filters.eq("email", email);
@@ -114,6 +116,8 @@ public class UserDAOImpl implements UserDAO {
         return user != null; //  user ton tai => true
     }
 
+    
+    
     @Override
     public boolean checkUsername(String username) {
         Bson filter = Filters.eq("username", username);
@@ -122,6 +126,8 @@ public class UserDAOImpl implements UserDAO {
         return user != null; //  username ton tai => true
     }
 
+    
+    
     @Override
     public int updateByEmail(String password, String email) {
         MongoCollection<User> users = database.getCollection("users", User.class);
@@ -132,11 +138,15 @@ public class UserDAOImpl implements UserDAO {
         return (int) users.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
     }
 
+    
+    
     @Override
     public MongoCollection<User> getAllByCollection() {
         return database.getCollection("users", User.class);
     }
 
+    
+    
     @Override
     public FindIterable<User> getAllByUsernameOrEmailRoleFlag(String usernameOrEmail, Integer role, Integer flag) {
         if (usernameOrEmail == null && role == null && flag == null) {
@@ -166,8 +176,18 @@ public class UserDAOImpl implements UserDAO {
         return userCollection.find(query).sort(Sorts.descending("status"));
     }
 
+    
+    
     @Override
     public long countPost(String userID) {
         return database.getCollection("posts", Post.class).countDocuments(Filters.eq("userID", userID));
+    }
+
+    
+    
+    @Override
+    public User getByEmail(String email) {
+        Bson filter = Filters.eq("email", email);
+        return userCollection.find(filter).first();
     }
 }

@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
+import online.syncio.component.MyDialog;
 import online.syncio.component.MyLabel;
 import online.syncio.component.MyPanel;
 import online.syncio.component.MyPasswordField;
@@ -13,10 +14,26 @@ import online.syncio.controller.SignupController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
+import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
+import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
+import java.util.Collections;
+import java.util.List;
+import online.syncio.utils.GoogleOAuthHelper;
 
 public class Signup extends javax.swing.JFrame {
+    private static String APPLICATION_NAME = "Syncio";
+    private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static String TOKENS_DIRECTORY_PATH = "tokens";
+    private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
+    private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
     private static Main main;
     private SignupController controller;
@@ -26,8 +43,7 @@ public class Signup extends javax.swing.JFrame {
 
     public Signup() {
         this.database = MongoDBConnect.getDatabase();
-
-        userDAO = new UserDAOImpl(database);
+        this.userDAO = new UserDAOImpl(database);
 
         setUndecorated(true);
         initComponents();
@@ -65,6 +81,7 @@ public class Signup extends javax.swing.JFrame {
         pnlPassword = new online.syncio.component.MyPanel();
         txtPassword = new online.syncio.component.MyPasswordField();
         txtPasswordConfirm = new online.syncio.component.MyPasswordField();
+        btnContinueWithGoogle = new online.syncio.component.MyButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,7 +108,7 @@ public class Signup extends javax.swing.JFrame {
 
         btnSignup.setBackground(new java.awt.Color(0, 149, 246));
         btnSignup.setForeground(new java.awt.Color(255, 255, 255));
-        btnSignup.setText("Signup");
+        btnSignup.setText("Sign up");
         btnSignup.setBorderColor(new java.awt.Color(255, 255, 255));
         btnSignup.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
         btnSignup.setPreferredSize(new java.awt.Dimension(92, 20));
@@ -142,6 +159,19 @@ public class Signup extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        btnContinueWithGoogle.setBackground(new java.awt.Color(254, 255, 255));
+        btnContinueWithGoogle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/google_28px.png"))); // NOI18N
+        btnContinueWithGoogle.setText(" Sign up with Google");
+        btnContinueWithGoogle.setBorderColor(new java.awt.Color(219, 219, 219));
+        btnContinueWithGoogle.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnContinueWithGoogle.setPreferredSize(new java.awt.Dimension(92, 20));
+        btnContinueWithGoogle.setRadius(10);
+        btnContinueWithGoogle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContinueWithGoogleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlFormLayout = new javax.swing.GroupLayout(pnlForm);
         pnlForm.setLayout(pnlFormLayout);
         pnlFormLayout.setHorizontalGroup(
@@ -163,13 +193,14 @@ public class Signup extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
                                 .addComponent(lblContinue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(119, 119, 119))
-                            .addComponent(pnlPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(pnlPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnContinueWithGoogle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlFormLayout.setVerticalGroup(
             pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFormLayout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,7 +214,9 @@ public class Signup extends javax.swing.JFrame {
                 .addComponent(lblLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblContinue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(btnContinueWithGoogle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
@@ -197,10 +230,10 @@ public class Signup extends javax.swing.JFrame {
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(pnlForm, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
-                .addContainerGap(52, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
+                .addContainerGap(43, Short.MAX_VALUE)
+                .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
         );
 
         pnlContainer.add(pnlMain, java.awt.BorderLayout.CENTER);
@@ -220,6 +253,72 @@ public class Signup extends javax.swing.JFrame {
         new Login().setVisible(true);
     }//GEN-LAST:event_lblLoginMouseClicked
 
+    private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
+        String userEmail;
+        
+        try {
+            // Build a new authorized API client service.
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleOAuthHelper.getCredentials(HTTP_TRANSPORT, CREDENTIALS_FILE_PATH, JSON_FACTORY, SCOPES))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+            
+            // Get the user's email address
+            String user = "me";
+            com.google.api.services.gmail.model.Profile profile = service.users().getProfile(user).execute();
+            userEmail = profile.getEmailAddress();
+            
+            User u = userDAO.getByEmail(userEmail);
+            if(u != null && u.getPassword().equals("")) {
+                GlassPanePopup.showPopup(new MyDialog("Account Already Exists", "This email is already connected to your Google Account.\nPlease use a different email or sign in with your Google account."), "dialog");
+            }
+            else if(u != null && !u.getPassword().equals("")) {
+                GlassPanePopup.showPopup(new MyDialog("Account Already Exists", "Please sign in using your original username and password."), "dialog");
+            }
+            else {
+                //sign up
+                String username = TextHelper.generateUniqueUsernameFromEmail(userEmail);
+                
+                //gui email
+                String subject = "WELCOME TO SYNCIO";
+                String recipientName = userEmail;
+                String content = "<tr>\n"
+                          + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
+                          + "<h4>" + subject + "</h4>\n"
+                          + "<br>\n"
+                          + "Dear " + recipientName + ",<br>\n"
+                          + "Thank you for creating your personal account with the username <b>" + username + "</b> on SYNCIO.<br>\n"
+                          + "</td>\n"
+                          + "</tr>\n"
+                          + "<tr>\n"
+                          + "<td>\n"
+                          + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
+                          + "</td>\n"
+                          + "</tr>\n";
+
+                boolean sendStatus = SendEmail.sendFormat(userEmail, userEmail, subject, content);
+
+                if (!sendStatus) {
+                    GlassPanePopup.showPopup(new MyDialog("Error", "An error occurred while sending the email"), "dialog");
+                }
+                else {
+                    // success send email
+                    //add
+                    boolean added = userDAO.add(new User(username, "", userEmail, null, 0, 0, null));
+                    if(added) {
+                        dispose();
+                        new Login().setVisible(true);
+                        GlassPanePopup.showPopup(new MyDialog("Account Created", "Your account with the username " + username + " has been successfully created."), "dialog");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -295,6 +394,7 @@ public class Signup extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private online.syncio.component.MyButton btnContinueWithGoogle;
     private online.syncio.component.MyButton btnSignup;
     private online.syncio.component.MyLabel lblContinue;
     private online.syncio.component.MyLabel lblLogin;

@@ -1,15 +1,36 @@
 package online.syncio.view;
 
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
+import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyDialog;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
 import online.syncio.controller.LoginController;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
+import online.syncio.model.LoggedInUser;
+import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
+import online.syncio.utils.GoogleOAuthHelper;
 import online.syncio.utils.TextHelper;
 
 public class Login extends javax.swing.JFrame {
+    private static String APPLICATION_NAME = "Syncio";
+    private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static String TOKENS_DIRECTORY_PATH = "tokens";
+    private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
+    private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
     private static Main main;
     private LoginController controller;
@@ -47,6 +68,7 @@ public class Login extends javax.swing.JFrame {
         lblCreateAccount = new online.syncio.component.MyLabel();
         lblContinue = new online.syncio.component.MyLabel();
         txtPassword = new online.syncio.component.MyPasswordField();
+        btnContinueWithGoogle = new online.syncio.component.MyButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,6 +129,19 @@ public class Login extends javax.swing.JFrame {
 
         txtPassword.setText("myPasswordField1");
 
+        btnContinueWithGoogle.setBackground(new java.awt.Color(254, 255, 255));
+        btnContinueWithGoogle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/google_28px.png"))); // NOI18N
+        btnContinueWithGoogle.setText(" Continue with Google");
+        btnContinueWithGoogle.setBorderColor(new java.awt.Color(219, 219, 219));
+        btnContinueWithGoogle.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnContinueWithGoogle.setPreferredSize(new java.awt.Dimension(92, 20));
+        btnContinueWithGoogle.setRadius(10);
+        btnContinueWithGoogle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContinueWithGoogleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlFormLayout = new javax.swing.GroupLayout(pnlForm);
         pnlForm.setLayout(pnlFormLayout);
         pnlFormLayout.setHorizontalGroup(
@@ -118,12 +153,6 @@ public class Login extends javax.swing.JFrame {
             .addGroup(pnlFormLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlFormLayout.createSequentialGroup()
-                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFormLayout.createSequentialGroup()
                         .addGap(0, 132, Short.MAX_VALUE)
                         .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,12 +163,19 @@ public class Login extends javax.swing.JFrame {
                                 .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblCreateAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblContinue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(125, 125, 125))))))
+                                .addGap(125, 125, 125))))
+                    .addGroup(pnlFormLayout.createSequentialGroup()
+                        .addGroup(pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnContinueWithGoogle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         pnlFormLayout.setVerticalGroup(
             pnlFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFormLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addGap(10, 10, 10)
                 .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -153,7 +189,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(lblCreateAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblContinue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
+                .addGap(40, 40, 40)
+                .addComponent(btnContinueWithGoogle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
@@ -168,9 +206,9 @@ public class Login extends javax.swing.JFrame {
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addGap(90, 90, 90)
+                .addComponent(pnlForm, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         pnlContainer.add(pnlMain, java.awt.BorderLayout.CENTER);
@@ -194,6 +232,57 @@ public class Login extends javax.swing.JFrame {
         new Forgot().setVisible(true);
     }//GEN-LAST:event_lblForgetPasswordMouseClicked
 
+    private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
+        MongoDatabase database = MongoDBConnect.getDatabase();
+        UserDAO userDAO = new UserDAOImpl(database);
+        String userEmail;
+        
+        try {
+            // Build a new authorized API client service.
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleOAuthHelper.getCredentials(HTTP_TRANSPORT, CREDENTIALS_FILE_PATH, JSON_FACTORY, SCOPES))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+            
+            // Get the user's email address
+            String user = "me";
+            com.google.api.services.gmail.model.Profile profile = service.users().getProfile(user).execute();
+            userEmail = profile.getEmailAddress();
+            
+            User u = userDAO.getByEmail(userEmail);
+            if(u != null && u.getPassword().equals("")) {
+                // log in
+                LoggedInUser.setCurrentUser(u); //set loggedin user
+
+                // check role
+                if (LoggedInUser.isAdmin()) {
+                    MainAdmin mainAdmin = new MainAdmin();
+                    mainAdmin.setConnection(database, u);
+                    mainAdmin.setVisible(true);
+
+                    dispose();
+                } else {
+                    Main main = new Main();
+                    main.setConnection(database);
+                    main.setVisible(true);
+
+                    dispose();
+                }
+            }
+            else if(u != null && !u.getPassword().equals("")) {
+                GlassPanePopup.showPopup(new MyDialog("Login Method Notice", "This email already linked to standard account.\nPlease sign in using your original username and password."), "dialog");
+            }
+            else {
+                //not found account
+                GlassPanePopup.showPopup(new MyDialog("Account Not Found", "You don't have a linked Syncio account with your Google Account.\nTry logging in with your username. If you don't have an account, please sign up."), "dialog");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
+
+    
+    
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -220,6 +309,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private online.syncio.component.MyButton btnContinueWithGoogle;
     private online.syncio.component.MyButton btnLogin;
     private online.syncio.component.MyLabel lblContinue;
     private online.syncio.component.MyLabel lblCreateAccount;

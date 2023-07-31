@@ -10,6 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
 
 /**
  * The TextHelper class provides utility methods for working with passwords.
@@ -165,5 +168,19 @@ public class TextHelper {
                 }
             }
         });
+    }
+    
+    
+    
+    public static String generateUniqueUsernameFromEmail(String userEmail) {
+        UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
+        String baseUsername = userEmail.split("@")[0].toLowerCase().replaceAll("[^a-zA-Z0-9_]", "_");
+        String username = baseUsername;
+        int count = 1;
+        while (userDAO.checkUsername(username)) {
+            username = baseUsername + count;
+            count++;
+        }
+        return username;
     }
 }
