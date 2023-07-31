@@ -51,7 +51,7 @@ public class LoginController {
             setError.add("Please enter password");
             txtPassword.requestFocus();
         } else if (!password.matches("[a-zA-Z0-9]+")) {
-            setError.add(" should only allow letters and digits (a-zA-Z0-9).");
+            setError.add("Password should only allow letters and digits (a-zA-Z0-9).");
             txtPassword.requestFocus();
         }
 
