@@ -1,36 +1,97 @@
 package online.syncio.view;
 
+import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.KeyEvent;
-import javax.swing.JEditorPane;
+import java.awt.Dimension;
+import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import online.syncio.component.MyNotification;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.PostDAO;
+import online.syncio.dao.PostDAOImpl;
+import online.syncio.dao.UserDAO;
+import online.syncio.dao.UserDAOImpl;
+import online.syncio.model.LoggedInUser;
+import online.syncio.model.Post;
+import online.syncio.model.UserIDAndDateAndText;
+import online.syncio.utils.ImageHelper;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
-    public PostDetailUI() {
+    private MongoDatabase database = MongoDBConnect.getDatabase();
+    private PostDAO postDAO = new PostDAOImpl(database);
+    private UserDAO userDAO = new UserDAOImpl(database);
+    private String userID;
+    private String postID;
+    private Post post;
+    private int imageIndex = 0;
+
+    public PostDetailUI(String postID) {
+        this.postID = postID;
+        post = postDAO.getByID(postID);
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        
-        txpCaption.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
-        txpCaption.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        
-        txpCaption.setContentType("text/html");
-
+        //pnlCmtContainer.setPreferredSize(new Dimension(lblAccount.getWidth(), pnlCmtContainer.getHeight()));
+        showInfoPost(postID);
     }
-    
-    
-    
+
     public void addEmoji(JLabel lbl, Color color) {
-        int length = txpCaption.getDocument().getLength();
+        int length = txpCmt.getDocument().getLength();
 
         if (length < 500) {
-            txpCaption.append(lbl.getText(), color);
-            txpCaption.append("", Color.BLACK);
-            txpCaption.requestFocus();
+            txpCmt.append(lbl.getText(), color);
+            txpCmt.append("", Color.BLACK);
+            txpCmt.requestFocus();
         }
     }
 
+    private void loadCmt(String postID) {
+        String userName = userDAO.getByID(post.getUserID()).getUsername();
+        List<UserIDAndDateAndText> listCmt = post.getCommentList();
+        lblAccount.setText(userName);
+
+        for (UserIDAndDateAndText cmt : listCmt) {
+            CommentUI cmtUI = new CommentUI(userName, cmt.getText(), cmt.getDate());
+            //cmtUI.setPreferredSize(new Dimension(pnlCmtContainer.getWidth(), 50));
+            //pnlCmt.removeAll();
+            pnlCmt.add(cmtUI);
+            pnlCmt.revalidate();
+            pnlCmt.repaint();
+        }
+    }
+
+    private void showInfoPost(String postID) {
+        loadCmt(postID);
+        //GlassPanePopup.showPopup(new CommentUI(user, "xinh vc"), "cmtui");
+        //raito
+        pnlLeft.setSize(400, 400);
+        if (post.getPhotoList().size() > 0) {
+            if (post.getPhotoList().size() <= 1) {
+                btnNext.setVisible(false);
+                btnPrev.setVisible(false);
+            }
+
+            imageIndex = 0;
+            pnlLeft.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(imageIndex)));
+            int imgHeight = pnlLeft.getImgHeight();
+
+            if (imgHeight > 300) {
+                pnlLeft.setPreferredSize(new Dimension(400, 400));
+            } else if (imgHeight > 300) {
+                pnlLeft.setPreferredSize(new Dimension(400, 300));
+            } else if (imgHeight > 200) {
+                pnlLeft.setPreferredSize(new Dimension(400, 200));
+            } else {
+                pnlLeft.setPreferredSize(new Dimension(400, 100));
+            }
+        } else {
+            pnlLeft.setPreferredSize(new Dimension(0, 0));
+            pnlLeft.setImg("");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,7 +108,6 @@ public class PostDetailUI extends javax.swing.JPanel {
         btnNext = new online.syncio.component.MyButton();
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
-        jLabel1 = new javax.swing.JLabel();
         pnlRight = new online.syncio.component.MyPanel();
         lblAccount = new online.syncio.component.MyLabel();
         pnlIcon = new online.syncio.component.MyPanel();
@@ -58,10 +118,14 @@ public class PostDetailUI extends javax.swing.JPanel {
         lblSparkles = new online.syncio.component.MyLabel();
         lblSmile = new online.syncio.component.MyLabel();
         lblLaugh = new online.syncio.component.MyLabel();
+        pnlCmtContainer = new online.syncio.component.MyPanel();
         myPanel1 = new online.syncio.component.MyPanel();
-        lblCountNumber = new online.syncio.component.MyLabel();
-        myScrollPane2 = new online.syncio.component.MyScrollPane();
-        txpCaption = new online.syncio.component.MyTextPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txpCmt = new online.syncio.component.MyTextPane();
+        btnSend = new online.syncio.component.MyButton();
+        myPanel2 = new online.syncio.component.MyPanel();
+        myScrollPane1 = new online.syncio.component.MyScrollPane();
+        pnlCmt = new online.syncio.component.MyPanel();
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setRadius(10);
@@ -106,9 +170,6 @@ public class PostDetailUI extends javax.swing.JPanel {
         lblCountImage.setForeground(new java.awt.Color(219, 219, 219));
         lblCountImage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 24)); // NOI18N
-        jLabel1.setText("Load cái hình vô đây");
-
         javax.swing.GroupLayout pnlLeftLayout = new javax.swing.GroupLayout(pnlLeft);
         pnlLeft.setLayout(pnlLeftLayout);
         pnlLeftLayout.setHorizontalGroup(
@@ -122,21 +183,15 @@ public class PostDetailUI extends javax.swing.JPanel {
                         .addGap(401, 401, 401)
                         .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(10, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLeftLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(112, 112, 112))
         );
         pnlLeftLayout.setVerticalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlLeftLayout.createSequentialGroup()
-                .addGap(221, 221, 221)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
+                .addGap(325, 325, 325)
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
@@ -157,8 +212,8 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         pnlIcon.setBackground(new java.awt.Color(255, 255, 255));
         pnlIcon.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10)));
-        pnlIcon.setMaximumSize(new java.awt.Dimension(170, 90));
-        pnlIcon.setMinimumSize(new java.awt.Dimension(170, 90));
+        pnlIcon.setMaximumSize(new java.awt.Dimension(276, 360));
+        pnlIcon.setMinimumSize(new java.awt.Dimension(276, 360));
         pnlIcon.setPreferredSize(new java.awt.Dimension(57, 50));
         pnlIcon.setRoundBottomRight(10);
         pnlIcon.setLayout(new java.awt.GridLayout(1, 0, 0, 10));
@@ -269,31 +324,59 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         pnlRight.add(pnlIcon, java.awt.BorderLayout.PAGE_END);
 
-        myPanel1.setPreferredSize(new java.awt.Dimension(278, 407));
-        myPanel1.setLayout(new java.awt.BorderLayout());
+        pnlCmtContainer.setMaximumSize(new java.awt.Dimension(278, 355));
+        pnlCmtContainer.setPreferredSize(new java.awt.Dimension(278, 355));
+        pnlCmtContainer.setLayout(new java.awt.BorderLayout());
 
-        lblCountNumber.setBackground(new java.awt.Color(254, 255, 255));
-        lblCountNumber.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 10));
-        lblCountNumber.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCountNumber.setText(" ");
-        myPanel1.add(lblCountNumber, java.awt.BorderLayout.PAGE_END);
+        myPanel1.setPreferredSize(new java.awt.Dimension(278, 50));
 
-        myScrollPane2.setBorder(null);
+        jScrollPane1.setViewportView(txpCmt);
 
-        txpCaption.setBorderThickness(0);
-        txpCaption.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txpCaptionKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txpCaptionKeyTyped(evt);
+        btnSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/send.png"))); // NOI18N
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
             }
         });
-        myScrollPane2.setViewportView(txpCaption);
 
-        myPanel1.add(myScrollPane2, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout myPanel1Layout = new javax.swing.GroupLayout(myPanel1);
+        myPanel1.setLayout(myPanel1Layout);
+        myPanel1Layout.setHorizontalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(myPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        myPanel1Layout.setVerticalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+            .addComponent(btnSend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+        );
 
-        pnlRight.add(myPanel1, java.awt.BorderLayout.LINE_END);
+        pnlCmtContainer.add(myPanel1, java.awt.BorderLayout.PAGE_END);
+
+        pnlCmt.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCmt.setMaximumSize(new java.awt.Dimension(276, 355));
+        pnlCmt.setMinimumSize(new java.awt.Dimension(276, 355));
+        pnlCmt.setPreferredSize(new java.awt.Dimension(276, 355));
+        myScrollPane1.setViewportView(pnlCmt);
+
+        javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
+        myPanel2.setLayout(myPanel2Layout);
+        myPanel2Layout.setHorizontalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        myPanel2Layout.setVerticalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pnlCmtContainer.add(myPanel2, java.awt.BorderLayout.CENTER);
+
+        pnlRight.add(pnlCmtContainer, java.awt.BorderLayout.LINE_END);
 
         pnlContent.add(pnlRight, java.awt.BorderLayout.CENTER);
 
@@ -339,35 +422,35 @@ public class PostDetailUI extends javax.swing.JPanel {
         addEmoji(lblLaugh, Color.BLACK);
     }//GEN-LAST:event_lblLaughMousePressed
 
-    private void txpCaptionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txpCaptionKeyTyped
-        int length = txpCaption.getDocument().getLength();
-
-        if (length >= 500 && !(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txpCaptionKeyTyped
-
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        
+
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
-        
+
     }//GEN-LAST:event_btnPrevActionPerformed
 
-    private void txpCaptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txpCaptionKeyReleased
-        
-    }//GEN-LAST:event_txpCaptionKeyReleased
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        // TODO add your handling code here:
+        String userID = LoggedInUser.getCurrentUser().getId().toString();
+        String cmt = txpCmt.getText();
 
+        if (postDAO.addComment(cmt, userID, postID)) {
+            System.out.println("Đã gửi comment");
+            txpCmt.setText("");
+            new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
+            loadCmt(postID);
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;
     private online.syncio.component.MyButton btnPrev;
-    private javax.swing.JLabel jLabel1;
+    private online.syncio.component.MyButton btnSend;
+    private javax.swing.JScrollPane jScrollPane1;
     private online.syncio.component.MyLabel lblAccount;
     private online.syncio.component.MyLabel lblCamera;
     private online.syncio.component.MyLabel lblCountImage;
-    private online.syncio.component.MyLabel lblCountNumber;
     private online.syncio.component.MyLabel lblHeart;
     private online.syncio.component.MyLabel lblLaugh;
     private online.syncio.component.MyLabel lblLike;
@@ -375,12 +458,15 @@ public class PostDetailUI extends javax.swing.JPanel {
     private online.syncio.component.MyLabel lblSmile;
     private online.syncio.component.MyLabel lblSparkles;
     private online.syncio.component.MyPanel myPanel1;
-    private online.syncio.component.MyScrollPane myScrollPane2;
+    private online.syncio.component.MyPanel myPanel2;
+    private online.syncio.component.MyScrollPane myScrollPane1;
+    private online.syncio.component.MyPanel pnlCmt;
+    private online.syncio.component.MyPanel pnlCmtContainer;
     private online.syncio.component.MyPanel pnlContent;
     private online.syncio.component.MyPanel pnlIcon;
     private online.syncio.component.MyPanel pnlLeft;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlRight;
-    private online.syncio.component.MyTextPane txpCaption;
+    private online.syncio.component.MyTextPane txpCmt;
     // End of variables declaration//GEN-END:variables
 }

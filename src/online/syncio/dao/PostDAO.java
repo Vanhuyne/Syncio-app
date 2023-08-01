@@ -12,4 +12,5 @@ public interface PostDAO extends DAO<Post> {
     public List<Post> getAllByUserID(String userID);
     public boolean addLike(String postID, String userID);
     public boolean removeLike(String postID, String userID);
+    public boolean addComment(String text, String userID, String postID);
 }
