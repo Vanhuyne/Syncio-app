@@ -1,6 +1,5 @@
 package online.syncio.controller;
 
-import com.mongodb.client.MongoDatabase;
 import java.util.HashSet;
 import java.util.Set;
 import online.syncio.component.GlassPanePopup;
@@ -9,7 +8,6 @@ import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.OtherHelper;
@@ -20,13 +18,12 @@ import online.syncio.view.MainAdmin;
 public class LoginController {
 
     private Login login;
-    private MongoDatabase database;
     private UserDAO userDAO;
 
     public LoginController(Login login) {
         this.login = login;
-        this.database = MongoDBConnect.getDatabase();
-        userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
     }
 
     public void loginAuthentication() {
@@ -70,19 +67,19 @@ public class LoginController {
 
                 // check role
                 if (LoggedInUser.isAdmin()) {
-                    MainAdmin mainAdmin = new MainAdmin();
-                    mainAdmin.setConnection(this.database, user);
-                    mainAdmin.setVisible(true);
-
+                    new MainAdmin().setVisible(true);
                     login.dispose();
-                } else {
-                    Main main = new Main();
-                    main.setConnection(this.database);
-                    main.setVisible(true);
-
+                }
+                else {
+                    new Main().setVisible(true);
                     login.dispose();
+                    
                     if(login.getChkRememberMe().isSelected()) {
                         OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
+                    }
+                    else {
+                        LoggedInUser.logOut();
+                        OtherHelper.deleteSessionValue("LOGGED_IN_USER");
                     }
                 }
             }

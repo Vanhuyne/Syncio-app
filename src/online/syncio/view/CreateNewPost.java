@@ -17,10 +17,9 @@ import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyNotification;
 import online.syncio.component.MyTextPane;
 import online.syncio.controller.CreateNewPostController;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
@@ -39,10 +38,9 @@ public class CreateNewPost extends javax.swing.JPanel {
 
     public CreateNewPost(Main main) {
         this.main = main;
-        this.database = main.getDatabase();
-
-        postDAO = new PostDAOImpl(database);
-        userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));

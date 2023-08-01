@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 
@@ -173,7 +173,7 @@ public class TextHelper {
     
     
     public static String generateUniqueUsernameFromEmail(String userEmail) {
-        UserDAO userDAO = new UserDAOImpl(MongoDBConnect.getDatabase());
+        UserDAO userDAO = new UserDAOImpl(MongoDBConnectOld.getDatabase());
         String baseUsername = userEmail.split("@")[0].toLowerCase().replaceAll("[^a-zA-Z0-9_]", "_");
         String username = baseUsername;
         int count = 1;

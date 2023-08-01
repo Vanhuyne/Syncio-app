@@ -13,11 +13,9 @@ public class ConnectionPanel extends JPanel {
 
     public void setConnection(Main main) {
         this.main = main;
-        this.database = main.getDatabase();
     }
     
     public void setConnection(MainAdmin mainAdmin) {
         this.mainAdmin = mainAdmin;
-        this.database = mainAdmin.getDatabase();
     }
 }

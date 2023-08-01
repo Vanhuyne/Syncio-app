@@ -6,7 +6,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,6 @@ import online.syncio.component.MyTextField;
 import online.syncio.controller.LoginController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
@@ -33,7 +31,6 @@ public class Login extends javax.swing.JFrame {
     private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
     private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
-    private static Main main;
     private LoginController controller;
 
     public Login() {
@@ -245,8 +242,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblForgetPasswordMouseClicked
 
     private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
-        MongoDatabase database = MongoDBConnect.getDatabase();
-        UserDAO userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        UserDAO userDAO = MongoDBConnect.getUserDAO();
         String userEmail;
         
         try {
@@ -268,16 +265,10 @@ public class Login extends javax.swing.JFrame {
 
                 // check role
                 if (LoggedInUser.isAdmin()) {
-                    MainAdmin mainAdmin = new MainAdmin();
-                    mainAdmin.setConnection(database, u);
-                    mainAdmin.setVisible(true);
-
+                    new MainAdmin().setVisible(true);
                     dispose();
                 } else {
-                    Main main = new Main();
-                    main.setConnection(database);
-                    main.setVisible(true);
-
+                    new Main().setVisible(true);
                     dispose();
                 }
             }
@@ -312,6 +303,8 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
+        ActionHelper.registerShutdownHook(); // Register the shutdown hook
+        
         java.awt.EventQueue.invokeLater(() -> {
             new Login().setVisible(true);
         });

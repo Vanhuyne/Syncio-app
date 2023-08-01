@@ -6,8 +6,8 @@ import javax.swing.BoxLayout;
 import javax.swing.Box;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.SearchedUserCard;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.User;
 
 public class SearchUserPanel extends ConnectionPanel {
@@ -16,7 +16,9 @@ public class SearchUserPanel extends ConnectionPanel {
     private FindIterable<User> userList;
 
     public SearchUserPanel() {
-        initComponents();
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         setOpaque(true);
@@ -28,8 +30,6 @@ public class SearchUserPanel extends ConnectionPanel {
     @Override
     public void setConnection(Main main) {
         this.main = main;
-        this.database = main.getDatabase();
-        userDAO = new UserDAOImpl(database);
     }
 
     public void find() {
@@ -51,7 +51,6 @@ public class SearchUserPanel extends ConnectionPanel {
         Box.createVerticalStrut(20);
 
         for (User user : userList) {
-
             pnlResult.add(new SearchedUserCard(user));
             Box.createVerticalStrut(20);
 

@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import online.syncio.dao.MongoDBConnect;
 
 public class ActionHelper {
 
@@ -20,5 +21,14 @@ public class ActionHelper {
         for (JTextField textField : textFields) {
             textField.addKeyListener(enterKeyListener);
         }
+    }
+    
+    
+    
+    public static void registerShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            // Perform cleanup tasks here, such as closing the MongoDB connection
+            MongoDBConnect.close();
+        }));
     }
 }

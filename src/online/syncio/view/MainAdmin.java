@@ -12,11 +12,12 @@ import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.utils.ActionHelper;
 
 public final class MainAdmin extends javax.swing.JFrame {
 
-    private MongoDatabase database;
     private User currentUser;
+    public Profile profile;
 
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
@@ -24,15 +25,19 @@ public final class MainAdmin extends javax.swing.JFrame {
     public MyFont myFont = new MyFont();
 
     public MainAdmin() {
+        this.profile = new Profile(LoggedInUser.getCurrentUser());
+        
         setUndecorated(true);
         initComponents();
         GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
+        
+        addComponents();
     }
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new ManagementDashboard(), new ManagementUser(), new ManagementHiddenPost(), new ManagementReportedPost(), new Profile(), new OtherUserProfile(), new EditProfile()};
+        connectionPanelList = new ConnectionPanel[]{new ManagementDashboard(), new ManagementUser(), new ManagementHiddenPost(), new ManagementReportedPost(), profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -235,7 +240,8 @@ public final class MainAdmin extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
 
-        //</editor-fold>
+        ActionHelper.registerShutdownHook(); // Register the shutdown hook
+        
         java.awt.EventQueue.invokeLater(() -> {
             new MainAdmin().setVisible(true);
         });
@@ -245,20 +251,11 @@ public final class MainAdmin extends javax.swing.JFrame {
         return pnlTabContent;
     }
 
-    public MongoDatabase getDatabase() {
-        return database;
-    }
-
-    public void setConnection(MongoDatabase database, User user) {
-        this.database = database;
-        this.currentUser = user;
-
-        addComponents();
-    }
-
     public User getCurrentUser() {
         return currentUser;
     }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnDashboard;
     private online.syncio.component.MyButton btnHiddenPost;

@@ -1,5 +1,6 @@
 package online.syncio.dao;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface PostDAO extends DAO<Post> {
     public boolean addLike(String postID, String userID);
     public boolean removeLike(String postID, String userID);
     public boolean addComment(String text, String userID, String postID);
+    public ChangeStreamIterable<Post> getChangeStream();
 }

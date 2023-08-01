@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import online.syncio.component.MyNotification;
-import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
@@ -20,7 +20,7 @@ import online.syncio.utils.ImageHelper;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
-    private MongoDatabase database = MongoDBConnect.getDatabase();
+    private MongoDatabase database = MongoDBConnectOld.getDatabase();
     private PostDAO postDAO = new PostDAOImpl(database);
     private UserDAO userDAO = new UserDAOImpl(database);
     private String userID;

@@ -1,5 +1,6 @@
 package online.syncio.dao;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -44,6 +45,8 @@ public class PostDAOImpl implements PostDAO {
         return false;
     }
 
+    
+    
     @Override
     public boolean updateByID(Post t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -53,11 +56,15 @@ public class PostDAOImpl implements PostDAO {
     public boolean deleteByID(String entityID) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    
 
     @Override
     public Post getByID(String postID) {
         return postCollection.find(eq("_id", new ObjectId(postID))).first();
     }
+    
+    
 
     @Override
     public List<Post> getAll() {
@@ -72,25 +79,24 @@ public class PostDAOImpl implements PostDAO {
         return lPost;
     }
 
+    
+    
     @Override
     public MongoCollection<Post> getAllByCollection() {
-        return database.getCollection("posts", Post.class);
+        return postCollection;
     }
 
+    
+    
     @Override
     public List<Post> getAllByUserID(String userID) {
-        List<Post> postList = new ArrayList<>();
-
-        FindIterable<Post> posts = postCollection.find(eq("userID", userID))
-                .sort(Sorts.ascending("datePosted"));
-
-        for (Post p : posts) {
-            postList.add(p);
-        }
-
-        return postList;
+        Bson filter = eq("userID", userID);
+        FindIterable<Post> posts = postCollection.find(filter).sort(Sorts.descending("datePosted"));
+        return posts.into(new ArrayList<>()); // Convert FindIterable directly to List
     }
 
+    
+    
     @Override
     public boolean addLike(String postID, String userID) {
         Bson likeFilter = Filters.eq("_id", new ObjectId(postID)); //get document
@@ -107,13 +113,15 @@ public class PostDAOImpl implements PostDAO {
         return true;
     }
 
+    
+    
     @Override
     public FindIterable<Post> getAllPostOfFollowers(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
 
         // Get the list of follower IDs from the user object
         List<String> followerIds = new ArrayList<>();
-        for (UserIDAndDate userIDAndDate : user.getFollowers()) {
+        for (UserIDAndDate userIDAndDate : user.getFollowing()) {
             followerIds.add(userIDAndDate.getUserID());
         }
         
@@ -127,6 +135,8 @@ public class PostDAOImpl implements PostDAO {
         return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
 
+    
+    
     @Override
     public boolean addComment(String text, String userID, String postID) {
         Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
@@ -134,5 +144,13 @@ public class PostDAOImpl implements PostDAO {
         postCollection.updateOne(cmtFilter, add);
         return true;
     }
-
+    
+    
+    
+    @Override
+    public ChangeStreamIterable<Post> getChangeStream() {
+        ChangeStreamIterable<Post> changeStreamPosts = postCollection.watch();
+        return changeStreamPosts;
+    }
+    
 }

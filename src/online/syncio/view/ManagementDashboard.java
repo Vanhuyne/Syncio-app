@@ -1,6 +1,5 @@
 package online.syncio.view;
 
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CountOptions;
@@ -8,13 +7,10 @@ import com.mongodb.client.model.Filters;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import online.syncio.component.ConnectionPanel;
@@ -22,16 +18,13 @@ import online.syncio.component.MyChart;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.Export;
 import org.bson.BsonDocument;
-import org.bson.Document;
 
 public class ManagementDashboard extends ConnectionPanel {
     
@@ -39,9 +32,9 @@ public class ManagementDashboard extends ConnectionPanel {
     private PostDAO postDAO;
 
     public ManagementDashboard() {
-        this.database = MongoDBConnect.getDatabase();
-        this.userDAO = new UserDAOImpl(database);
-        this.postDAO = new PostDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
         
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -422,7 +415,7 @@ public class ManagementDashboard extends ConnectionPanel {
             myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(myPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(lblEngagementRate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblEngagementRate1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblEngagementRateQuestion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))

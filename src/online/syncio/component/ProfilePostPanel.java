@@ -44,10 +44,8 @@ public class ProfilePostPanel extends JPanel {
                     contentPanel.add(createPostPanel(p));
                     numRows++;
 
-                    if (numRows % COLUMNS > 0) {
-                        contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(),
-                                (Math.floorDiv(numRows, COLUMNS) * cellWidth)));
-                    }
+                    int numRowsPerColumn = (int) Math.ceil((double) numRows / COLUMNS);
+                    contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), numRowsPerColumn * cellWidth - gap));
                 });
                 contentPanel.revalidate();
                 contentPanel.repaint();
@@ -59,8 +57,9 @@ public class ProfilePostPanel extends JPanel {
     }
 
     private MyPanel createPostPanel(Post post) {
-        MyPanel postPanel = new MyPanel();
-        postPanel.setSize(new Dimension(cellWidth, cellWidth));
+        MyPanel postPanel = new MyPanel(true);
+        postPanel.setSize(cellWidth, cellWidth);
+        postPanel.setPreferredSize(new Dimension(cellWidth, cellWidth));
 
         postPanel.setBackground(Color.WHITE);
 
@@ -77,7 +76,11 @@ public class ProfilePostPanel extends JPanel {
 
     public void setUserPosts(List<Post> userPosts) {
         this.userPosts = userPosts;
-
+        loadUserPost();
+    }
+    
+    public void addUserPost(Post p) {
+        this.userPosts.add(0, p);
         loadUserPost();
     }
 }
