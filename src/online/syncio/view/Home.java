@@ -7,7 +7,6 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.SwingUtilities;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;
@@ -37,7 +36,7 @@ public class Home extends ConnectionPanel {
         this.main = main;
         this.userDAO = new UserDAOImpl(database);
         this.postDAO = new PostDAOImpl(database);
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
@@ -48,13 +47,12 @@ public class Home extends ConnectionPanel {
 
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
             scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-            
+
             loadMorePosts();
         } else {
             System.out.println("chưa đăng nhập");
         }
 
-        
         // Add an AdjustmentListener to the vertical scrollbar of the scroll pane
         scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             @Override
@@ -67,20 +65,16 @@ public class Home extends ConnectionPanel {
         });
 
     }
-    
-    
-    
+
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
-    
+
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
-    
-    
     private void loadMorePosts() {
         // Create a separate thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -115,8 +109,6 @@ public class Home extends ConnectionPanel {
     public boolean isSearchPanelVisible() {
         return main.getPnlSearch().isVisible();
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

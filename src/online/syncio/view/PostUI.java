@@ -207,6 +207,11 @@ public class PostUI extends javax.swing.JPanel {
         lblComment.setMaximumSize(new java.awt.Dimension(20, 49));
         lblComment.setMinimumSize(new java.awt.Dimension(20, 49));
         lblComment.setPreferredSize(new java.awt.Dimension(20, 49));
+        lblComment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCommentMouseClicked(evt);
+            }
+        });
 
         lblTotalLike.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         lblTotalLike.setText("0 likes");
@@ -295,7 +300,7 @@ public class PostUI extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
@@ -346,7 +351,7 @@ public class PostUI extends javax.swing.JPanel {
     }//GEN-LAST:event_lblViewAllCmtMouseExited
 
     private void lblViewAllCmtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseClicked
-        GlassPanePopup.showPopup(new PostDetailUI(), "postdetail");
+        GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
     }//GEN-LAST:event_lblViewAllCmtMouseClicked
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
@@ -360,6 +365,11 @@ public class PostUI extends javax.swing.JPanel {
     private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
         selectImage(imageIndex - 1);
     }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void lblCommentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMouseClicked
+        // TODO add your handling code here:
+        GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
+    }//GEN-LAST:event_lblCommentMouseClicked
 
     public MyLabel getLblComment() {
         return lblComment;

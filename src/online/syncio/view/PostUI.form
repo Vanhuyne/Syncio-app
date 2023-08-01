@@ -34,7 +34,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="pnlImages" alignment="0" max="32767" attributes="0"/>
+          <Component id="pnlImages" alignment="0" pref="402" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <Component id="lblUsername" min="-2" pref="137" max="-2" attributes="0"/>
               <EmptySpace pref="169" max="32767" attributes="0"/>
@@ -156,6 +156,9 @@
           <Dimension value="[20, 49]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblCommentMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTotalLike">
       <Properties>
