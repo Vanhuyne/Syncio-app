@@ -34,9 +34,9 @@ public class CommentUI extends javax.swing.JPanel {
         lblDate = new online.syncio.component.MyLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(278, 52));
-        setMinimumSize(new java.awt.Dimension(278, 52));
-        setPreferredSize(new java.awt.Dimension(278, 52));
+        setMaximumSize(new java.awt.Dimension(276, 55));
+        setMinimumSize(new java.awt.Dimension(276, 55));
+        setPreferredSize(new java.awt.Dimension(276, 55));
 
         lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblAccount.setText(" 56duong");
@@ -48,7 +48,7 @@ public class CommentUI extends javax.swing.JPanel {
         lblCmt.setFont(new java.awt.Font("SF Pro Display Medium", 0, 12)); // NOI18N
 
         lblDate.setText("00-00-0000");
-        lblDate.setFont(new java.awt.Font("SF Pro Display Medium", 0, 10)); // NOI18N
+        lblDate.setFont(new java.awt.Font("SF Pro Display Medium", 0, 8)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -74,7 +74,6 @@ public class CommentUI extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAccount;

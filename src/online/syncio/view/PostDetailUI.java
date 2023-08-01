@@ -56,6 +56,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         for (UserIDAndDateAndText cmt : listCmt) {
             CommentUI cmtUI = new CommentUI(userName, cmt.getText(), cmt.getDate());
             //cmtUI.setPreferredSize(new Dimension(pnlCmtContainer.getWidth(), 50));
+            //pnlCmt.removeAll();
             pnlCmt.add(cmtUI);
             pnlCmt.revalidate();
             pnlCmt.repaint();
@@ -190,7 +191,7 @@ public class PostDetailUI extends javax.swing.JPanel {
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
@@ -323,7 +324,8 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         pnlRight.add(pnlIcon, java.awt.BorderLayout.PAGE_END);
 
-        pnlCmtContainer.setPreferredSize(new java.awt.Dimension(278, 407));
+        pnlCmtContainer.setMaximumSize(new java.awt.Dimension(278, 355));
+        pnlCmtContainer.setPreferredSize(new java.awt.Dimension(278, 355));
         pnlCmtContainer.setLayout(new java.awt.BorderLayout());
 
         myPanel1.setPreferredSize(new java.awt.Dimension(278, 50));
@@ -356,6 +358,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmtContainer.add(myPanel1, java.awt.BorderLayout.PAGE_END);
 
         pnlCmt.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCmt.setMaximumSize(new java.awt.Dimension(276, 355));
+        pnlCmt.setMinimumSize(new java.awt.Dimension(276, 355));
+        pnlCmt.setPreferredSize(new java.awt.Dimension(276, 355));
         myScrollPane1.setViewportView(pnlCmt);
 
         javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
