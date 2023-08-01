@@ -3,14 +3,11 @@ package online.syncio.view;
 import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import online.syncio.component.GlassPanePopup;
+import javax.swing.SwingUtilities;
+import online.syncio.component.MyNotification;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.PostDAOImpl;
@@ -18,7 +15,6 @@ import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
-import online.syncio.model.UserIDAndDate;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
 
@@ -38,7 +34,7 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-
+        //pnlCmtContainer.setPreferredSize(new Dimension(lblAccount.getWidth(), pnlCmtContainer.getHeight()));
         showInfoPost(postID);
     }
 
@@ -56,10 +52,10 @@ public class PostDetailUI extends javax.swing.JPanel {
         String userName = userDAO.getByID(post.getUserID()).getUsername();
         List<UserIDAndDateAndText> listCmt = post.getCommentList();
         lblAccount.setText(userName);
-        
+
         for (UserIDAndDateAndText cmt : listCmt) {
             CommentUI cmtUI = new CommentUI(userName, cmt.getText(), cmt.getDate());
-            
+            //cmtUI.setPreferredSize(new Dimension(pnlCmtContainer.getWidth(), 50));
             pnlCmt.add(cmtUI);
             pnlCmt.revalidate();
             pnlCmt.repaint();
@@ -122,12 +118,12 @@ public class PostDetailUI extends javax.swing.JPanel {
         lblSmile = new online.syncio.component.MyLabel();
         lblLaugh = new online.syncio.component.MyLabel();
         pnlCmtContainer = new online.syncio.component.MyPanel();
-        myPanel3 = new online.syncio.component.MyPanel();
-        btnSend = new online.syncio.component.MyButton();
+        myPanel1 = new online.syncio.component.MyPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txpCmt = new online.syncio.component.MyTextPane();
-        myPanel4 = new online.syncio.component.MyPanel();
-        myScrollPane2 = new online.syncio.component.MyScrollPane();
+        btnSend = new online.syncio.component.MyButton();
+        myPanel2 = new online.syncio.component.MyPanel();
+        myScrollPane1 = new online.syncio.component.MyScrollPane();
         pnlCmt = new online.syncio.component.MyPanel();
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
@@ -194,7 +190,7 @@ public class PostDetailUI extends javax.swing.JPanel {
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
@@ -330,7 +326,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmtContainer.setPreferredSize(new java.awt.Dimension(278, 407));
         pnlCmtContainer.setLayout(new java.awt.BorderLayout());
 
-        myPanel3.setPreferredSize(new java.awt.Dimension(278, 45));
+        myPanel1.setPreferredSize(new java.awt.Dimension(278, 50));
+
+        jScrollPane1.setViewportView(txpCmt);
 
         btnSend.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/send.png"))); // NOI18N
         btnSend.addActionListener(new java.awt.event.ActionListener() {
@@ -339,46 +337,39 @@ public class PostDetailUI extends javax.swing.JPanel {
             }
         });
 
-        jScrollPane1.setViewportView(txpCmt);
-
-        javax.swing.GroupLayout myPanel3Layout = new javax.swing.GroupLayout(myPanel3);
-        myPanel3.setLayout(myPanel3Layout);
-        myPanel3Layout.setHorizontalGroup(
-            myPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(myPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout myPanel1Layout = new javax.swing.GroupLayout(myPanel1);
+        myPanel1.setLayout(myPanel1Layout);
+        myPanel1Layout.setHorizontalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(myPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        myPanel3Layout.setVerticalGroup(
-            myPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, myPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(myPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(btnSend, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)))
+        myPanel1Layout.setVerticalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+            .addComponent(btnSend, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        pnlCmtContainer.add(myPanel3, java.awt.BorderLayout.PAGE_END);
+        pnlCmtContainer.add(myPanel1, java.awt.BorderLayout.PAGE_END);
 
         pnlCmt.setBackground(new java.awt.Color(255, 255, 255));
-        pnlCmt.setMaximumSize(new java.awt.Dimension(276, 360));
-        pnlCmt.setMinimumSize(new java.awt.Dimension(276, 360));
-        myScrollPane2.setViewportView(pnlCmt);
+        myScrollPane1.setViewportView(pnlCmt);
 
-        javax.swing.GroupLayout myPanel4Layout = new javax.swing.GroupLayout(myPanel4);
-        myPanel4.setLayout(myPanel4Layout);
-        myPanel4Layout.setHorizontalGroup(
-            myPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(myScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+        javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
+        myPanel2.setLayout(myPanel2Layout);
+        myPanel2Layout.setHorizontalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        myPanel4Layout.setVerticalGroup(
-            myPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(myScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+        myPanel2Layout.setVerticalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(myScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pnlCmtContainer.add(myPanel4, java.awt.BorderLayout.CENTER);
+        pnlCmtContainer.add(myPanel2, java.awt.BorderLayout.CENTER);
 
         pnlRight.add(pnlCmtContainer, java.awt.BorderLayout.LINE_END);
 
@@ -436,17 +427,16 @@ public class PostDetailUI extends javax.swing.JPanel {
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         // TODO add your handling code here:
-
         String userID = LoggedInUser.getCurrentUser().getId().toString();
         String cmt = txpCmt.getText();
 
         if (postDAO.addComment(cmt, userID, postID)) {
             System.out.println("Đã gửi comment");
             txpCmt.setText("");
+            new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
             loadCmt(postID);
         }
     }//GEN-LAST:event_btnSendActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;
@@ -462,9 +452,9 @@ public class PostDetailUI extends javax.swing.JPanel {
     private online.syncio.component.MyLabel lblOK;
     private online.syncio.component.MyLabel lblSmile;
     private online.syncio.component.MyLabel lblSparkles;
-    private online.syncio.component.MyPanel myPanel3;
-    private online.syncio.component.MyPanel myPanel4;
-    private online.syncio.component.MyScrollPane myScrollPane2;
+    private online.syncio.component.MyPanel myPanel1;
+    private online.syncio.component.MyPanel myPanel2;
+    private online.syncio.component.MyScrollPane myScrollPane1;
     private online.syncio.component.MyPanel pnlCmt;
     private online.syncio.component.MyPanel pnlCmtContainer;
     private online.syncio.component.MyPanel pnlContent;
