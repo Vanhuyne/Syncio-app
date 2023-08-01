@@ -53,8 +53,12 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             txtDateCreated.setVisible(false);
             lblLoading.setText("No posts found for this profile.");
             lblLoading.setIcon(null);
+            txtEmail.setEditable(true);
+            txtUsername.setEditable(true);
+            txtPassword.setEditable(true);
+            txtBio.setEditable(true);
             txtEmail.requestFocus();
-        }
+        } 
         else {
             //edit
             txtID.setText(user.getId().toString());
@@ -82,6 +86,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             flag();
 
             User u = new User();
+            u.setId(user.getId());
             u.setFollowers(new ArrayList<>(Collections.singletonList(new UserIDAndDate(user.getId().toString()))));
             posts = postDAO.getAllPostOfFollowers(u);
 
@@ -278,6 +283,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
         txtID.setEditable(false);
         txtID.setPreferredSize(new java.awt.Dimension(320, 35));
 
+        txtEmail.setEditable(false);
         txtEmail.setPlaceholder("Email");
         txtEmail.setPreferredSize(new java.awt.Dimension(320, 35));
 
@@ -326,6 +332,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             }
         });
 
+        txtPassword.setEditable(false);
         txtPassword.setPlaceholder("Password");
         txtPassword.setPreferredSize(new java.awt.Dimension(320, 35));
 

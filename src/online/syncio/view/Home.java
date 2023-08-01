@@ -32,7 +32,6 @@ public class Home extends ConnectionPanel {
     private List<String> lFollowerID = new ArrayList<>();
     private int curIndex = 0;
     FindIterable<Post> posts;
-    private boolean stopLoading = false; // Flag to stop loading posts when pnlSearch is visible
 
     public Home(Main main) {
         this.main = main;
@@ -98,7 +97,7 @@ public class Home extends ConnectionPanel {
                 // At this point, pnlSearch is not visible, so continue adding PostUI components
                 PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
                 SwingUtilities.invokeLater(() -> {
-                    if (!stopLoading && !isSearchPanelVisible()) {
+                    if (!isSearchPanelVisible()) {
                         removeLoading();
                         feedPanel.add(postUI);
                         addLoading();

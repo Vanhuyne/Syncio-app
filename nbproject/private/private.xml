@@ -3,18 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/model/Post.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/ManagementHiddenPost.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/MainAdmin.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/ManagementDashboard.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/SearchedUserCard.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Login.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/UserDAO.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/LoginController.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Main.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Profile.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Home.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/SearchUserPanel.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Signup.java</file>
         </group>
     </open-files>
 </project-private>
