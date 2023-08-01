@@ -8,28 +8,22 @@ import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyLabel;
-import online.syncio.component.MyPanel;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
-
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.utils.ActionHelper;
 import online.syncio.utils.TextHelper;
 
 public class Forgot extends javax.swing.JFrame {
 
-    private static Main main;
     private ForgotController controller;
-    private MongoDatabase database;
     private UserDAO userDAO;
     private int otp = -1;
 
     public Forgot() {
-        this.database = MongoDBConnect.getDatabase();
-
-        userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
 
         setUndecorated(true);
         initComponents();
@@ -49,6 +43,7 @@ public class Forgot extends javax.swing.JFrame {
         txtOTP.setVisible(false);
         txtPassword.setVisible(false);
         txtPasswordConfirm.setVisible(false);
+        
         //press Enter => click btnLogin
         ActionHelper.assignEnterKeyListener(btnGetOTP, txtEmail, txtOTP, txtPassword, txtPasswordConfirm);
     }
@@ -212,8 +207,8 @@ public class Forgot extends javax.swing.JFrame {
 //        if (!check) {
 //            new Main().setVisible(true);
 //        }        
-        dispose();
         new Login().setVisible(true);
+        dispose();
     }//GEN-LAST:event_lblLoginMouseClicked
 
     private void lblNoteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNoteMouseClicked
@@ -241,10 +236,9 @@ public class Forgot extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Forgot.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
+        ActionHelper.registerShutdownHook(); // Register the shutdown hook
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

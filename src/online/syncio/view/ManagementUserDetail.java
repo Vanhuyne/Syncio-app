@@ -12,9 +12,7 @@ import online.syncio.component.MyDialog;
 import online.syncio.controller.LoginController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
@@ -35,9 +33,9 @@ public class ManagementUserDetail extends javax.swing.JFrame {
     ManagementUser managementUser;
 
     public ManagementUserDetail(ManagementUser managementUser, User user) {
-        this.database = MongoDBConnect.getDatabase();
-        this.userDAO = new UserDAOImpl(database);
-        this.postDAO = new PostDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
         this.currentUser = user;
         this.managementUser = managementUser;
         
@@ -68,7 +66,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             txtDateCreated.setText(user.getDateCreated());
             if(user.getBio() != null) txtBio.setText(user.getBio());
             lblPost.setText(userDAO.countPost(user.getId().toString()) + " posts");
-            lblFollowing.setText(user.getFollowers().size() + " following");
+            lblFollowing.setText(user.getFollowing().size() + " following");
             if(user.getRole() == 0) {
                 rdoUser.setSelected(true);
                 rdoAdmin.setVisible(false);
@@ -87,7 +85,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
 
             User u = new User();
             u.setId(user.getId());
-            u.setFollowers(new ArrayList<>(Collections.singletonList(new UserIDAndDate(user.getId().toString()))));
+            u.setFollowing(new ArrayList<>(Collections.singletonList(new UserIDAndDate(user.getId().toString()))));
             posts = postDAO.getAllPostOfFollowers(u);
 
             // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
@@ -486,7 +484,7 @@ public class ManagementUserDetail extends javax.swing.JFrame {
                 GlassPanePopup.showPopup(new MyDialog("Email Address Already Taken", "The email address you entered is already taken.\nPlease use a different email address."), "dialog");
                 return;
             }
-            User u = new User(txtUsername.getText(), currentUser.getPassword(), currentUser.getEmail(), txtBio.getText().equals("Bio") ? null : txtBio.getText(), rdoAdmin.isSelected() ? 1 : 0, currentUser.getFlag(), currentUser.getFollowers());
+            User u = new User(txtUsername.getText(), currentUser.getPassword(), currentUser.getEmail(), txtBio.getText().equals("Bio") ? null : txtBio.getText(), rdoAdmin.isSelected() ? 1 : 0, currentUser.getFlag(), currentUser.getFollowing());
             u.setId(currentUser.getId());
             if(!u.getUsername().equals(currentUser.getUsername()))
                 if (userDAO.checkUsername(username)) {

@@ -1,7 +1,9 @@
 package online.syncio.view;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -11,18 +13,14 @@ import javax.swing.SwingUtilities;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 
 public class Home extends ConnectionPanel {
 
-    //    private LoadingMore loading = new LoadingMore();
     private Main main;
-    private MongoDatabase database = MongoDBConnect.getDatabase();
     private User currentUser;
     private String currentUserID;
     private UserDAO userDAO;
@@ -31,11 +29,15 @@ public class Home extends ConnectionPanel {
     private List<String> lFollowerID = new ArrayList<>();
     private int curIndex = 0;
     FindIterable<Post> posts;
+    private MongoCursor<ChangeStreamDocument<Post>> changeStreamCursor;
 
+
+    
     public Home(Main main) {
         this.main = main;
-        this.userDAO = new UserDAOImpl(database);
-        this.postDAO = new PostDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -76,29 +78,57 @@ public class Home extends ConnectionPanel {
     }
 
     private void loadMorePosts() {
-        // Create a separate thread for loading and displaying posts
+        // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
+            // Set up MongoDB change stream
+            ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
+
+            // Listen for change stream events in a separate thread
+            Thread changeStreamThread = new Thread(() -> {
+                changeStream.forEach(changeDocument -> {
+                    // Handle the change event here
+                    // For example, extract the new post data from changeDocument and update your feed UI
+                    Post newPost = changeDocument.getFullDocument();
+                    if (newPost != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            PostUI postUI = new PostUI(newPost.getId().toString(), currentUserID);
+                            removeLoading();
+                            feedPanel.add(postUI);
+                            addLoading();
+                            feedPanel.revalidate();
+                            feedPanel.repaint();
+                        });
+                    }
+                });
+            });
+            changeStreamThread.start();
+
+            // Load initial posts from the regular database query
             for (Post post : posts) {
                 // Check if pnlSearch is visible before adding PostUI components
                 while (isSearchPanelVisible()) {
                     try {
-                        Thread.sleep(100); // Wait for 100 milliseconds before checking again
+                        Thread.sleep(50); // Wait for 100 milliseconds before checking again
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-
-                // At this point, pnlSearch is not visible, so continue adding PostUI components
+                
                 PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
                 SwingUtilities.invokeLater(() -> {
-                    if (!isSearchPanelVisible()) {
-                        removeLoading();
-                        feedPanel.add(postUI);
-                        addLoading();
-                        feedPanel.revalidate();
-                        feedPanel.repaint();
-                    }
+                    removeLoading();
+                    feedPanel.add(postUI);
+                    addLoading();
+                    feedPanel.revalidate();
+                    feedPanel.repaint();
                 });
+            }
+
+            // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
+            try {
+                changeStreamThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
 
@@ -109,7 +139,7 @@ public class Home extends ConnectionPanel {
     public boolean isSearchPanelVisible() {
         return main.getPnlSearch().isVisible();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

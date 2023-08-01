@@ -1,6 +1,5 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
@@ -11,9 +10,7 @@ import online.syncio.component.MyPanel;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
 import online.syncio.controller.SignupController;
-import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
 import online.syncio.utils.SendEmail;
@@ -26,6 +23,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import java.util.Collections;
 import java.util.List;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.utils.GoogleOAuthHelper;
 
 public class Signup extends javax.swing.JFrame {
@@ -35,15 +33,13 @@ public class Signup extends javax.swing.JFrame {
     private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
     private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
-    private static Main main;
     private SignupController controller;
-    private MongoDatabase database;
     private UserDAO userDAO;
     private int otp = -1;
 
     public Signup() {
-        this.database = MongoDBConnect.getDatabase();
-        this.userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
 
         setUndecorated(true);
         initComponents();
@@ -351,6 +347,8 @@ public class Signup extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        ActionHelper.registerShutdownHook(); // Register the shutdown hook
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

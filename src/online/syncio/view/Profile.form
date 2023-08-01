@@ -18,6 +18,9 @@
   <SubComponents>
     <Container class="online.syncio.component.MyScrollPane" name="scrollPane">
       <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
         <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
         <Property name="verticalScrollBarPolicy" type="int" value="22"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -63,12 +66,13 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="lblFollowerNum" min="-2" pref="100" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                                              <Component id="lblFollowingNum" min="-2" pref="100" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="btnEditProfile" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="lblFollowerNum" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                                          <Component id="btnEditProfileMessage" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="btnFollow" min="-2" pref="90" max="-2" attributes="0"/>
+                                          <Component id="lblFollowingNum" min="-2" pref="100" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Component id="lblBio" min="-2" max="-2" attributes="0"/>
@@ -82,7 +86,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="148" max="32767" attributes="0"/>
+                      <EmptySpace pref="150" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -98,8 +102,9 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="lblUsername" alignment="0" min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Component id="btnEditProfile" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="lblUsername" alignment="0" pref="30" max="32767" attributes="0"/>
+                                  <Component id="btnEditProfileMessage" alignment="0" pref="30" max="32767" attributes="0"/>
+                                  <Component id="btnFollow" alignment="0" pref="30" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -124,19 +129,19 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="online.syncio.component.MyButton" name="btnEditProfile">
+            <Component class="online.syncio.component.MyButton" name="btnEditProfileMessage">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ef" green="ef" red="ef" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Edit profile"/>
                 <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                  <Color blue="ef" green="ef" red="ef" type="rgb"/>
                 </Property>
                 <Property name="radius" type="int" value="10"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditProfileActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditProfileMessageActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblSepratorLine">
@@ -168,7 +173,7 @@
             </Component>
             <Component class="online.syncio.component.MyProfileFollowLabel" name="lblFollowerNum">
               <Properties>
-                <Property name="text" type="java.lang.String" value="10 followers"/>
+                <Property name="text" type="java.lang.String" value="0 followers"/>
               </Properties>
             </Component>
             <Component class="online.syncio.component.MyProfileFollowLabel" name="lblFollowingNum">
@@ -180,9 +185,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="POSTS"/>
               </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lblPost.setFont(regularFont);"/>
-              </AuxValues>
             </Component>
             <Component class="online.syncio.component.ProfilePostPanel" name="pnlProfilePost">
               <Properties>
@@ -201,6 +203,24 @@
               <Properties>
                 <Property name="opaque" type="boolean" value="true"/>
               </Properties>
+            </Component>
+            <Component class="online.syncio.component.MyButton" name="btnFollow">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="f6" green="95" red="0" type="rgb"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Follow"/>
+                <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="f6" green="95" red="0" type="rgb"/>
+                </Property>
+                <Property name="radius" type="int" value="10"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFollowActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

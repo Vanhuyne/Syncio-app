@@ -22,7 +22,6 @@ public class ForgotController {
     private Date otpRequestedTime = new Date();
     private Forgot forgot;
     private UserDAO userDAO;
-//    private String us;
     String emailGLOBAL = null;
     int otp = -1;
     

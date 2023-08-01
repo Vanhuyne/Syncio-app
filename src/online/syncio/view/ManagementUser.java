@@ -5,28 +5,23 @@ import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import online.syncio.component.ConnectionPanel;
-import online.syncio.controller.ManagementUserController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.User;
 import online.syncio.utils.Export;
 
 public class ManagementUser extends ConnectionPanel {
 
-    private ManagementUserController controller;
     DefaultTableModel model;
     private UserDAO userDAO;
     private FindIterable<User> lUser;
     ManagementUser managementUser;
 
     public ManagementUser() {
-        this.database = MongoDBConnect.getDatabase();
-        this.userDAO = new UserDAOImpl(database);
-        this.managementUser = this;
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -68,8 +63,6 @@ public class ManagementUser extends ConnectionPanel {
             }
         ;
         });
-
-        this.controller = new ManagementUserController(this);
     }
 
     public FindIterable find() {
@@ -103,7 +96,7 @@ public class ManagementUser extends ConnectionPanel {
         //them tung dong vao
         if (lUser != null) {
             for (User user : lUser) {
-                model.addRow(new Object[]{user.getId(), user.getEmail(), user.getUsername(), user.getFollowers().size(), userDAO.countPost(user.getId().toString()), user.getDateCreated(), user.getRole() == 0 ? "User" : "Admin", user.getFlag() == 0 ? "Active" : "Deactived"});
+                model.addRow(new Object[]{user.getId(), user.getEmail(), user.getUsername(), user.getFollowing().size(), userDAO.countPost(user.getId().toString()), user.getDateCreated(), user.getRole() == 0 ? "User" : "Admin", user.getFlag() == 0 ? "Active" : "Deactived"});
             }
         }
     }

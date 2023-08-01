@@ -13,10 +13,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.JPanel;
 import online.syncio.utils.ImageHelper;
 
@@ -28,6 +25,7 @@ public class MyPanel extends JPanel {
     private int roundTopRight = 0;
     private int roundBottomLeft = 0;
     private int roundBottomRight = 0;
+    private boolean isFit = false;
 
     
     
@@ -102,6 +100,11 @@ public class MyPanel extends JPanel {
         setOpaque(false);
     }
     
+    public MyPanel(boolean isFit) {
+        this.isFit = isFit;
+        setOpaque(false);
+    }
+    
     
     
     @Override
@@ -137,21 +140,48 @@ public class MyPanel extends JPanel {
             RenderingHints rh = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2.setRenderingHints(rh);
             
-            //center
-            int centerWidth = 0;
-            int centerHeight = 0;
-            int imageWidth = ImageHelper.imageToBufferedImage(getImg()).getWidth();
-            int imageHeight = ImageHelper.imageToBufferedImage(getImg()).getHeight();
-            
-            centerWidth = (imageWidth - getWidth()) / 2;
-            centerHeight = (imageHeight - getHeight()) / 2;
-//            int centerWidth = (getWidth() - ImageHelper.imageToBufferedImage(getImg()).getWidth()) / 2;
-//            int centerHeight = (getHeight() - ImageHelper.imageToBufferedImage(getImg()).getHeight()) / 2;
-            
-//            if(centerWidth < 0) centerWidth = 0;
-//            if(centerHeight < 0) centerHeight = 0;
-            
-            grphcs.drawImage(img, centerWidth * -1, centerHeight * -1, null);
+            if(!isFit) {
+                //center
+                int centerWidth = 0;
+                int centerHeight = 0;
+                int imageWidth = ImageHelper.imageToBufferedImage(getImg()).getWidth();
+                int imageHeight = ImageHelper.imageToBufferedImage(getImg()).getHeight();
+
+                centerWidth = (imageWidth - getWidth()) / 2;
+                centerHeight = (imageHeight - getHeight()) / 2;
+    //            int centerWidth = (getWidth() - ImageHelper.imageToBufferedImage(getImg()).getWidth()) / 2;
+    //            int centerHeight = (getHeight() - ImageHelper.imageToBufferedImage(getImg()).getHeight()) / 2;
+
+    //            if(centerWidth < 0) centerWidth = 0;
+    //            if(centerHeight < 0) centerHeight = 0;
+
+                grphcs.drawImage(img, centerWidth * -1, centerHeight * -1, null);
+            }
+            else {
+                int imgWidth = ImageHelper.imageToBufferedImage(getImg()).getWidth();
+                int imgHeight = ImageHelper.imageToBufferedImage(getImg()).getHeight();
+                int panelWidth = getWidth();
+                int panelHeight = getHeight();
+
+                double widthRatio = (double) panelWidth / imgWidth;
+                double heightRatio = (double) panelHeight / imgHeight;
+                double zoomRatio = 1.000;
+                
+                if(widthRatio < 1 && heightRatio < 1) {
+                    zoomRatio = Math.min(widthRatio, heightRatio);
+                }
+                else {
+                    zoomRatio = Math.max(widthRatio, heightRatio);
+                }
+
+                int scaledWidth = (int) (imgWidth * zoomRatio);
+                int scaledHeight = (int) (imgHeight * zoomRatio);
+
+                int xOffset = (panelWidth - scaledWidth) / 2;
+                int yOffset = (panelHeight - scaledHeight) / 2;
+
+                grphcs.drawImage(img, xOffset, yOffset, scaledWidth, scaledHeight, null);
+            }
         }
     }
 

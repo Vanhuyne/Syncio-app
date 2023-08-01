@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import online.syncio.model.Post;
 import online.syncio.model.User;
+import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.TextHelper;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
@@ -30,6 +32,8 @@ public class UserDAOImpl implements UserDAO {
         userCollection = database.getCollection("users", User.class);
     }
 
+    
+    
     @Override
     public boolean add(User user) {
         try {
@@ -42,6 +46,8 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
+    
+    
 
     @Override
     public boolean updateByID(User user) {
@@ -64,6 +70,8 @@ public class UserDAOImpl implements UserDAO {
 
         return false;
     }
+    
+    
 
     @Override
     public boolean deleteByID(String entityID) {
@@ -74,23 +82,22 @@ public class UserDAOImpl implements UserDAO {
     public User getByID(String userID) {
         return userCollection.find(eq("_id", new ObjectId(userID))).first();
     }
+    
+    
 
     @Override
     public List<User> getAll() {
         List<User> lUser = new ArrayList<>();
         try {
-            FindIterable<User> users = userCollection.find();
-
-            // listUser
-            for (User user : users) {
-                lUser.add(user);
-            }
+            userCollection.find().into(lUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return lUser;
     }
+    
+    
 
     @Override
     public User authentication(String username, String password) {
@@ -130,19 +137,17 @@ public class UserDAOImpl implements UserDAO {
     
     @Override
     public int updateByEmail(String password, String email) {
-        MongoCollection<User> users = database.getCollection("users", User.class);
-
         Bson filter = Filters.eq("email", email);
         Bson update = Updates.set("password", password);
 
-        return (int) users.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
+        return (int) userCollection.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
     }
 
     
     
     @Override
     public MongoCollection<User> getAllByCollection() {
-        return database.getCollection("users", User.class);
+        return userCollection;
     }
 
     
@@ -189,5 +194,42 @@ public class UserDAOImpl implements UserDAO {
     public User getByEmail(String email) {
         Bson filter = Filters.eq("email", email);
         return userCollection.find(filter).first();
+    }
+
+    
+    
+    @Override
+    public int updateUsernameByEmail(String username, String email) {
+        Bson filter = Filters.eq("email", email);
+        Bson update = Updates.set("username", username);
+
+        return (int) userCollection.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
+    }
+
+    @Override
+    public int updateBioByEmail(String bio, String email) {
+        Bson filter = Filters.eq("email", email);
+        Bson update = Updates.set("bio", bio);
+
+        return (int) userCollection.updateOne(filter, update).getModifiedCount();  // thanh cong -> (lon hon 0)
+    }
+
+    
+    
+    @Override
+    public int toggleFollow(String currentUserID, String followedUserID) {
+        // Check if the currentUserID is already present in the followers array
+        boolean isFollowing = getByID(currentUserID).getFollowing().stream().anyMatch(follower -> follower.getUserID().equals(followedUserID));
+        Bson p;
+                
+        if (isFollowing) {
+            // remove
+            p = Updates.pull("following", new Document("userID", followedUserID));
+        } else {
+            // add
+            p = Updates.push("following", new UserIDAndDate(followedUserID));
+        }
+        Bson userFilter = Filters.eq("_id", new ObjectId(currentUserID));
+        return (int) userCollection.updateOne(userFilter, p).getModifiedCount();  // thanh cong -> (lon hon 0)
     }
 }

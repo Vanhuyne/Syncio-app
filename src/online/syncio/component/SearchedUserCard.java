@@ -1,18 +1,25 @@
 package online.syncio.component;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.OtherHelper;
+import online.syncio.view.Main;
 
 public class SearchedUserCard extends javax.swing.JPanel {
+    private User user;
 
     private Image defaultImage = new javax.swing.ImageIcon(getClass()
             .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
 
     public SearchedUserCard(User user) {
+        this.user = user;
+        
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -24,12 +31,14 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
         lblUsername.setText(user.getUsername().trim());
-        lblFollowers.setText(user.getFollowers().size() + " followers");
+        lblFollowers.setText(user.getFollowing().size() + " following");
     }
     
     
     
     public SearchedUserCard(User user, Color backgroundColor) {
+        this.user = user;
+        
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -44,7 +53,8 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
         lblUsername.setText(user.getUsername().trim());
-        lblFollowers.setText(user.getFollowers().size() + " followers");
+//        lblFollowers.setText(user.getFollowing().size() + " followers");
+        lblFollowers.setText("");
     }
 
     @SuppressWarnings("unchecked")
@@ -57,6 +67,11 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(290, 90));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
 
         lblAvatar.setBackground(new java.awt.Color(255, 255, 255));
         lblAvatar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -90,11 +105,22 @@ public class SearchedUserCard extends javax.swing.JPanel {
                         .addGap(8, 8, 8)
                         .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblFollowers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        if(LoggedInUser.isAdmin()) return;
+        
+        Main main = OtherHelper.getMainFrame(this);
+        
+        CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
+        c.show(main.getPnlTabContent(), "profile");
+        
+        main.profile.loadProfile(user);
+        main.getBtnSearch().doClick();
+    }//GEN-LAST:event_formMousePressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAvatar;

@@ -3,6 +3,7 @@ package online.syncio.model;
 import java.util.ArrayList;
 import java.util.Objects;
 import online.syncio.utils.TimeHelper;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 
 public class User {
@@ -10,23 +11,24 @@ public class User {
     private String username;
     private String password;
     private String email;
+    public Binary avt;
     private String bio;
     private int role;
     private String dateCreated = TimeHelper.getCurrentDateTime();
     private int flag;
-    private ArrayList<UserIDAndDate> followers = new ArrayList<>();
+    private ArrayList<UserIDAndDate> following = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> followers) {
+    public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> following) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.bio = bio;
         this.role = role;
         this.flag = flag;
-        this.followers = followers;
+        this.following = following;
     }
 
     public User(ObjectId id, String username, String password, String email, String bio, int role, int flag) {
@@ -81,6 +83,14 @@ public class User {
         this.email = email;
     }
 
+    public Binary getAvt() {
+        return avt;
+    }
+
+    public void setAvt(Binary avt) {
+        this.avt = avt;
+    }
+
     public String getBio() {
         return bio;
     }
@@ -113,12 +123,12 @@ public class User {
         this.flag = flag;
     }
 
-    public ArrayList<UserIDAndDate> getFollowers() {
-        return followers;
+    public ArrayList<UserIDAndDate> getFollowing() {
+        return following;
     }
 
-    public void setFollowers(ArrayList<UserIDAndDate> followers) {
-        this.followers = followers;
+    public void setFollowing(ArrayList<UserIDAndDate> following) {
+        this.following = following;
     }
     
     
@@ -130,11 +140,11 @@ public class User {
         if (o == null || getClass() != o.getClass())
             return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(bio, user.bio) && Objects.equals(role, user.role) && Objects.equals(flag, user.flag) && Objects.equals(followers, user.followers);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(avt, user.avt) && Objects.equals(bio, user.bio) && Objects.equals(role, user.role) && Objects.equals(flag, user.flag) && Objects.equals(following, user.following);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, bio, role, dateCreated, flag, followers);
+        return Objects.hash(id, username, password, email, avt, bio, role, dateCreated, flag, following);
     }
 }

@@ -1,45 +1,26 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.ReturnDocument;
-import com.mongodb.client.model.Updates;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyLabel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.PostDAOImpl;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
-import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
-import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.TimeHelper;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 public class PostUI extends javax.swing.JPanel {
 
-    private MongoDatabase database = MongoDBConnect.getDatabase();
-    private PostDAO postDAO = new PostDAOImpl(database);
-    private UserDAO userDAO = new UserDAOImpl(database);
+    private MongoDatabase database;
+    private PostDAO postDAO;
+    private UserDAO userDAO;
     private String userID;
     private String postID;
     private Post post;
@@ -50,6 +31,10 @@ public class PostUI extends javax.swing.JPanel {
     ImageIcon unliked = new ImageIcon();
 
     public PostUI(String postID, String userID) {
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
+        
         this.userID = userID;
         this.postID = postID;
         post = postDAO.getByID(postID);

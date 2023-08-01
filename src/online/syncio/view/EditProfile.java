@@ -1,24 +1,26 @@
 package online.syncio.view;
 
 import java.awt.Color;
-import java.awt.Font;
+import javax.swing.JTextField;
 import online.syncio.component.ConnectionPanel;
-import online.syncio.component.MyLabel;
+import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyDialog;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
-import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.OtherHelper;
+import online.syncio.utils.Validator;
 
 public class EditProfile extends ConnectionPanel {
-
-    private Font regularFont = new MyFont().getSFProDisplayRegular(), boldFont = new MyFont().getSFProDisplayBold();
-
-    private MyLabel[] changeLabelList;
-    private Main main;
-
-    private User currentUser = LoggedInUser.getCurrentUser();
+    private User currentUser;
+    private UserDAO userDAO;
 
     public EditProfile() {
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.currentUser = LoggedInUser.getCurrentUser();
+                
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         if(currentUser != null) {
@@ -46,22 +48,22 @@ public class EditProfile extends ConnectionPanel {
         pnlMain = new online.syncio.component.MyPanel();
         lblSepratorLine = new javax.swing.JLabel();
         lblAccount = new online.syncio.component.MyLabel();
-        myLabel1 = new online.syncio.component.MyLabel();
+        lblTitle = new online.syncio.component.MyLabel();
         lblSepratorLine1 = new javax.swing.JLabel();
         lblLogout = new online.syncio.component.MyLabel();
         lblUsername = new online.syncio.component.MyLabel();
         txtUsername = new online.syncio.component.MyTextField();
         lblChangeUsername = new online.syncio.component.MyLabel();
         lblPassword = new online.syncio.component.MyLabel();
-        lblChangePassword = new online.syncio.component.MyLabel();
         lblEmail = new online.syncio.component.MyLabel();
         txtEmail = new online.syncio.component.MyTextField();
-        lblChangeEmail = new online.syncio.component.MyLabel();
         lblBio = new online.syncio.component.MyLabel();
         lblChangeBio = new online.syncio.component.MyLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtBio = new online.syncio.component.MyTextArea();
         txtPassword = new online.syncio.component.MyPasswordField();
+        lblPasswordQuestion = new online.syncio.component.MyLabel();
+        lblEmailQuestion = new online.syncio.component.MyLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -77,7 +79,7 @@ public class EditProfile extends ConnectionPanel {
         lblAccount.setMinimumSize(new java.awt.Dimension(57, 54));
         lblAccount.setPreferredSize(new java.awt.Dimension(57, 54));
 
-        myLabel1.setText("Edit Profile");
+        lblTitle.setText("Edit Profile");
 
         lblSepratorLine1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(228, 228, 228), 2));
         lblSepratorLine1.setPreferredSize(new java.awt.Dimension(2, 1));
@@ -102,24 +104,22 @@ public class EditProfile extends ConnectionPanel {
         lblChangeUsername.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeUsername.setText("Change");
         lblChangeUsername.setFontBold(2);
+        lblChangeUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblChangeUsernameMousePressed(evt);
+            }
+        });
 
         lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPassword.setText("Password");
 
-        lblChangePassword.setForeground(new java.awt.Color(0, 149, 246));
-        lblChangePassword.setText("Change");
-        lblChangePassword.setFontBold(2);
-
         lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblEmail.setText("Email");
 
-        txtEmail.setBackground(new java.awt.Color(239, 239, 239));
+        txtEmail.setEditable(false);
         txtEmail.setText("duongcontact@gmail.com");
         txtEmail.setBorderColor(new java.awt.Color(239, 239, 239));
-
-        lblChangeEmail.setForeground(new java.awt.Color(0, 149, 246));
-        lblChangeEmail.setText("Change");
-        lblChangeEmail.setFontBold(2);
+        txtEmail.setEnabled(false);
 
         lblBio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblBio.setText("Bio");
@@ -127,6 +127,11 @@ public class EditProfile extends ConnectionPanel {
         lblChangeBio.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeBio.setText("Change");
         lblChangeBio.setFontBold(2);
+        lblChangeBio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblChangeBioMousePressed(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
 
@@ -137,9 +142,16 @@ public class EditProfile extends ConnectionPanel {
         txtBio.setBorderColor(new java.awt.Color(239, 239, 239));
         jScrollPane1.setViewportView(txtBio);
 
-        txtPassword.setBackground(new java.awt.Color(239, 239, 239));
+        txtPassword.setEditable(false);
         txtPassword.setText("matKhauSieuCapVjpPr0");
         txtPassword.setBorderColor(new java.awt.Color(239, 239, 239));
+        txtPassword.setEnabled(false);
+
+        lblPasswordQuestion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/question_16px.png"))); // NOI18N
+        lblPasswordQuestion.setToolTipText("Email cannot be updated");
+
+        lblEmailQuestion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/question_16px.png"))); // NOI18N
+        lblEmailQuestion.setToolTipText("Use \"Forgot Password\" for password updates");
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -153,7 +165,7 @@ public class EditProfile extends ConnectionPanel {
                         .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 738, Short.MAX_VALUE)
                         .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
             .addComponent(lblSepratorLine1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
@@ -163,56 +175,67 @@ public class EditProfile extends ConnectionPanel {
                     .addComponent(lblPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
                     .addComponent(lblBio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(25, 25, 25)
+                .addGap(20, 20, 20)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(40, 40, 40)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblChangeUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChangePassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChangeEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChangeBio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblChangeUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblChangeBio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPasswordQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblEmailQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(315, 315, 315))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(myLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(1, 1, 1)
-                .addComponent(lblSepratorLine1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChangeUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblChangePassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChangeEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblBio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblChangeBio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlMainLayout.createSequentialGroup()
+                                .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(1, 1, 1)
+                        .addComponent(lblSepratorLine1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblChangeUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lblPasswordQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lblEmailQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblBio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblChangeBio, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(264, 264, 264)
+                        .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(214, 214, 214)
+                        .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(277, Short.MAX_VALUE))
         );
 
@@ -226,21 +249,46 @@ public class EditProfile extends ConnectionPanel {
         new Login().setVisible(true);
     }//GEN-LAST:event_lblLogoutMousePressed
 
+    private void lblChangeUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeUsernameMousePressed
+        //validate
+        String username = txtUsername.getText().trim();
+        String errors = Validator.allowNumberTextUnderline((JTextField)txtUsername, "Username", username, false, "Username");
+        if(!errors.equals("")) {
+            GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
+        }
+        else {
+            //update
+            int result = userDAO.updateUsernameByEmail(username, txtEmail.getText());
+            if(result <= 0) GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Username"), "dialog");
+            else GlassPanePopup.showPopup(new MyDialog("Update Successful", "Updated successfully. Reopen the app to see the change."), "dialog");
+        }
+    }//GEN-LAST:event_lblChangeUsernameMousePressed
+
+    private void lblChangeBioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeBioMousePressed
+        //validate
+        String bio = txtBio.getText().trim();
+        
+        //update
+        int result = userDAO.updateBioByEmail(bio, txtEmail.getText());
+        if(result <= 0) GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Bio"), "dialog");
+        else GlassPanePopup.showPopup(new MyDialog("Update Successful", "Your Bio has been updated successfully."), "dialog");
+    }//GEN-LAST:event_lblChangeBioMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private online.syncio.component.MyLabel lblAccount;
     private online.syncio.component.MyLabel lblBio;
     private online.syncio.component.MyLabel lblChangeBio;
-    private online.syncio.component.MyLabel lblChangeEmail;
-    private online.syncio.component.MyLabel lblChangePassword;
     private online.syncio.component.MyLabel lblChangeUsername;
     private online.syncio.component.MyLabel lblEmail;
+    private online.syncio.component.MyLabel lblEmailQuestion;
     private online.syncio.component.MyLabel lblLogout;
     private online.syncio.component.MyLabel lblPassword;
+    private online.syncio.component.MyLabel lblPasswordQuestion;
     private javax.swing.JLabel lblSepratorLine;
     private javax.swing.JLabel lblSepratorLine1;
+    private online.syncio.component.MyLabel lblTitle;
     private online.syncio.component.MyLabel lblUsername;
-    private online.syncio.component.MyLabel myLabel1;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyTextArea txtBio;
     private online.syncio.component.MyTextField txtEmail;

@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyTable;
-import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.utils.TimeHelper;
 import org.bson.Document;
 
@@ -30,7 +30,7 @@ public class ChamCong extends javax.swing.JFrame {
     
     DefaultTableModel model;
     MyTable myTable;
-    private MongoDatabase database = MongoDBConnect.getDatabase();
+    private MongoDatabase database = MongoDBConnectOld.getDatabase();
 
     public ChamCong() {
         setUndecorated(true);

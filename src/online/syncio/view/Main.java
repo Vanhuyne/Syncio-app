@@ -3,25 +3,23 @@ package online.syncio.view;
 import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import javax.swing.BorderFactory;
 import online.syncio.component.ConnectionPanel;
-import online.syncio.resources.fonts.MyFont;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
+import online.syncio.resources.fonts.MyFont;
+import online.syncio.utils.ActionHelper;
 import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
-//    SearchUserPanel pnlSearch;
-    private MongoDatabase database;
     private UserDAO userDAO;
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
@@ -29,10 +27,11 @@ public final class Main extends javax.swing.JFrame {
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
     boolean added = false;
+    public Profile profile;
 
     public Main() {
-        this.database = MongoDBConnect.getDatabase();
-        this.userDAO = new UserDAOImpl(database);
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
         
         setUndecorated(true);
         initComponents();
@@ -47,17 +46,22 @@ public final class Main extends javax.swing.JFrame {
         }
         
         if(LoggedInUser.getCurrentUser() == null) {
+            //chua login
             btnProfile.setText("Log in");
         }
+        else {
+            // da login
+            this.profile = new Profile(LoggedInUser.getCurrentUser());
+        }
         
-        setConnection(database);
+        addComponents();
     }
     
     
 
     public void addComponents() {
         connectionPanelList = new ConnectionPanel[]{new Home(this), new Message(), new Notification(),
-            new Profile(), new OtherUserProfile(), new EditProfile()};
+            profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -89,6 +93,8 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    
+    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -113,7 +119,7 @@ public final class Main extends javax.swing.JFrame {
     public void showTab(String newTab, MyButton btn) {
         btn.setFontBold(2);
         for (MyButton b : btnMenuList) {
-            if (b.getName().trim().equalsIgnoreCase(curTab)) {
+            if (b.getName().trim().equalsIgnoreCase(curTab) && !curTab.equals(newTab)) {
                 b.setFontBold(1);
                 break;
             }
@@ -128,6 +134,8 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -323,7 +331,8 @@ public final class Main extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        //</editor-fold>
+        ActionHelper.registerShutdownHook(); // Register the shutdown hook
+        
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
         });
@@ -331,15 +340,6 @@ public final class Main extends javax.swing.JFrame {
 
     public MyPanel getPnlTabContent() {
         return pnlTabContent;
-    }
-
-    public MongoDatabase getDatabase() {
-        return database;
-    }
-
-    public void setConnection(MongoDatabase database) {
-        this.database = database;
-        addComponents();
     }
 
     public SearchUserPanel getPnlSearch() {
@@ -357,11 +357,17 @@ public final class Main extends javax.swing.JFrame {
     public void setMyPanel1(MyPanel myPanel1) {
         this.pnlContainer = myPanel1;
     }
-    
-    
-    
-    
 
+    public MyButton getBtnSearch() {
+        return btnSearch;
+    }
+
+    public void setBtnSearch(MyButton btnSearch) {
+        this.btnSearch = btnSearch;
+    }
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

@@ -2,6 +2,7 @@ package online.syncio.component;
 
 import java.awt.Color;
 import javax.swing.JFrame;
+import online.syncio.dao.MongoDBConnect;
 
 /**
  * The WindowTitleBar class represents a custom title bar for a JFrame window.
@@ -113,6 +114,10 @@ public class WindowTitleBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        // Add a shutdown hook to close the MongoDB connection before exiting
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            MongoDBConnect.close();
+        }));
         System.exit(0);
     }//GEN-LAST:event_btnCloseActionPerformed
 

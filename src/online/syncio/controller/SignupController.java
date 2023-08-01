@@ -1,25 +1,18 @@
 package online.syncio.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
-import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
 import online.syncio.utils.Validator;
 import online.syncio.view.Login;
 import online.syncio.view.Signup;
-import online.syncio.view.Main;
 
 public class SignupController {
 

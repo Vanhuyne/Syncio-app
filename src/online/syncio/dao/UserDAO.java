@@ -13,5 +13,8 @@ public interface UserDAO extends DAO<User> {
     public FindIterable<User> getAllByUsernameOrEmailRoleFlag(String usernameOrEmail, Integer role, Integer flag);
     public long countPost(String userID);
     public User getByEmail(String email);
+    public int updateUsernameByEmail(String username, String email);
+    public int updateBioByEmail(String bio, String email);
+    public int toggleFollow(String currentUserID, String followedUserID);
 }
 

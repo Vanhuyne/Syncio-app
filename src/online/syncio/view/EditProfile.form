@@ -41,7 +41,7 @@
                           <EmptySpace pref="738" max="32767" attributes="0"/>
                           <Component id="lblLogout" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="myLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
@@ -54,19 +54,29 @@
                       <Component id="lblUsername" alignment="1" pref="63" max="32767" attributes="0"/>
                       <Component id="lblBio" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="txtEmail" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtUsername" alignment="0" pref="301" max="32767" attributes="0"/>
-                      <Component id="jScrollPane1" alignment="0" pref="301" max="32767" attributes="0"/>
+                      <Component id="txtUsername" alignment="0" pref="326" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="326" max="32767" attributes="0"/>
                       <Component id="txtPassword" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblChangeUsername" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
-                      <Component id="lblChangePassword" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
-                      <Component id="lblChangeEmail" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
-                      <Component id="lblChangeBio" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblChangeUsername" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
+                              <Component id="lblChangeBio" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="lblPasswordQuestion" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="lblEmailQuestion" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" pref="315" max="-2" attributes="0"/>
               </Group>
@@ -74,47 +84,55 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
-                  <Component id="myLabel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="lblSepratorLine" min="-2" pref="1" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="lblLogout" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="lblAccount" min="-2" pref="54" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                          <Component id="lblSepratorLine1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="txtUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="lblChangeUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblPasswordQuestion" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPassword" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblEmailQuestion" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtEmail" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblBio" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                                  <Component id="lblChangeBio" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="jScrollPane1" alignment="0" min="-2" pref="88" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <Group type="102" attributes="0">
-                          <Component id="lblSepratorLine" min="-2" pref="1" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="lblLogout" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="264" pref="264" max="-2" attributes="0"/>
+                          <Component id="lblEmail" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="lblAccount" min="-2" pref="54" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                  <Component id="lblSepratorLine1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="txtUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="lblChangeUsername" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtPassword" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblPassword" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                          <Component id="lblChangePassword" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="214" pref="214" max="-2" attributes="0"/>
+                          <Component id="lblPassword" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblEmail" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="txtEmail" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="lblChangeEmail" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblBio" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                          <Component id="lblChangeBio" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="jScrollPane1" alignment="0" min="-2" pref="88" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="277" max="32767" attributes="0"/>
               </Group>
@@ -153,7 +171,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="online.syncio.component.MyLabel" name="myLabel1">
+        <Component class="online.syncio.component.MyLabel" name="lblTitle">
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit Profile"/>
           </Properties>
@@ -212,20 +230,14 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeUsernameMousePressed"/>
+          </Events>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblPassword">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Password"/>
-          </Properties>
-        </Component>
-        <Component class="online.syncio.component.MyLabel" name="lblChangePassword">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f6" green="95" red="0" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Change"/>
-            <Property name="fontBold" type="int" value="2"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblEmail">
@@ -236,22 +248,12 @@
         </Component>
         <Component class="online.syncio.component.MyTextField" name="txtEmail">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ef" green="ef" red="ef" type="rgb"/>
-            </Property>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="duongcontact@gmail.com"/>
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
-          </Properties>
-        </Component>
-        <Component class="online.syncio.component.MyLabel" name="lblChangeEmail">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="f6" green="95" red="0" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Change"/>
-            <Property name="fontBold" type="int" value="2"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblBio">
@@ -268,6 +270,9 @@
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMousePressed"/>
+          </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <Properties>
@@ -298,13 +303,28 @@
         </Container>
         <Component class="online.syncio.component.MyPasswordField" name="txtPassword">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ef" green="ef" red="ef" type="rgb"/>
-            </Property>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="matKhauSieuCapVjpPr0"/>
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="online.syncio.component.MyLabel" name="lblPasswordQuestion">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/online/syncio/resources/images/icons/question_16px.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Email cannot be updated"/>
+          </Properties>
+        </Component>
+        <Component class="online.syncio.component.MyLabel" name="lblEmailQuestion">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/online/syncio/resources/images/icons/question_16px.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Use &quot;Forgot Password&quot; for password updates"/>
           </Properties>
         </Component>
       </SubComponents>
