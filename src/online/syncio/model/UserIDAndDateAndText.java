@@ -11,6 +11,11 @@ public class UserIDAndDateAndText {
     public UserIDAndDateAndText() {
     }
 
+    public UserIDAndDateAndText(String userID, String text) {
+        this.userID = userID;
+        this.text = text;
+    }
+
     public UserIDAndDateAndText(String userID) {
         this.userID = userID;
     }
@@ -31,6 +36,14 @@ public class UserIDAndDateAndText {
 
     public String getDate() {
         return date;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void setDate(String date) {

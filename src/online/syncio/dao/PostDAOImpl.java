@@ -14,6 +14,7 @@ import java.util.List;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
+import online.syncio.model.UserIDAndDateAndText;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -124,6 +125,14 @@ public class PostDAOImpl implements PostDAO {
 
         // Execute the query and return the result
         return posts.find(filter).sort(Sorts.descending("datePosted"));
+    }
+
+    @Override
+    public boolean addComment(String text, String userID, String postID) {
+        Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
+        Bson add = Updates.push("commentList", new UserIDAndDateAndText(userID, text));
+        postCollection.updateOne(cmtFilter, add);
+        return true;
     }
 
 }
