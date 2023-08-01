@@ -34,6 +34,7 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
+        //scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         //pnlCmtContainer.setPreferredSize(new Dimension(lblAccount.getWidth(), pnlCmtContainer.getHeight()));
         showInfoPost(postID);
     }
@@ -54,9 +55,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         lblAccount.setText(userName);
 
         for (UserIDAndDateAndText cmt : listCmt) {
-            CommentUI cmtUI = new CommentUI(userName, cmt.getText(), cmt.getDate());
+            CommentUI cmtUI = new CommentUI(userDAO.getByID(cmt.getUserID()).getUsername(), cmt.getText(), cmt.getDate());
             //cmtUI.setPreferredSize(new Dimension(pnlCmtContainer.getWidth(), 50));
-            //pnlCmt.removeAll();
+
             pnlCmt.add(cmtUI);
             pnlCmt.revalidate();
             pnlCmt.repaint();
@@ -124,7 +125,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         txpCmt = new online.syncio.component.MyTextPane();
         btnSend = new online.syncio.component.MyButton();
         myPanel2 = new online.syncio.component.MyPanel();
-        myScrollPane1 = new online.syncio.component.MyScrollPane();
+        scrollPane = new online.syncio.component.MyScrollPane();
         pnlCmt = new online.syncio.component.MyPanel();
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
@@ -191,7 +192,7 @@ public class PostDetailUI extends javax.swing.JPanel {
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
@@ -361,17 +362,17 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmt.setMaximumSize(new java.awt.Dimension(276, 355));
         pnlCmt.setMinimumSize(new java.awt.Dimension(276, 355));
         pnlCmt.setPreferredSize(new java.awt.Dimension(276, 355));
-        myScrollPane1.setViewportView(pnlCmt);
+        scrollPane.setViewportView(pnlCmt);
 
         javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
         myPanel2.setLayout(myPanel2Layout);
         myPanel2Layout.setHorizontalGroup(
             myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(myScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         myPanel2Layout.setVerticalGroup(
             myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(myScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pnlCmtContainer.add(myPanel2, java.awt.BorderLayout.CENTER);
@@ -439,6 +440,8 @@ public class PostDetailUI extends javax.swing.JPanel {
             System.out.println("Đã gửi comment");
             txpCmt.setText("");
             new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
+            post = postDAO.getByID(postID);
+            pnlCmt.removeAll();
             loadCmt(postID);
         }
     }//GEN-LAST:event_btnSendActionPerformed
@@ -459,7 +462,6 @@ public class PostDetailUI extends javax.swing.JPanel {
     private online.syncio.component.MyLabel lblSparkles;
     private online.syncio.component.MyPanel myPanel1;
     private online.syncio.component.MyPanel myPanel2;
-    private online.syncio.component.MyScrollPane myScrollPane1;
     private online.syncio.component.MyPanel pnlCmt;
     private online.syncio.component.MyPanel pnlCmtContainer;
     private online.syncio.component.MyPanel pnlContent;
@@ -467,6 +469,7 @@ public class PostDetailUI extends javax.swing.JPanel {
     private online.syncio.component.MyPanel pnlLeft;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlRight;
+    private online.syncio.component.MyScrollPane scrollPane;
     private online.syncio.component.MyTextPane txpCmt;
     // End of variables declaration//GEN-END:variables
 }
