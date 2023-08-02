@@ -69,15 +69,13 @@ public class LoginController {
                 if (LoggedInUser.isAdmin()) {
                     new MainAdmin().setVisible(true);
                     login.dispose();
-                }
-                else {
+                } else {
                     new Main().setVisible(true);
                     login.dispose();
-                    
-                    if(login.getChkRememberMe().isSelected()) {
+
+                    if (login.getChkRememberMe().isSelected()) {
                         OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
-                    }
-                    else {
+                    } else {
                         LoggedInUser.logOut();
                         OtherHelper.deleteSessionValue("LOGGED_IN_USER");
                     }

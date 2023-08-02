@@ -1,18 +1,14 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
-import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
@@ -23,50 +19,50 @@ public final class Main extends javax.swing.JFrame {
     private UserDAO userDAO;
     static ConnectionPanel[] connectionPanelList;
     static MyButton[] btnMenuList;
-    private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
-    boolean added = false;
     public Profile profile;
 
     public Main() {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
-        
+
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
-        
+
         pnlSearch.setVisible(false);
-        
-        if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+
+        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
             LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
         }
-        
-        if(LoggedInUser.getCurrentUser() == null) {
+
+        if (LoggedInUser.getCurrentUser() == null) {
             //chua login
             btnProfile.setText("Log in");
-        }
-        else {
+        } else {
             // da login
             this.profile = new Profile(LoggedInUser.getCurrentUser());
         }
-        
+
         addComponents();
     }
-    
-    
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(this), new Message(), new Notification(),
+        connectionPanelList = new ConnectionPanel[]{new Home(this), new MessagePanel(), new Notification(),
             profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
         for (ConnectionPanel pnl : connectionPanelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
+
+            if (pnlName.equalsIgnoreCase("messagepanel")) {
+                pnlName = "message";
+            }
+
             pnlTabContent.add(pnl, pnlName);
             pnl.setConnection(this);
         }
@@ -80,21 +76,20 @@ public final class Main extends javax.swing.JFrame {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
-                
-                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
-                    dispose();
-                    new Login().setVisible(true);
-                    if(!name1.equals("profile")) GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
-                    return;
-                }
 
+//                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+//                    dispose();
+//                    new Login().setVisible(true);
+//                    if (!name1.equals("profile")) {
+//                        GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+//                    }
+//                    return;
+//                }
                 showTab(name1, btn1);
             });
         }
     }
 
-    
-    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -134,8 +129,6 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -332,7 +325,7 @@ public final class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
-        
+
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
         });
@@ -365,9 +358,7 @@ public final class Main extends javax.swing.JFrame {
     public void setBtnSearch(MyButton btnSearch) {
         this.btnSearch = btnSearch;
     }
-    
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;
