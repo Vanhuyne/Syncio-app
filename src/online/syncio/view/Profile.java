@@ -41,6 +41,10 @@ public class Profile extends JPanel {
     }
 
     public void loadProfile(User user) {
+        if (user == null) {
+            return;
+        }
+
         this.user = user;
         this.posts = postDAO.getAllByUserID(user.getId().toString());
 

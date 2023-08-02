@@ -7,6 +7,8 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import java.awt.Color;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -279,7 +281,7 @@ public class Login extends javax.swing.JFrame {
                 //not found account
                 GlassPanePopup.showPopup(new MyDialog("Account Not Found", "You don't have a linked Syncio account with your Google Account.\nTry logging in with your username. If you don't have an account, please sign up."), "dialog");
             }
-        } catch (Exception ex) {
+        } catch (IOException | GeneralSecurityException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed

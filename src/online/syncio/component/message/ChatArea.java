@@ -52,6 +52,7 @@ public class ChatArea extends JPanel {
     private FindIterable<MessagePanel> messageList;
 
     private User currentUser;
+
     private User messagingUser;
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -64,6 +65,7 @@ public class ChatArea extends JPanel {
     }
 
     public ChatArea() {
+
         init();
         initAnimator();
 
@@ -71,10 +73,9 @@ public class ChatArea extends JPanel {
         postDAO = MongoDBConnect.getPostDAO();
         messageDAO = MongoDBConnect.getMessageDAO();
 
-        this.currentUser = LoggedInUser.getCurrentUser();
+        currentUser = LoggedInUser.getCurrentUser();
 
         addEventsAndRunnable();
-        loadExistingMessages();
     }
 
     private void init() {
@@ -177,35 +178,38 @@ public class ChatArea extends JPanel {
         };
     }
 
-    public void loadExistingMessages() {
-        FindIterable<Message> messageList = messageDAO.findAllByTwoUsernames(currentUser.getUsername(),
-                messagingUser.getUsername());
-
-        Thread thread = new Thread(() -> {
-            for (Message m : messageList) {
-                SwingUtilities.invokeLater(() -> {
-                    if (m.getRecipient().equalsIgnoreCase(messagingUser.getUsername())) {
-                        addChatBox(m, ChatBox.BoxType.RIGHT);
-                    } else {
-                        addChatBox(m, ChatBox.BoxType.LEFT);
-                    }
-                });
-
-                if (!m.getSender().equalsIgnoreCase(currentUser.getUsername())) {
-                    lastSentDate = m.getDateSent();
-                }
-            }
-        });
-
-        thread.start();
-
-    }
-
     public void setMessagingUser(User messagingUser) {
         this.messagingUser = messagingUser;
         setTitle(messagingUser.getUsername());
         setName(messagingUser.getUsername().trim().toLowerCase());
+
+        loadExistingMessages();
+
         scheduler.scheduleAtFixedRate(updateRecievingMessageTask, 0, 3, TimeUnit.SECONDS);
+    }
+
+    public void loadExistingMessages() {
+        FindIterable<Message> messageList = messageDAO.findAllByTwoUsernames(currentUser.getUsername(),
+                messagingUser.getUsername());
+
+        if (messageList != null) {
+            Thread thread = new Thread(() -> {
+                for (Message m : messageList) {
+                    SwingUtilities.invokeLater(() -> {
+                        if (m.getRecipient().equalsIgnoreCase(messagingUser.getUsername())) {
+                            addChatBox(m, ChatBox.BoxType.RIGHT);
+                        } else {
+                            addChatBox(m, ChatBox.BoxType.LEFT);
+                        }
+                    });
+
+                    if (!m.getSender().equalsIgnoreCase(currentUser.getUsername())) {
+                        lastSentDate = m.getDateSent();
+                    }
+                }
+            });
+            thread.start();
+        }
     }
 
     private JPanel createHeader() {

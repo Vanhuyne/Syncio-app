@@ -65,6 +65,9 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(290, 90));
         addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
             }
@@ -113,9 +116,14 @@ public class SearchedUserCard extends javax.swing.JPanel {
         CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
         c.show(main.getPnlTabContent(), "profile");
 
-        main.profile.loadProfile(user);
+        main.getMessagePanel().openMessage(user);
+//        main.profile.loadProfile(user);
+        main.showTab("message");
         main.getBtnSearch().doClick();
     }//GEN-LAST:event_formMousePressed
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+    }//GEN-LAST:event_formMouseEntered
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAvatar;

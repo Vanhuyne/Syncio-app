@@ -12,6 +12,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
+import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
@@ -21,6 +22,7 @@ public final class Main extends javax.swing.JFrame {
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
     public Profile profile;
+    private MessagePanel messagePanel;
 
     private UserDAO userDAO;
 
@@ -37,22 +39,23 @@ public final class Main extends javax.swing.JFrame {
 
         pnlSearch.setVisible(false);
 
-//        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
-//            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
-//        }
-        if (LoggedInUser.getCurrentUser() == null) {
+        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+            // da login
+            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
+            this.profile = new Profile(LoggedInUser.getCurrentUser());
+        } else if (LoggedInUser.getCurrentUser() == null) {
             //chua login
             btnProfile.setText("Log in");
-        } else {
-            // da login
-            this.profile = new Profile(LoggedInUser.getCurrentUser());
+            this.profile = new Profile(null);
         }
+
+        messagePanel = new MessagePanel();
 
         addComponents();
     }
 
     public void addComponents() {
-        panelList = new JPanel[]{new Home(), new MessagePanel(), new Notification(), profile, new EditProfile()};
+        panelList = new JPanel[]{new Home(), messagePanel, new Notification(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -358,6 +361,10 @@ public final class Main extends javax.swing.JFrame {
 
     public void setBtnSearch(MyButton btnSearch) {
         this.btnSearch = btnSearch;
+    }
+
+    public MessagePanel getMessagePanel() {
+        return messagePanel;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
