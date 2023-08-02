@@ -10,10 +10,10 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.OtherHelper;
 import online.syncio.view.Main;
 
 public class SearchedUserCard extends javax.swing.JPanel {
+
     private User user;
     private UserDAO userDAO;
 
@@ -24,7 +24,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.user = user;
-        
+
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -38,12 +38,10 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblUsername.setText(user.getUsername().trim());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
     }
-    
-    
-    
+
     public SearchedUserCard(User user, Color backgroundColor) {
         this.user = user;
-        
+
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -51,7 +49,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setMaximumSize(new Dimension(290, 90));
         setMinimumSize(new Dimension(290, 90));
         setBackground(backgroundColor);
-        
+
         lblAvatar.setBackground(backgroundColor);
 
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
@@ -73,6 +71,9 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(290, 90));
         addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
             }
@@ -116,16 +117,19 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        if(LoggedInUser.isAdmin()) return;
-        
-        Main main = OtherHelper.getMainFrame(this);
-        
+        Main main = Main.getInstance();
+
         CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
         c.show(main.getPnlTabContent(), "profile");
-        
-        main.profile.loadProfile(user);
+
+        main.getMessagePanel().openMessage(user);
+//        main.profile.loadProfile(user);
+        main.showTab("message");
         main.getBtnSearch().doClick();
     }//GEN-LAST:event_formMousePressed
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+    }//GEN-LAST:event_formMouseEntered
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAvatar;

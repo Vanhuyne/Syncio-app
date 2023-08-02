@@ -7,6 +7,7 @@ import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 
 public class User {
+
     private ObjectId id;
     private String username;
     private String password;
@@ -40,7 +41,7 @@ public class User {
         this.role = role;
         this.flag = flag;
     }
-    
+
     public User(String id, String username, String password, String email, String bio, int role, int flag) {
         this.id = new ObjectId(id);
         this.username = username;
@@ -58,7 +59,7 @@ public class User {
     public void setId(ObjectId id) {
         this.id = id;
     }
-    
+
     public String getUsername() {
         return username;
     }
@@ -130,15 +131,15 @@ public class User {
     public void setFollowing(ArrayList<UserIDAndDate> following) {
         this.following = following;
     }
-    
-    
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         User user = (User) o;
         return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(avt, user.avt) && Objects.equals(bio, user.bio) && Objects.equals(role, user.role) && Objects.equals(flag, user.flag) && Objects.equals(following, user.following);
     }
@@ -147,4 +148,10 @@ public class User {
     public int hashCode() {
         return Objects.hash(id, username, password, email, avt, bio, role, dateCreated, flag, following);
     }
+
+    @Override
+    public String toString() {
+        return "User{" + "username=" + username + ", password=" + password + ", email=" + email + ", bio=" + bio + ", role=" + role + ", dateCreated=" + dateCreated + ", flag=" + flag + ", following=" + following + '}';
+    }
+
 }

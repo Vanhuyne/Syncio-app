@@ -8,6 +8,7 @@ import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 
 public class Post {
+
     private ObjectId id;
     private String userID;
     private String caption;
@@ -39,7 +40,7 @@ public class Post {
     public void setId(ObjectId id) {
         this.id = id;
     }
-    
+
     public String getUserID() {
         return userID;
     }
@@ -104,9 +105,7 @@ public class Post {
     public void setFlag(int flag) {
         this.flag = flag;
     }
-    
-    
-    
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Grade{");
@@ -125,10 +124,12 @@ public class Post {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         Post post = (Post) o;
         return Objects.equals(id, post.id) && Objects.equals(userID, post.userID) && Objects.equals(caption, post.caption) && Objects.equals(datePosted, post.datePosted) && Objects.equals(photoList, post.photoList) && Objects.equals(likeList, post.likeList) && Objects.equals(commentList, post.commentList) && Objects.equals(reportList, post.reportList) && Objects.equals(flag, post.flag);
     }
@@ -138,4 +139,3 @@ public class Post {
         return Objects.hash(id, userID, caption, datePosted, photoList, likeList, commentList, reportList, flag);
     }
 }
-

@@ -13,12 +13,14 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
 public class MongoDBConnect {
+
     private static MongoDBConnect instance;
     private static MongoClient mongoClient;
     private static MongoDatabase database;
     private static UserDAO userDAO;
     private static PostDAO postDAO;
-    
+    private static MessageDAO messageDAO;
+
     public static synchronized MongoDBConnect getInstance() {
         if (instance == null) {
             instance = new MongoDBConnect();
@@ -43,6 +45,7 @@ public class MongoDBConnect {
             // Create UserDAO and PostDAO instances
             userDAO = new UserDAOImpl(database);
             postDAO = new PostDAOImpl(database);
+            messageDAO = new MessageDAOImpl(database);
         }
     }
 
@@ -65,6 +68,13 @@ public class MongoDBConnect {
             connect();
         }
         return postDAO;
+    }
+
+    public static MessageDAO getMessageDAO() {
+        if (mongoClient == null) {
+            connect();
+        }
+        return messageDAO;
     }
 
     public static void close() {

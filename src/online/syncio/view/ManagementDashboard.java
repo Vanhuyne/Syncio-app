@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import online.syncio.component.ConnectionPanel;
+import javax.swing.JPanel;
 import online.syncio.component.MyChart;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
@@ -26,40 +26,38 @@ import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.Export;
 import org.bson.BsonDocument;
 
-public class ManagementDashboard extends ConnectionPanel {
-    
+public class ManagementDashboard extends JPanel {
+
     private UserDAO userDAO;
     private PostDAO postDAO;
 
     public ManagementDashboard() {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        
+
         ArrayList<String> dateList = new ArrayList<>();
         ArrayList<Integer> valueList = new ArrayList<>();
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         // get starting date
         cal.add(Calendar.DAY_OF_YEAR, -7);
 
         // loop adding one day in each iteration
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             cal.add(Calendar.DAY_OF_YEAR, 1);
             dateList.add(sdf.format(cal.getTime()));
         }
-        
-        
+
         MongoCollection<User> collectionUser = userDAO.getAllByCollection();
         FindIterable<User> userCollection = collectionUser.find(
-            Filters.and(
-                Filters.gte("dateCreated", dateList.get(0) + " 00:00:00"), // Start of the day
-                Filters.lt("dateCreated", dateList.get(dateList.size() - 1) + " 23:59:59") // End of the day
-            )
+                Filters.and(
+                        Filters.gte("dateCreated", dateList.get(0) + " 00:00:00"), // Start of the day
+                        Filters.lt("dateCreated", dateList.get(dateList.size() - 1) + " 23:59:59") // End of the day
+                )
         );
 
         // Iterate through the dateList and populate the valueList with new user counts
@@ -67,39 +65,41 @@ public class ManagementDashboard extends ConnectionPanel {
             int newUserCount = 0;
             for (User user : userCollection) {
                 String registrationDate = user.getDateCreated().substring(0, 10);
-                if (registrationDate.equals(date)) newUserCount++;
+                if (registrationDate.equals(date)) {
+                    newUserCount++;
+                }
             }
             valueList.add(newUserCount);
         }
-        
-        
+
         //chart
-        for(int i = 0; i < dateList.size(); i++) dateList.set(i, dateList.get(i).substring(5, 10)); //remove year
+        for (int i = 0; i < dateList.size(); i++) {
+            dateList.set(i, dateList.get(i).substring(5, 10)); //remove year
+        }
         MyChart newUserChart = new MyChart(dateList, valueList);
         newUserChart.setChartHEIGHT(469);
         newUserChart.setChartName("New Users Last 7 Days");
         pnlNewUsersChart.add(newUserChart);
         pnlNewUsersChart.revalidate();
         pnlNewUsersChart.repaint();
-        
+
         CountOptions opts = new CountOptions().hintString("_id_");
         long numUsers = collectionUser.countDocuments(new BsonDocument(), opts);
         long numPosts = postDAO.getAllByCollection().countDocuments(new BsonDocument(), opts);
         lblUsersTotal.setText(numUsers + "");
         lblPostsTotal.setText(numPosts + "");
-        
-        
+
         long likeCount = 0;
         long commentCount = 0;
         Map<String, Integer> engagementCountMap = new HashMap<>();
-        
+
         MongoCollection<Post> collectionPost = postDAO.getAllByCollection();
         FindIterable<Post> postCollection = collectionPost.find();
-        
-        for(Post post : postCollection) {
+
+        for (Post post : postCollection) {
             likeCount += post.getLikeList().size();
             commentCount += post.getCommentList().size();
-            
+
             // Loop through the likeList and increment the engagement count for each user
             List<UserIDAndDate> likeList = post.getLikeList();
             for (UserIDAndDate like : likeList) {
@@ -114,9 +114,9 @@ public class ManagementDashboard extends ConnectionPanel {
                 engagementCountMap.put(userID, engagementCountMap.getOrDefault(userID, 0) + 1);
             }
         }
-        
-        lblAverageEngagementRate.setText(String.format("%.2f", (double)(likeCount + commentCount) / numUsers));
-        
+
+        lblAverageEngagementRate.setText(String.format("%.2f", (double) (likeCount + commentCount) / numUsers));
+
         // Sort the users based on their engagement counts in descending order
         List<Map.Entry<String, Integer>> sortedEngagementList = new ArrayList<>(engagementCountMap.entrySet());
         sortedEngagementList.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
@@ -133,14 +133,14 @@ public class ManagementDashboard extends ConnectionPanel {
             Map.Entry<String, Integer> entry = topUsers.get(i);
             String userID = entry.getKey();
             int engagementCount = entry.getValue();
-            
+
             pnlResult.add(new SearchedUserCard(userDAO.getByID(userID), new Color(245, 245, 245)));
             Box.createVerticalStrut(20);
 
             pnlResult.revalidate();
             pnlResult.repaint();
         }
-        
+
     }
 
     @SuppressWarnings("unchecked")

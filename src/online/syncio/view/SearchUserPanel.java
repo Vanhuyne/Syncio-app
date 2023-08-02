@@ -2,34 +2,28 @@ package online.syncio.view;
 
 import com.mongodb.client.FindIterable;
 import java.awt.Color;
-import javax.swing.BoxLayout;
 import javax.swing.Box;
-import online.syncio.component.ConnectionPanel;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
 
-public class SearchUserPanel extends ConnectionPanel {
+public class SearchUserPanel extends JPanel {
 
-    private UserDAO userDAO;
+    private Main main = Main.getInstance();
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private FindIterable<User> userList;
 
     public SearchUserPanel() {
-        MongoDBConnect.connect();
-        this.userDAO = MongoDBConnect.getUserDAO();
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         setOpaque(true);
 
         pnlResult.setLayout(new BoxLayout(pnlResult, BoxLayout.Y_AXIS));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-    }
-
-    @Override
-    public void setConnection(Main main) {
-        this.main = main;
     }
 
     public void find() {
@@ -57,7 +51,6 @@ public class SearchUserPanel extends ConnectionPanel {
             pnlResult.revalidate();
             pnlResult.repaint();
         }
-
     }
 
     @SuppressWarnings("unchecked")

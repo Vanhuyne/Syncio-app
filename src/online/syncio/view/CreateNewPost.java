@@ -1,6 +1,5 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -12,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import static online.syncio.view.Main.prevTab;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyNotification;
 import online.syncio.component.MyTextPane;
@@ -23,6 +21,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
+import static online.syncio.view.Main.prevTab;
 
 public class CreateNewPost extends javax.swing.JPanel {
 
@@ -32,13 +31,11 @@ public class CreateNewPost extends javax.swing.JPanel {
 
     private Main main;
     private CreateNewPostController controller;
-    private MongoDatabase database;
     private PostDAO postDAO;
     private UserDAO userDAO;
 
     public CreateNewPost(Main main) {
         this.main = main;
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
 

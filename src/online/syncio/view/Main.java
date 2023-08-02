@@ -6,11 +6,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
 import java.awt.geom.RoundRectangle2D;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
-import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
@@ -21,27 +21,29 @@ import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
-    private UserDAO userDAO;
-    static ConnectionPanel[] connectionPanelList;
+    private static Main instance;
+    static JPanel[] panelList;
     static MyButton[] btnMenuList;
-    private CreateNewPost popupCreate;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
-    boolean added = false;
     public Profile profile;
+    private MessagePanel messagePanel;
+
+    private UserDAO userDAO;
 
     public Main() {
-        MongoDBConnect.connect();
+        instance = this;
+
         this.userDAO = MongoDBConnect.getUserDAO();
-        
+
         setUndecorated(true);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
-        
+
         pnlSearch.setVisible(false);
-        
+
         if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
             // da login = remember me
             LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
@@ -56,7 +58,9 @@ public final class Main extends javax.swing.JFrame {
             btnProfile.setText("Log in");
             this.profile = new Profile(null);
         }
-        
+
+        messagePanel = new MessagePanel();
+
         addComponents();
     }
     
@@ -73,19 +77,21 @@ public final class Main extends javax.swing.JFrame {
     
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(this), new Message(), new Notification(),
-            profile, new EditProfile()};
+        panelList = new JPanel[]{new Home(), messagePanel, new Notification(), new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
-        for (ConnectionPanel pnl : connectionPanelList) {
+        for (JPanel pnl : panelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
-            System.out.println(pnlName);
-            pnlTabContent.add(pnl, pnlName);
-            pnl.setConnection(this);
-        }
 
-        pnlSearch.setConnection(this);
+            if (pnlName.equalsIgnoreCase("messagepanel")) {
+                pnlName = "message";
+            }
+
+            System.out.println(pnlName);
+
+            pnlTabContent.add(pnl, pnlName);
+        }
 
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
@@ -111,12 +117,11 @@ public final class Main extends javax.swing.JFrame {
                     
                     showTab(name1, btn1);
                 }
+
             });
         }
     }
 
-    
-    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -156,8 +161,6 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -352,15 +355,16 @@ public final class Main extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
-            }
+
+        java.awt.EventQueue.invokeLater(() -> {
+            new Main().setVisible(true);
         });
+    }
+
+    public static Main getInstance() {
+        return instance;
     }
 
     public MyPanel getPnlTabContent() {
@@ -390,9 +394,11 @@ public final class Main extends javax.swing.JFrame {
     public void setBtnSearch(MyButton btnSearch) {
         this.btnSearch = btnSearch;
     }
-    
-    
-    
+
+    public MessagePanel getMessagePanel() {
+        return messagePanel;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

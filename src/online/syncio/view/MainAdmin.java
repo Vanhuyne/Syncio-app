@@ -1,17 +1,16 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import online.syncio.component.ConnectionPanel;
-import online.syncio.resources.fonts.MyFont;
+import javax.swing.JPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
 
 public final class MainAdmin extends javax.swing.JFrame {
@@ -19,32 +18,31 @@ public final class MainAdmin extends javax.swing.JFrame {
     private User currentUser;
     public Profile profile;
 
-    static ConnectionPanel[] connectionPanelList;
+    static JPanel[] panelList;
     static MyButton[] btnMenuList;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
 
     public MainAdmin() {
         this.profile = new Profile(LoggedInUser.getCurrentUser());
-        
+
         setUndecorated(true);
         initComponents();
         GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
-        
+
         addComponents();
     }
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new ManagementDashboard(), new ManagementUser(), new ManagementHiddenPost(), new ManagementReportedPost(), profile, new EditProfile()};
+        panelList = new JPanel[]{new ManagementDashboard(), new ManagementUser(), new ManagementHiddenPost(), new ManagementReportedPost(), profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
-        for (ConnectionPanel pnl : connectionPanelList) {
+        for (JPanel pnl : panelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
             pnlTabContent.add(pnl, pnlName);
-            pnl.setConnection(this);
         }
 
         btnMenuList = new MyButton[]{btnDashboard, btnUser, btnHiddenPost, btnReportedPost, btnProfile};
@@ -241,7 +239,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         //</editor-fold>
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
-        
+
         java.awt.EventQueue.invokeLater(() -> {
             new MainAdmin().setVisible(true);
         });
@@ -254,8 +252,7 @@ public final class MainAdmin extends javax.swing.JFrame {
     public User getCurrentUser() {
         return currentUser;
     }
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnDashboard;
     private online.syncio.component.MyButton btnHiddenPost;

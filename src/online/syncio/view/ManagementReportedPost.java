@@ -1,9 +1,9 @@
 package online.syncio.view;
 
 import java.awt.Color;
-import online.syncio.component.ConnectionPanel;
+import javax.swing.JPanel;
 
-public class ManagementReportedPost extends ConnectionPanel {
+public class ManagementReportedPost extends JPanel {
 
     public ManagementReportedPost() {
         initComponents();

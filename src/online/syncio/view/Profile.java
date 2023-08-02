@@ -7,8 +7,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
@@ -18,29 +18,28 @@ import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
 
-public class Profile extends ConnectionPanel {
+public class Profile extends JPanel {
 
     private Image defaultImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/avt_128px.png")).getImage();
+
+    private Main main = Main.getInstance();
     private UserDAO userDAO;
     private PostDAO postDAO;
     List<Post> posts;
     private User user;
 
     public Profile(User user) {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
         this.user = user;
-        
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        
+
         loadProfile(user);
     }
-    
-    
-    
+
     public void loadProfile(User user) {
         if(user == null) return;
         
@@ -51,12 +50,11 @@ public class Profile extends ConnectionPanel {
             // own profile
             btnEditProfileMessage.setText("Edit profile");
             btnFollow.setVisible(false);
-            
+
             lblAvatar.setSize(128, 128);
             ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
             lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
-        }
-        else {
+        } else {
             // another user profile
             User currentUser = LoggedInUser.getCurrentUser();
             ArrayList<UserIDAndDate> following = new ArrayList<>();
@@ -64,7 +62,7 @@ public class Profile extends ConnectionPanel {
 
             btnEditProfileMessage.setText("Message");
             btnFollow.setVisible(true);
-            
+
             boolean f = false;
             //check myfollowing contain user is shown
             for(UserIDAndDate u : following) {
@@ -74,9 +72,11 @@ public class Profile extends ConnectionPanel {
                     break;
                 }
             }
-            if(!f) btnFollow.setText("Follow");
+            if (!f) {
+                btnFollow.setText("Follow");
+            }
         }
-        
+
         String username = user.getUsername();
         String bio = user.getBio();
         int postNum = posts.size();
@@ -89,9 +89,9 @@ public class Profile extends ConnectionPanel {
         lblPostNum.setText(postNum + " posts");
         lblFollowingNum.setText(followersSize + " following");
         lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
-        
+              
         pnlProfilePost.setUserPosts(posts);
-        
+
         Thread thread = new Thread(() -> {
             // Set up MongoDB change stream for the user's posts
             ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
@@ -128,20 +128,15 @@ public class Profile extends ConnectionPanel {
         // Start the thread
         thread.start();
     }
-    
-    
-    
+
     public void toggleFollow() {
-        if(btnFollow.getText().equalsIgnoreCase("follow")) {
+        if (btnFollow.getText().equalsIgnoreCase("follow")) {
             btnFollow.setText("Unfollow");
-        }
-        else {
+        } else {
             btnFollow.setText("Follow");
         }
     }
 
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -283,7 +278,7 @@ public class Profile extends ConnectionPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditProfileMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileMessageActionPerformed
-        if(btnEditProfileMessage.getText().equalsIgnoreCase("edit profile")) {
+        if (btnEditProfileMessage.getText().equalsIgnoreCase("edit profile")) {
             CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
             c.show(this.main.getPnlTabContent(), "editprofile");
         }
@@ -291,7 +286,7 @@ public class Profile extends ConnectionPanel {
 
     private void btnFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowActionPerformed
         int result = userDAO.toggleFollow(LoggedInUser.getCurrentUser().getId().toString(), user.getId().toString());
-        if(result > 0) {
+        if (result > 0) {
             toggleFollow();
             lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
         }
@@ -299,8 +294,6 @@ public class Profile extends ConnectionPanel {
             System.out.println(result);
         }
     }//GEN-LAST:event_btnFollowActionPerformed
-
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnEditProfileMessage;

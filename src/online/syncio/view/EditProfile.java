@@ -1,8 +1,8 @@
 package online.syncio.view;
 
 import java.awt.Color;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import online.syncio.component.ConnectionPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.dao.MongoDBConnect;
@@ -12,18 +12,18 @@ import online.syncio.model.User;
 import online.syncio.utils.OtherHelper;
 import online.syncio.utils.Validator;
 
-public class EditProfile extends ConnectionPanel {
+public final class EditProfile extends JPanel {
+
     private User currentUser;
     private UserDAO userDAO;
 
     public EditProfile() {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.currentUser = LoggedInUser.getCurrentUser();
-                
+
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        if(currentUser != null) {
+        if (currentUser != null) {
             loadUserData();
         }
     }
@@ -245,33 +245,38 @@ public class EditProfile extends ConnectionPanel {
     private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
         LoggedInUser.logOut();
         OtherHelper.deleteSessionValue("LOGGED_IN_USER");
-        OtherHelper.getMainFrame(this).dispose();
+        Main.getInstance().dispose();
         new Login().setVisible(true);
     }//GEN-LAST:event_lblLogoutMousePressed
 
     private void lblChangeUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeUsernameMousePressed
         //validate
         String username = txtUsername.getText().trim();
-        String errors = Validator.allowNumberTextUnderline((JTextField)txtUsername, "Username", username, false, "Username");
-        if(!errors.equals("")) {
+        String errors = Validator.allowNumberTextUnderline((JTextField) txtUsername, "Username", username, false, "Username");
+        if (!errors.equals("")) {
             GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
-        }
-        else {
+        } else {
             //update
             int result = userDAO.updateUsernameByEmail(username, txtEmail.getText());
-            if(result <= 0) GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Username"), "dialog");
-            else GlassPanePopup.showPopup(new MyDialog("Update Successful", "Updated successfully. Reopen the app to see the change."), "dialog");
+            if (result <= 0) {
+                GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Username"), "dialog");
+            } else {
+                GlassPanePopup.showPopup(new MyDialog("Update Successful", "Updated successfully. Reopen the app to see the change."), "dialog");
+            }
         }
     }//GEN-LAST:event_lblChangeUsernameMousePressed
 
     private void lblChangeBioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeBioMousePressed
         //validate
         String bio = txtBio.getText().trim();
-        
+
         //update
         int result = userDAO.updateBioByEmail(bio, txtEmail.getText());
-        if(result <= 0) GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Bio"), "dialog");
-        else GlassPanePopup.showPopup(new MyDialog("Update Successful", "Your Bio has been updated successfully."), "dialog");
+        if (result <= 0) {
+            GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Bio"), "dialog");
+        } else {
+            GlassPanePopup.showPopup(new MyDialog("Update Successful", "Your Bio has been updated successfully."), "dialog");
+        }
     }//GEN-LAST:event_lblChangeBioMousePressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

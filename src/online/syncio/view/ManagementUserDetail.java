@@ -23,7 +23,6 @@ import online.syncio.utils.Validator;
 
 public class ManagementUserDetail extends javax.swing.JFrame {
 
-    private static Main main;
     private LoginController controller;
     private MongoDatabase database;
     private UserDAO userDAO;
@@ -33,19 +32,18 @@ public class ManagementUserDetail extends javax.swing.JFrame {
     ManagementUser managementUser;
 
     public ManagementUserDetail(ManagementUser managementUser, User user) {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
         this.currentUser = user;
         this.managementUser = managementUser;
-        
+
         setUndecorated(true);
         initComponents();
         GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
-        
-        if(user == null) {
+
+        if (user == null) {
             //new
             txtID.setVisible(false);
             txtDateCreated.setVisible(false);
@@ -56,22 +54,22 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             txtPassword.setEditable(true);
             txtBio.setEditable(true);
             txtEmail.requestFocus();
-        } 
-        else {
+        } else {
             //edit
             txtID.setText(user.getId().toString());
             txtEmail.setText(user.getEmail());
             txtUsername.setText(user.getUsername());
             txtPassword.setText(user.getPassword());
             txtDateCreated.setText(user.getDateCreated());
-            if(user.getBio() != null) txtBio.setText(user.getBio());
+            if (user.getBio() != null) {
+                txtBio.setText(user.getBio());
+            }
             lblPost.setText(userDAO.countPost(user.getId().toString()) + " posts");
             lblFollowing.setText(user.getFollowing().size() + " following");
-            if(user.getRole() == 0) {
+            if (user.getRole() == 0) {
                 rdoUser.setSelected(true);
                 rdoAdmin.setVisible(false);
-            }
-            else {
+            } else {
                 rdoAdmin.setSelected(true);
                 rdoAdmin.setVisible(true);
             }
@@ -94,20 +92,16 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             loadMorePosts();
         }
     }
-    
-    
-    
+
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
-    
+
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
-    
-    
     private void loadMorePosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -123,14 +117,13 @@ public class ManagementUserDetail extends javax.swing.JFrame {
                 });
                 feedPanel.revalidate();
                 feedPanel.repaint();
-                
+
                 count++;
             }
-            
-            if(count != 0) {
+
+            if (count != 0) {
                 removeLoading();
-            }
-            else {
+            } else {
                 lblLoading.setText("No posts found for this profile.");
                 lblLoading.setIcon(null);
             }
@@ -139,17 +132,14 @@ public class ManagementUserDetail extends javax.swing.JFrame {
         // Start the thread
         thread.start();
     }
-    
-    
-    
+
     public void flag() {
-        if(currentUser.getFlag() == 0) {
+        if (currentUser.getFlag() == 0) {
             txtUsername.setEditable(true);
             txtBio.setEditable(true);
             btnSetFlag.setText("Set Flag");
             txtUsername.requestFocus();
-        }
-        else {
+        } else {
             txtEmail.setEditable(false);
             txtUsername.setEditable(false);
             txtPassword.setEditable(false);
@@ -157,15 +147,14 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             btnSetFlag.setText("Unflag");
         }
     }
-    
-    
-    
+
     public void toggleFlag() {
-        if(currentUser.getFlag() == 0) currentUser.setFlag(1);
-        else currentUser.setFlag(0);
+        if (currentUser.getFlag() == 0) {
+            currentUser.setFlag(1);
+        } else {
+            currentUser.setFlag(0);
+        }
     }
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -458,79 +447,82 @@ public class ManagementUserDetail extends javax.swing.JFrame {
         String email = txtEmail.getText();
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
-        
+
         boolean isExist = userDAO.checkEmail(email);
-        
+
         //validate
         ArrayList<String> errors = new ArrayList<>();
-        errors.add(Validator.email((JTextField)txtEmail, "Email", email, false, "Email"));
-        errors.add(Validator.allowNumberText((JTextField)txtUsername, "Username", username, false, "Username"));
-        if(!isExist) errors.add(Validator.allowNumberText((JTextField)txtPassword, "Password", password, false, "Password"));
+        errors.add(Validator.email((JTextField) txtEmail, "Email", email, false, "Email"));
+        errors.add(Validator.allowNumberText((JTextField) txtUsername, "Username", username, false, "Username"));
+        if (!isExist) {
+            errors.add(Validator.allowNumberText((JTextField) txtPassword, "Password", password, false, "Password"));
+        }
 
         Collections.reverse(errors);
         String e = "";
-        for(String s : errors) e += s;
+        for (String s : errors) {
+            e += s;
+        }
 
         //co loi
-        if(!e.isEmpty()) {
+        if (!e.isEmpty()) {
             GlassPanePopup.showPopup(new MyDialog("Error", e), "dialog");
             return;
         }
-        
+
         //check add or update
         if (isExist) {
             //update
-            if(!txtID.isVisible()) {
+            if (!txtID.isVisible()) {
                 GlassPanePopup.showPopup(new MyDialog("Email Address Already Taken", "The email address you entered is already taken.\nPlease use a different email address."), "dialog");
                 return;
             }
             User u = new User(txtUsername.getText(), currentUser.getPassword(), currentUser.getEmail(), txtBio.getText().equals("Bio") ? null : txtBio.getText(), rdoAdmin.isSelected() ? 1 : 0, currentUser.getFlag(), currentUser.getFollowing());
             u.setId(currentUser.getId());
-            if(!u.getUsername().equals(currentUser.getUsername()))
+            if (!u.getUsername().equals(currentUser.getUsername())) {
                 if (userDAO.checkUsername(username)) {
                     GlassPanePopup.showPopup(new MyDialog("Username Already Taken", "The username you've chosen is already taken.\nPlease select a different username."), "dialog");
                     return;
                 }
-            
+            }
+
             boolean result = userDAO.updateByID(u);
-            if(result) {
+            if (result) {
                 dispose();
                 managementUser.fillToTable();
             }
-        }
-        else {
+        } else {
             //add
             if (userDAO.checkUsername(username)) {
                 GlassPanePopup.showPopup(new MyDialog("Username Already Taken", "The username you've chosen is already taken.\nPlease select a different username."), "dialog");
                 return;
             }
-            
+
             //gui email
             String subject = "WELCOME TO SYNCIO";
             String recipientName = email;
             String content = "<tr>\n"
-                      + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
-                      + "<h4>" + subject + "</h4>\n"
-                      + "<br>\n"
-                      + "Dear " + recipientName + ",<br>\n"
-                      + "Thank you for creating your personal account on SYNCIO.<br>\n"
-                      + "<br><br>\n"
-                      + "An account has been created for you in Syncio by \n" + LoggedInUser.getCurrentUser().getUsername()+ ".\n"
-                      + "<br><br>\n"
-                      + "</td>\n"
-                      + "</tr>\n"
-                      + "<tr>\n"
-                      + "<td>\n"
-                      + "<p class=\"text-center\">If you did not request this account or have any questions, please contact our support team.</p>\n"
-                      + "</td>\n"
-                      + "</tr>\n";
+                    + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
+                    + "<h4>" + subject + "</h4>\n"
+                    + "<br>\n"
+                    + "Dear " + recipientName + ",<br>\n"
+                    + "Thank you for creating your personal account on SYNCIO.<br>\n"
+                    + "<br><br>\n"
+                    + "An account has been created for you in Syncio by \n" + LoggedInUser.getCurrentUser().getUsername() + ".\n"
+                    + "<br><br>\n"
+                    + "</td>\n"
+                    + "</tr>\n"
+                    + "<tr>\n"
+                    + "<td>\n"
+                    + "<p class=\"text-center\">If you did not request this account or have any questions, please contact our support team.</p>\n"
+                    + "</td>\n"
+                    + "</tr>\n";
 
             boolean sendStatus = SendEmail.sendFormat(email, email, subject, content);
 
             if (!sendStatus) {
                 GlassPanePopup.showPopup(new MyDialog("Error", "An error occurred while sending the email"), "dialog");
-            }
-            else {
+            } else {
                 // hash password
                 password = TextHelper.HashPassword(password);
                 boolean result = userDAO.add(new User(username, password, email, null, rdoAdmin.isSelected() ? 1 : 0, btnSetFlag.getText().equalsIgnoreCase("set flag") ? 0 : 1, null));
@@ -541,7 +533,6 @@ public class ManagementUserDetail extends javax.swing.JFrame {
             }
         }
 
-        
 //        u.setFlag(currentUser.getFlag());
 //        u.setRole(rdoAdmin.isSelected() ? 1 : 0);
 //        System.out.println(currentUser.getBio());
@@ -570,8 +561,6 @@ public class ManagementUserDetail extends javax.swing.JFrame {
 //            new ManagementUserDetail().setVisible(true);
 //        });
     }
-
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCancel;

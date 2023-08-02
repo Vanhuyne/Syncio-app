@@ -5,14 +5,14 @@ import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
 import online.syncio.utils.Export;
 
-public class ManagementUser extends ConnectionPanel {
+public class ManagementUser extends JPanel {
 
     DefaultTableModel model;
     private UserDAO userDAO;
@@ -20,7 +20,6 @@ public class ManagementUser extends ConnectionPanel {
     ManagementUser managementUser;
 
     public ManagementUser() {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
 
         initComponents();
@@ -62,7 +61,9 @@ public class ManagementUser extends ConnectionPanel {
                 }
             }
         ;
-        });
+    }
+
+    );
     }
 
     public FindIterable find() {

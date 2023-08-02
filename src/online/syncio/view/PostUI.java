@@ -29,61 +29,52 @@ public class PostUI extends javax.swing.JPanel {
     ImageIcon unliked = new ImageIcon();
 
     public PostUI(String postID, String userID) {
-        MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
-        
+
         this.userID = userID;
         this.postID = postID;
         post = postDAO.getByID(postID);
         initComponents();
-        
+
         try {
             liked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-red_24px.png")));
             unliked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+
         showInfoPost(postID);
     }
-    
-    
-    
+
     public boolean isLiked() {
         // Check if any documents matched the condition
         if (post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
-    
-    
-    
+
     public void updateLike() {
-        if(isLiked()) {
+        if (isLiked()) {
             lblHeart.setIcon(unliked);
             postDAO.removeLike(postID, userID);
-        }
-        else {
+        } else {
             post.getLikeList().add(new UserIDAndDate(userID));
             lblHeart.setIcon(liked);
             postDAO.addLike(postID, userID);
         }
-        
+
         post = postDAO.getByID(postID);
-        lblTotalLike.setText(post.getLikeList().size()+" likes");
+        lblTotalLike.setText(post.getLikeList().size() + " likes");
     }
 
-    
-    
     private void showInfoPost(String postID) {
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
-        
+
         if(!post.getCaption().equals("")) {
             txtCaption.setText("");
             TextHelper.addColoredText(txtCaption, post.getCaption());   
@@ -93,18 +84,19 @@ public class PostUI extends javax.swing.JPanel {
         }
         
         lblTotalLike.setText(post.getLikeList().size()+" likes");
+      
         if (isLiked()) {
             lblHeart.setIcon(liked);
         }
-        
+
         //raito
         pnlImages.setSize(400, 400);
         if (post.getPhotoList().size() > 0) {
-            if(post.getPhotoList().size() <= 1) {
+            if (post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
             }
-            
+
             imageIndex = 0;
             pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(imageIndex)));
             int imgHeight = pnlImages.getImgHeight();
@@ -118,15 +110,12 @@ public class PostUI extends javax.swing.JPanel {
             } else {
                 pnlImages.setPreferredSize(new Dimension(400, 100));
             }
-        }
-        else {
+        } else {
             pnlImages.setPreferredSize(new Dimension(0, 0));
             pnlImages.setImg("");
         }
     }
-    
-    
-    
+
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
@@ -137,8 +126,6 @@ public class PostUI extends javax.swing.JPanel {
             pnlImages.repaint();
         }
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -391,8 +378,6 @@ public class PostUI extends javax.swing.JPanel {
     public MyLabel getLblHeart() {
         return lblHeart;
     }
-
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;

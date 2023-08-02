@@ -7,6 +7,8 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import java.awt.Color;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -25,6 +27,7 @@ import online.syncio.utils.GoogleOAuthHelper;
 import online.syncio.utils.TextHelper;
 
 public class Login extends javax.swing.JFrame {
+
     private static String APPLICATION_NAME = "Syncio";
     private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static String TOKENS_DIRECTORY_PATH = "tokens";
@@ -34,6 +37,8 @@ public class Login extends javax.swing.JFrame {
     private LoginController controller;
 
     public Login() {
+        MongoDBConnect.connect();
+
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -242,23 +247,23 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblForgetPasswordMouseClicked
 
     private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
-        MongoDBConnect.connect();
         UserDAO userDAO = MongoDBConnect.getUserDAO();
         String userEmail;
-        
+
         try {
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleOAuthHelper.getCredentials(HTTP_TRANSPORT, CREDENTIALS_FILE_PATH, JSON_FACTORY, SCOPES))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-            
+
             // Get the user's email address
             String user = "me";
             com.google.api.services.gmail.model.Profile profile = service.users().getProfile(user).execute();
             userEmail = profile.getEmailAddress();
-            
+
             User u = userDAO.getByEmail(userEmail);
+
             if(u != null && u.getPassword().equals("")) {
                 if (u.getFlag() == 1) {
                     GlassPanePopup.showPopup(new MyDialog("Account Unavailable", "We're sorry, but your account is currently unavailable.\nPlease try again later or contact support for assistance."), "dialog");
@@ -276,15 +281,13 @@ public class Login extends javax.swing.JFrame {
                     new Main().setVisible(true);
                     dispose();
                 }
-            }
-            else if(u != null && !u.getPassword().equals("")) {
+            } else if (u != null && !u.getPassword().equals("")) {
                 GlassPanePopup.showPopup(new MyDialog("Login Method Notice", "This email already linked to standard account.\nPlease sign in using your original username and password."), "dialog");
-            }
-            else {
+            } else {
                 //not found account
                 GlassPanePopup.showPopup(new MyDialog("Account Not Found", "You don't have a linked Syncio account with your Google Account.\nTry logging in with your username. If you don't have an account, please sign up."), "dialog");
             }
-        } catch (Exception ex) {
+        } catch (IOException | GeneralSecurityException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
@@ -294,8 +297,6 @@ public class Login extends javax.swing.JFrame {
         new Main().setVisible(true);
     }//GEN-LAST:event_lblContinueMousePressed
 
-    
-    
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -309,7 +310,7 @@ public class Login extends javax.swing.JFrame {
         }
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
-        
+
         java.awt.EventQueue.invokeLater(() -> {
             new Login().setVisible(true);
         });
@@ -326,8 +327,6 @@ public class Login extends javax.swing.JFrame {
     public MyCheckBox getChkRememberMe() {
         return chkRememberMe;
     }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnContinueWithGoogle;
