@@ -1,18 +1,19 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.geom.RoundRectangle2D;
 import online.syncio.component.ConnectionPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
 import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.UserDAO;
-import online.syncio.dao.UserDAOImpl;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
@@ -35,26 +36,38 @@ public final class Main extends javax.swing.JFrame {
         
         setUndecorated(true);
         initComponents();
-        setBackground(new Color(0f, 0f, 0f, 0f));
+        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
         
         pnlSearch.setVisible(false);
         
         if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+            // da login = remember me
             LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
+            this.profile = new Profile(LoggedInUser.getCurrentUser());
         }
-        
-        if(LoggedInUser.getCurrentUser() == null) {
+        else if(LoggedInUser.getCurrentUser() != null) {
+            //da login = username password
+            this.profile = new Profile(LoggedInUser.getCurrentUser());
+        }
+        else if(LoggedInUser.getCurrentUser() == null) {
             //chua login
             btnProfile.setText("Log in");
-        }
-        else {
-            // da login
-            this.profile = new Profile(LoggedInUser.getCurrentUser());
+            this.profile = new Profile(null);
         }
         
         addComponents();
+    }
+    
+    //rounded frame
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHints(rh);
+        super.paint(g);
     }
     
     
@@ -67,6 +80,7 @@ public final class Main extends javax.swing.JFrame {
 
         for (ConnectionPanel pnl : connectionPanelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
+            System.out.println(pnlName);
             pnlTabContent.add(pnl, pnlName);
             pnl.setConnection(this);
         }
@@ -82,13 +96,21 @@ public final class Main extends javax.swing.JFrame {
                 String name1 = btn1.getName().trim();
                 
                 if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+                    //chua login
                     dispose();
                     new Login().setVisible(true);
-                    if(!name1.equals("profile")) GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
-                    return;
+                    if(!name1.equals("profile")) {
+                        //bntProfile is Login, user click on to login >< show popup
+                        GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+                    }
                 }
-
-                showTab(name1, btn1);
+                else {
+                    if(name1.equals("profile")) {
+                        this.profile.loadProfile(LoggedInUser.getCurrentUser());
+                    }
+                    
+                    showTab(name1, btn1);
+                }
             });
         }
     }
@@ -330,11 +352,14 @@ public final class Main extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
         
-        java.awt.EventQueue.invokeLater(() -> {
-            new Main().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Main().setVisible(true);
+            }
         });
     }
 

@@ -71,16 +71,14 @@ public class LoginController {
                     login.dispose();
                 }
                 else {
-                    new Main().setVisible(true);
-                    login.dispose();
-                    
                     if(login.getChkRememberMe().isSelected()) {
                         OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
                     }
                     else {
-                        LoggedInUser.logOut();
                         OtherHelper.deleteSessionValue("LOGGED_IN_USER");
                     }
+                    new Main().setVisible(true);
+                    login.dispose();
                 }
             }
         } else {

@@ -2,6 +2,7 @@ package online.syncio.component;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import online.syncio.model.Post;
 import online.syncio.utils.ImageHelper;
+import online.syncio.view.PostDetailUI;
 import org.bson.types.Binary;
 
 public class ProfilePostPanel extends JPanel {
@@ -34,6 +36,8 @@ public class ProfilePostPanel extends JPanel {
         add(contentPanel, BorderLayout.CENTER);
     }
 
+    
+
     private void loadUserPost() {
         contentPanel.removeAll(); // Use contentPanel instead of "this"
         numRows = 0; // Reset the number of rows
@@ -41,7 +45,15 @@ public class ProfilePostPanel extends JPanel {
         Thread thread = new Thread(() -> {
             for (Post p : userPosts) {
                 SwingUtilities.invokeLater(() -> {
-                    contentPanel.add(createPostPanel(p));
+                    MyPanel pnl = createPostPanel(p);
+                    pnl.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mousePressed(java.awt.event.MouseEvent evt) {
+                            GlassPanePopup.showPopup(new PostDetailUI(p.getId().toString()), "postdetail");
+                        }
+                    });
+                    
+                    contentPanel.add(pnl);
                     numRows++;
 
                     int numRowsPerColumn = (int) Math.ceil((double) numRows / COLUMNS);
@@ -58,6 +70,7 @@ public class ProfilePostPanel extends JPanel {
 
     private MyPanel createPostPanel(Post post) {
         MyPanel postPanel = new MyPanel(true);
+        postPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         postPanel.setSize(cellWidth, cellWidth);
         postPanel.setPreferredSize(new Dimension(cellWidth, cellWidth));
 

@@ -1,8 +1,6 @@
 package online.syncio.view;
 
-import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -15,10 +13,10 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.TextHelper;
 
 public class PostUI extends javax.swing.JPanel {
 
-    private MongoDatabase database;
     private PostDAO postDAO;
     private UserDAO userDAO;
     private String userID;
@@ -85,7 +83,15 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
         lblDateCreated.setText(post.getDatePosted());
-        txtCaption.setText(post.getCaption());
+        
+        if(!post.getCaption().equals("")) {
+            txtCaption.setText("");
+            TextHelper.addColoredText(txtCaption, post.getCaption());   
+        }
+        else {
+            jScrollPane1.setVisible(false);
+        }
+        
         lblTotalLike.setText(post.getLikeList().size()+" likes");
         if (isLiked()) {
             lblHeart.setIcon(liked);
@@ -143,17 +149,20 @@ public class PostUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblUsername = new javax.swing.JLabel();
-        lblDateCreated = new javax.swing.JLabel();
-        lblHeart = new online.syncio.component.MyLabel();
-        lblComment = new online.syncio.component.MyLabel();
-        lblTotalLike = new javax.swing.JLabel();
-        lblUsername2 = new javax.swing.JLabel();
         lblViewAllCmt = new javax.swing.JLabel();
         pnlImages = new online.syncio.component.MyPanel();
         btnNext = new online.syncio.component.MyButton();
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
+        myPanel1 = new online.syncio.component.MyPanel();
+        lblUsername = new javax.swing.JLabel();
+        lblDateCreated = new javax.swing.JLabel();
+        myPanel2 = new online.syncio.component.MyPanel();
+        lblHeart = new online.syncio.component.MyLabel();
+        lblTotalLike = new javax.swing.JLabel();
+        lblComment = new online.syncio.component.MyLabel();
+        lblUsername2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         txtCaption = new online.syncio.component.MyTextPane();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -161,61 +170,12 @@ public class PostUI extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(400, 32767));
         setMinimumSize(new java.awt.Dimension(400, 0));
 
-        lblUsername.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
-        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
-        lblUsername.setText(" sanhvc");
-        lblUsername.setToolTipText("");
-
-        lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
-        lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblDateCreated.setText("02:42 05/07/2023");
-
-        lblHeart.setForeground(new java.awt.Color(255, 0, 0));
-        lblHeart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblHeart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png"))); // NOI18N
-        lblHeart.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
-        lblHeart.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblHeart.setMaximumSize(new java.awt.Dimension(20, 49));
-        lblHeart.setMinimumSize(new java.awt.Dimension(20, 49));
-        lblHeart.setPreferredSize(new java.awt.Dimension(20, 49));
-        lblHeart.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblHeartMousePressed(evt);
-            }
-        });
-
-        lblComment.setForeground(new java.awt.Color(255, 0, 0));
-        lblComment.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/comment_24px.png"))); // NOI18N
-        lblComment.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
-        lblComment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblComment.setMaximumSize(new java.awt.Dimension(20, 49));
-        lblComment.setMinimumSize(new java.awt.Dimension(20, 49));
-        lblComment.setPreferredSize(new java.awt.Dimension(20, 49));
-        lblComment.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblCommentMouseClicked(evt);
-            }
-        });
-
-        lblTotalLike.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        lblTotalLike.setText("0 likes");
-
-        lblUsername2.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
-        lblUsername2.setText("sanhvc");
-
         lblViewAllCmt.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         lblViewAllCmt.setForeground(new java.awt.Color(102, 102, 102));
         lblViewAllCmt.setText("View all comments");
         lblViewAllCmt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblViewAllCmtMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lblViewAllCmtMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                lblViewAllCmtMouseExited(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblViewAllCmtMousePressed(evt);
             }
         });
 
@@ -255,7 +215,7 @@ public class PostUI extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlImagesLayout.createSequentialGroup()
                 .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlImagesLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(306, Short.MAX_VALUE)
                         .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlImagesLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -276,68 +236,133 @@ public class PostUI extends javax.swing.JPanel {
                 .addContainerGap(184, Short.MAX_VALUE))
         );
 
-        txtCaption.setEditable(false);
-        txtCaption.setBackground(new java.awt.Color(255, 255, 255));
-        txtCaption.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 1, 1));
+        myPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        myPanel1.setPreferredSize(new java.awt.Dimension(0, 54));
+
+        lblUsername.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
+        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
+        lblUsername.setText(" sanhvc");
+        lblUsername.setToolTipText("");
+
+        lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
+        lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDateCreated.setText("02:42 05/07/2023");
+
+        javax.swing.GroupLayout myPanel1Layout = new javax.swing.GroupLayout(myPanel1);
+        myPanel1.setLayout(myPanel1Layout);
+        myPanel1Layout.setHorizontalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, myPanel1Layout.createSequentialGroup()
+                .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblDateCreated))
+        );
+        myPanel1Layout.setVerticalGroup(
+            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(myPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername)
+                    .addComponent(lblDateCreated))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+
+        myPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        lblHeart.setForeground(new java.awt.Color(255, 0, 0));
+        lblHeart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHeart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png"))); // NOI18N
+        lblHeart.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
+        lblHeart.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblHeart.setMaximumSize(new java.awt.Dimension(20, 49));
+        lblHeart.setMinimumSize(new java.awt.Dimension(20, 49));
+        lblHeart.setPreferredSize(new java.awt.Dimension(20, 49));
+        lblHeart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblHeartMousePressed(evt);
+            }
+        });
+
+        lblTotalLike.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        lblTotalLike.setText("0 likes");
+
+        lblComment.setForeground(new java.awt.Color(255, 0, 0));
+        lblComment.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/comment_24px.png"))); // NOI18N
+        lblComment.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
+        lblComment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblComment.setMaximumSize(new java.awt.Dimension(20, 49));
+        lblComment.setMinimumSize(new java.awt.Dimension(20, 49));
+        lblComment.setPreferredSize(new java.awt.Dimension(20, 49));
+        lblComment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCommentMouseClicked(evt);
+            }
+        });
+
+        lblUsername2.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
+        lblUsername2.setText("sanhvc");
+
+        javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
+        myPanel2.setLayout(myPanel2Layout);
+        myPanel2Layout.setHorizontalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblUsername2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(myPanel2Layout.createSequentialGroup()
+                .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(lblTotalLike, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        myPanel2Layout.setVerticalGroup(
+            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, myPanel2Layout.createSequentialGroup()
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addGroup(myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(lblTotalLike)
+                .addGap(10, 10, 10)
+                .addComponent(lblUsername2))
+        );
+
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setBorder(null);
+
+        txtCaption.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 3, 0));
+        txtCaption.setText("Examples of Instagram Captions · Forget the filters; live your life your way!");
         txtCaption.setBorderThickness(0);
+        jScrollPane1.setViewportView(txtCaption);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+            .addComponent(myPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+            .addComponent(myPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
-                .addComponent(lblDateCreated))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblTotalLike, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblViewAllCmt))
+                .addComponent(lblViewAllCmt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(lblUsername2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(txtCaption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsername)
-                    .addComponent(lblDateCreated))
-                .addGap(10, 10, 10)
+                .addComponent(myPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(pnlImages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(myPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
-                .addComponent(lblTotalLike)
-                .addGap(10, 10, 10)
-                .addComponent(lblUsername2)
-                .addGap(5, 5, 5)
-                .addComponent(txtCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
                 .addComponent(lblViewAllCmt)
                 .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lblViewAllCmtMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseEntered
-        lblViewAllCmt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_lblViewAllCmtMouseEntered
-
-    private void lblViewAllCmtMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseExited
-        lblViewAllCmt.setCursor(Cursor.getDefaultCursor());
-    }//GEN-LAST:event_lblViewAllCmtMouseExited
-
-    private void lblViewAllCmtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMouseClicked
-        GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
-    }//GEN-LAST:event_lblViewAllCmtMouseClicked
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
         updateLike();
@@ -352,9 +377,12 @@ public class PostUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPrevActionPerformed
 
     private void lblCommentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCommentMouseClicked
-        // TODO add your handling code here:
         GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
     }//GEN-LAST:event_lblCommentMouseClicked
+
+    private void lblViewAllCmtMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblViewAllCmtMousePressed
+        GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
+    }//GEN-LAST:event_lblViewAllCmtMousePressed
 
     public MyLabel getLblComment() {
         return lblComment;
@@ -369,6 +397,7 @@ public class PostUI extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;
     private online.syncio.component.MyButton btnPrev;
+    private javax.swing.JScrollPane jScrollPane1;
     private online.syncio.component.MyLabel lblComment;
     private online.syncio.component.MyLabel lblCountImage;
     private javax.swing.JLabel lblDateCreated;
@@ -377,6 +406,8 @@ public class PostUI extends javax.swing.JPanel {
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
     private javax.swing.JLabel lblViewAllCmt;
+    private online.syncio.component.MyPanel myPanel1;
+    private online.syncio.component.MyPanel myPanel2;
     private online.syncio.component.MyPanel pnlImages;
     private online.syncio.component.MyTextPane txtCaption;
     // End of variables declaration//GEN-END:variables
