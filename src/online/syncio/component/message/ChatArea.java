@@ -238,7 +238,7 @@ public class ChatArea extends JPanel {
     private JPanel createBottom() {
         RoundPanel panel = new RoundPanel();
         panel.setBackground(new Color(255, 255, 255, 255));
-        panel.setLayout(new MigLayout("fill, inset 2", "[fill,34!]2[fill]2[fill,34!]", "[bottom]"));
+        panel.setLayout(new MigLayout("fill, inset 2", "[fill,34!]2[fill]2[fill,34!]", "[bottom][15!]"));
         GoogleMaterialIcon iconSend = new GoogleMaterialIcon(GoogleMaterialDesignIcon.SEND, GradientType.VERTICAL, new Color(0, 133, 237), new Color(90, 182, 255), 20);
         Button cmdFile = new Button();
         Button cmdSend = new Button();
