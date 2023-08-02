@@ -28,5 +28,7 @@ public interface UserDAO extends DAO<User> {
 
     public int toggleFollow(String currentUserID, String followedUserID);
 
+    public int getFollowerCount(String userId);
+
     public User getByUsername(String username);
 }

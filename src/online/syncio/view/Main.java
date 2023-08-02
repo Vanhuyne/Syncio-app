@@ -2,8 +2,13 @@ package online.syncio.view;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import java.awt.geom.RoundRectangle2D;
+import online.syncio.component.ConnectionPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyPanel;
@@ -33,17 +38,22 @@ public final class Main extends javax.swing.JFrame {
 
         setUndecorated(true);
         initComponents();
-        setBackground(new Color(0f, 0f, 0f, 0f));
+        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
 
         pnlSearch.setVisible(false);
 
-        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
-            // da login
+        if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+            // da login = remember me
             LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
             this.profile = new Profile(LoggedInUser.getCurrentUser());
-        } else if (LoggedInUser.getCurrentUser() == null) {
+        }
+        else if(LoggedInUser.getCurrentUser() != null) {
+            //da login = username password
+            this.profile = new Profile(LoggedInUser.getCurrentUser());
+        }
+        else if(LoggedInUser.getCurrentUser() == null) {
             //chua login
             btnProfile.setText("Log in");
             this.profile = new Profile(null);
@@ -53,6 +63,18 @@ public final class Main extends javax.swing.JFrame {
 
         addComponents();
     }
+    
+    //rounded frame
+    @Override
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2.setRenderingHints(rh);
+        super.paint(g);
+    }
+    
+    
 
     public void addComponents() {
         panelList = new JPanel[]{new Home(), messagePanel, new Notification(), new EditProfile()};
@@ -66,6 +88,8 @@ public final class Main extends javax.swing.JFrame {
                 pnlName = "message";
             }
 
+            System.out.println(pnlName);
+
             pnlTabContent.add(pnl, pnlName);
         }
 
@@ -76,16 +100,24 @@ public final class Main extends javax.swing.JFrame {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
+                
+                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
+                    //chua login
+                    dispose();
+                    new Login().setVisible(true);
+                    if(!name1.equals("profile")) {
+                        //bntProfile is Login, user click on to login >< show popup
+                        GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+                    }
+                }
+                else {
+                    if(name1.equals("profile")) {
+                        this.profile.loadProfile(LoggedInUser.getCurrentUser());
+                    }
+                    
+                    showTab(name1, btn1);
+                }
 
-//                if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
-//                    dispose();
-//                    new Login().setVisible(true);
-//                    if (!name1.equals("profile")) {
-//                        GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
-//                    }
-//                    return;
-//                }
-                showTab(name1, btn1);
             });
         }
     }

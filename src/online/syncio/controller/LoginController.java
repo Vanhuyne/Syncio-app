@@ -69,14 +69,17 @@ public class LoginController {
                 if (LoggedInUser.isAdmin()) {
                     new MainAdmin().setVisible(true);
                     login.dispose();
-                } else if (login.getChkRememberMe().isSelected()) {
-                    OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
-                } else {
-                    OtherHelper.deleteSessionValue("LOGGED_IN_USER");
                 }
-                new Main().setVisible(true);
-
-                login.dispose();
+                else {
+                    if(login.getChkRememberMe().isSelected()) {
+                        OtherHelper.saveSessionValue("LOGGED_IN_USER", user.getId().toString());
+                    }
+                    else {
+                        OtherHelper.deleteSessionValue("LOGGED_IN_USER");
+                    }
+                    new Main().setVisible(true);
+                    login.dispose();
+                }
             }
         } else {
             //neu co loi => hien thi loi

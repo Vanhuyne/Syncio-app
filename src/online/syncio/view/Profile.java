@@ -41,19 +41,13 @@ public class Profile extends JPanel {
     }
 
     public void loadProfile(User user) {
-        if (user == null) {
-            return;
-        }
-
-        this.user = user;
+        if(user == null) return;
+        
+        this.user = user; //user is showing
         this.posts = postDAO.getAllByUserID(user.getId().toString());
-
-        ArrayList<UserIDAndDate> following = new ArrayList<>();
-        following = user.getFollowing();
-
-        if (user.getId().toString().equals(LoggedInUser.getCurrentUser().getId().toString())) {
+         
+        if(user.getId().toString().equals(LoggedInUser.getCurrentUser().getId().toString())) {
             // own profile
-            user = LoggedInUser.getCurrentUser();
             btnEditProfileMessage.setText("Edit profile");
             btnFollow.setVisible(false);
 
@@ -62,12 +56,17 @@ public class Profile extends JPanel {
             lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
         } else {
             // another user profile
+            User currentUser = LoggedInUser.getCurrentUser();
+            ArrayList<UserIDAndDate> following = new ArrayList<>();
+            following = currentUser.getFollowing();
+
             btnEditProfileMessage.setText("Message");
             btnFollow.setVisible(true);
 
             boolean f = false;
-            for (UserIDAndDate u : following) {
-                if (u.getUserID().equals(user.getId().toString())) {
+            //check myfollowing contain user is shown
+            for(UserIDAndDate u : following) {
+                if(u.getUserID().equals(user.getId().toString())) {
                     btnFollow.setText("Unfollow");
                     f = true;
                     break;
@@ -82,13 +81,15 @@ public class Profile extends JPanel {
         String bio = user.getBio();
         int postNum = posts.size();
 
-        int followersSize = following.size();
+        int followersSize = user.getFollowing().size();
 
         lblUsername.setText(username);
+        lblUsername.setToolTipText(username);
         lblBio.setText(bio);
         lblPostNum.setText(postNum + " posts");
         lblFollowingNum.setText(followersSize + " following");
-
+        lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
+              
         pnlProfilePost.setUserPosts(posts);
 
         Thread thread = new Thread(() -> {
@@ -180,6 +181,7 @@ public class Profile extends JPanel {
         lblSepratorLine.setPreferredSize(new java.awt.Dimension(2, 1));
 
         lblUsername.setText("56duong");
+        lblUsername.setToolTipText("");
         lblUsername.setFont(new java.awt.Font("SF Pro Display Medium", 0, 18)); // NOI18N
 
         lblPostNum.setText("0 posts");
@@ -189,6 +191,7 @@ public class Profile extends JPanel {
         lblFollowingNum.setText("5 following");
 
         lblPost.setText("POSTS");
+        lblPost.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         pnlProfilePost.setBackground(new java.awt.Color(255, 255, 255));
         pnlProfilePost.setOpaque(true);
@@ -222,8 +225,8 @@ public class Profile extends JPanel {
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblPostNum, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(20, 20, 20)
+                                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblFollowerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnEditProfileMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -236,12 +239,11 @@ public class Profile extends JPanel {
                         .addGap(150, 150, 150)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblSepratorLine, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
-                            .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                            .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(pnlMainLayout.createSequentialGroup()
+                        .addGap(513, 513, 513)
+                        .addComponent(lblPost, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(150, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblPost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(518, 518, 518))
         );
         pnlMainLayout.setVerticalGroup(
             pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,9 +265,9 @@ public class Profile extends JPanel {
                     .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(60, 60, 60)
                 .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(9, 9, 9)
                 .addComponent(lblPost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlProfilePost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67))
         );
@@ -286,7 +288,9 @@ public class Profile extends JPanel {
         int result = userDAO.toggleFollow(LoggedInUser.getCurrentUser().getId().toString(), user.getId().toString());
         if (result > 0) {
             toggleFollow();
-        } else {
+            lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
+        }
+        else {
             System.out.println(result);
         }
     }//GEN-LAST:event_btnFollowActionPerformed

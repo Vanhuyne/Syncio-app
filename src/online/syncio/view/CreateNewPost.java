@@ -61,7 +61,7 @@ public class CreateNewPost extends javax.swing.JPanel {
     public void addEmoji(JLabel lbl, Color color) {
         int length = txtCaption.getDocument().getLength();
 
-        if (length < 500) {
+        if (length < 300) {
             txtCaption.append(lbl.getText(), color);
             txtCaption.append("", Color.BLACK);
             txtCaption.requestFocus();
@@ -70,7 +70,7 @@ public class CreateNewPost extends javax.swing.JPanel {
 
     public void showCaptionLength() {
         int length = txtCaption.getDocument().getLength();
-        lblCountNumber.setText(length + "/500");
+        lblCountNumber.setText(length + "/300");
     }
 
     public void imageSelected(boolean isSelected) {
@@ -357,16 +357,14 @@ public class CreateNewPost extends javax.swing.JPanel {
         pnlLeftLayout.setHorizontalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlLeftLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlLeftLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(127, 127, 127))
-                    .addGroup(pnlLeftLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRemoveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnRemoveImage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10))
             .addGroup(pnlLeftLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
@@ -469,6 +467,7 @@ public class CreateNewPost extends javax.swing.JPanel {
         lblCamera.setForeground(new java.awt.Color(102, 102, 102));
         lblCamera.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCamera.setText("📸");
+        lblCamera.setToolTipText("");
         lblCamera.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
         lblCamera.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         lblCamera.setMaximumSize(new java.awt.Dimension(20, 49));
@@ -604,7 +603,7 @@ public class CreateNewPost extends javax.swing.JPanel {
     private void txtCaptionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCaptionKeyTyped
         int length = txtCaption.getDocument().getLength();
 
-        if (length >= 500 && !(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
+        if (length >= 300 && !(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
             evt.consume();
         }
     }//GEN-LAST:event_txtCaptionKeyTyped
