@@ -35,6 +35,8 @@ public class Login extends javax.swing.JFrame {
     private LoginController controller;
 
     public Login() {
+        MongoDBConnect.connect();
+
         setUndecorated(true);
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -243,7 +245,6 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblForgetPasswordMouseClicked
 
     private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
-        MongoDBConnect.connect();
         UserDAO userDAO = MongoDBConnect.getUserDAO();
         String userEmail;
 

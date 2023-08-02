@@ -3,7 +3,7 @@ package online.syncio.view;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import online.syncio.component.ConnectionPanel;
+import javax.swing.JPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyPanel;
@@ -12,19 +12,21 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
-import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
-    private UserDAO userDAO;
-    static ConnectionPanel[] connectionPanelList;
+    private static Main instance;
+    static JPanel[] panelList;
     static MyButton[] btnMenuList;
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
     public Profile profile;
 
+    private UserDAO userDAO;
+
     public Main() {
-        MongoDBConnect.connect();
+        instance = this;
+
         this.userDAO = MongoDBConnect.getUserDAO();
 
         setUndecorated(true);
@@ -35,10 +37,9 @@ public final class Main extends javax.swing.JFrame {
 
         pnlSearch.setVisible(false);
 
-        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
-            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
-        }
-
+//        if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
+//            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
+//        }
         if (LoggedInUser.getCurrentUser() == null) {
             //chua login
             btnProfile.setText("Log in");
@@ -51,12 +52,11 @@ public final class Main extends javax.swing.JFrame {
     }
 
     public void addComponents() {
-        connectionPanelList = new ConnectionPanel[]{new Home(this), new MessagePanel(), new Notification(),
-            profile, new EditProfile()};
+        panelList = new JPanel[]{new Home(), new MessagePanel(), new Notification(), profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
-        for (ConnectionPanel pnl : connectionPanelList) {
+        for (JPanel pnl : panelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
 
             if (pnlName.equalsIgnoreCase("messagepanel")) {
@@ -64,10 +64,7 @@ public final class Main extends javax.swing.JFrame {
             }
 
             pnlTabContent.add(pnl, pnlName);
-            pnl.setConnection(this);
         }
-
-        pnlSearch.setConnection(this);
 
         btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
 
@@ -329,6 +326,10 @@ public final class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
         });
+    }
+
+    public static Main getInstance() {
+        return instance;
     }
 
     public MyPanel getPnlTabContent() {

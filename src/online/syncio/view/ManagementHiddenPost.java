@@ -1,9 +1,9 @@
 package online.syncio.view;
 
 import java.awt.Color;
-import online.syncio.component.ConnectionPanel;
+import javax.swing.JPanel;
 
-public class ManagementHiddenPost extends ConnectionPanel {
+public class ManagementHiddenPost extends JPanel {
 
     public ManagementHiddenPost() {
         initComponents();

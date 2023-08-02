@@ -1,5 +1,6 @@
 package online.syncio.component.message;
 
+import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,6 +11,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javaswingdev.FontAwesome;
 import javaswingdev.FontAwesomeIcon;
 import javaswingdev.GoogleMaterialDesignIcon;
@@ -24,8 +28,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import online.syncio.component.MyLabel;
+import online.syncio.dao.MessageDAO;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.PostDAO;
+import online.syncio.dao.UserDAO;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
+import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.view.MessagePanel;
 
 public class ChatArea extends JPanel {
 
@@ -35,6 +46,19 @@ public class ChatArea extends JPanel {
     private AnimationFloatingButton animationFloatingButton;
     private List<ChatEvent> events = new ArrayList<>();
 
+    private UserDAO userDAO;
+    private PostDAO postDAO;
+    private MessageDAO messageDAO;
+    private FindIterable<MessagePanel> messageList;
+
+    private User currentUser;
+    private User messagingUser;
+
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private Runnable updateRecievingMessageTask;
+
+    private String lastSentDate = "";
+
     public void addChatEvent(ChatEvent event) {
         events.add(event);
     }
@@ -42,6 +66,15 @@ public class ChatArea extends JPanel {
     public ChatArea() {
         init();
         initAnimator();
+
+        userDAO = MongoDBConnect.getUserDAO();
+        postDAO = MongoDBConnect.getPostDAO();
+        messageDAO = MongoDBConnect.getMessageDAO();
+
+        this.currentUser = LoggedInUser.getCurrentUser();
+
+        addEventsAndRunnable();
+        loadExistingMessages();
     }
 
     private void init() {
@@ -88,6 +121,93 @@ public class ChatArea extends JPanel {
         animationFloatingButton = new AnimationFloatingButton(layoutLayered, floatingButton);
     }
 
+    private void addEventsAndRunnable() {
+        addChatEvent(new ChatEvent() {
+            @Override
+            public void mousePressedSendButton(ActionEvent evt) {
+                if (!getText().isBlank()) {
+                    Message m = new Message(currentUser.getUsername(),
+                            messagingUser.getUsername(),
+                            getText());
+
+                    messageDAO.add(m);
+                    addChatBox(m, ChatBox.BoxType.RIGHT);
+                    clearTextAndGrabFocus();
+                }
+            }
+
+            @Override
+            public void mousePressedFileButton(ActionEvent evt) {
+            }
+
+            @Override
+            public void keyTyped(KeyEvent evt) {
+            }
+        });
+
+        getTxtMessage().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    if (!getText().isBlank()) {
+                        Message m = new Message(currentUser.getUsername(),
+                                messagingUser.getUsername(),
+                                getText());
+
+                        messageDAO.add(m);
+                        addChatBox(m, ChatBox.BoxType.RIGHT);
+                        clearTextAndGrabFocus();
+                    }
+                }
+            }
+        });
+
+        updateRecievingMessageTask = () -> {
+            Message newMessage = messageDAO.findNewMessageWithCurrentUser(
+                    currentUser.getUsername(), messagingUser.getUsername());
+
+            if (newMessage != null) {
+                if (!newMessage.getSender().equalsIgnoreCase(currentUser.getUsername())
+                        && !newMessage.getDateSent().equalsIgnoreCase(lastSentDate)) {
+                    SwingUtilities.invokeLater(() -> addChatBox(newMessage, ChatBox.BoxType.LEFT));
+
+                    lastSentDate = newMessage.getDateSent();
+                }
+            }
+        };
+    }
+
+    public void loadExistingMessages() {
+        FindIterable<Message> messageList = messageDAO.findAllByTwoUsernames(currentUser.getUsername(),
+                messagingUser.getUsername());
+
+        Thread thread = new Thread(() -> {
+            for (Message m : messageList) {
+                SwingUtilities.invokeLater(() -> {
+                    if (m.getRecipient().equalsIgnoreCase(messagingUser.getUsername())) {
+                        addChatBox(m, ChatBox.BoxType.RIGHT);
+                    } else {
+                        addChatBox(m, ChatBox.BoxType.LEFT);
+                    }
+                });
+
+                if (!m.getSender().equalsIgnoreCase(currentUser.getUsername())) {
+                    lastSentDate = m.getDateSent();
+                }
+            }
+        });
+
+        thread.start();
+
+    }
+
+    public void setMessagingUser(User messagingUser) {
+        this.messagingUser = messagingUser;
+        setTitle(messagingUser.getUsername());
+        setName(messagingUser.getUsername().trim().toLowerCase());
+        scheduler.scheduleAtFixedRate(updateRecievingMessageTask, 0, 3, TimeUnit.SECONDS);
+    }
+
     private JPanel createHeader() {
         RoundPanel panel = new RoundPanel();
         panel.setLayout(new MigLayout("fill, inset 2"));
@@ -98,6 +218,10 @@ public class ChatArea extends JPanel {
         labelTitle.setForeground(new Color(0, 0, 0));
         panel.add(labelTitle);
         return panel;
+    }
+
+    public User getMessagingUser() {
+        return messagingUser;
     }
 
     private JPanel createBody() {

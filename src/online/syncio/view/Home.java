@@ -6,11 +6,10 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import online.syncio.component.ConnectionPanel;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
@@ -18,27 +17,22 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 
-public class Home extends ConnectionPanel {
+public class Home extends JPanel {
 
-    private Main main;
+    private Main main = Main.getInstance();
     private User currentUser;
     private String currentUserID;
-    private UserDAO userDAO;
-    private PostDAO postDAO;
-    private List<String> lPostID = new ArrayList<>();
-    private List<String> lFollowerID = new ArrayList<>();
+
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
+    private List<String> postIDList = new ArrayList<>();
+    private List<String> followerIDList = new ArrayList<>();
+
     private int curIndex = 0;
     FindIterable<Post> posts;
     private MongoCursor<ChangeStreamDocument<Post>> changeStreamCursor;
 
-
-    
-    public Home(Main main) {
-        this.main = main;
-        MongoDBConnect.connect();
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.postDAO = MongoDBConnect.getPostDAO();
-
+    public Home() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
@@ -56,14 +50,11 @@ public class Home extends ConnectionPanel {
         }
 
         // Add an AdjustmentListener to the vertical scrollbar of the scroll pane
-        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                // Update the position of pnlSearch relative to the pnlHome container
-                main.getPnlSearch().setBounds(main.getPnlSearch().getX(), getY(), main.getPnlSearch().getWidth(), main.getPnlSearch().getHeight());
-                main.getPnlSearch().revalidate();
-                main.getPnlSearch().repaint();
-            }
+        scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            // Update the position of pnlSearch relative to the pnlHome container
+            main.getPnlSearch().setBounds(main.getPnlSearch().getX(), getY(), main.getPnlSearch().getWidth(), main.getPnlSearch().getHeight());
+            main.getPnlSearch().revalidate();
+            main.getPnlSearch().repaint();
         });
 
     }
@@ -113,7 +104,7 @@ public class Home extends ConnectionPanel {
                         e.printStackTrace();
                     }
                 }
-                
+
                 PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
                 SwingUtilities.invokeLater(() -> {
                     removeLoading();
@@ -139,7 +130,7 @@ public class Home extends ConnectionPanel {
     public boolean isSearchPanelVisible() {
         return main.getPnlSearch().isVisible();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -5,13 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.OtherHelper;
 import online.syncio.view.Main;
 
 public class SearchedUserCard extends javax.swing.JPanel {
+
     private User user;
 
     private Image defaultImage = new javax.swing.ImageIcon(getClass()
@@ -19,7 +18,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
     public SearchedUserCard(User user) {
         this.user = user;
-        
+
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -33,12 +32,10 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblUsername.setText(user.getUsername().trim());
         lblFollowers.setText(user.getFollowing().size() + " following");
     }
-    
-    
-    
+
     public SearchedUserCard(User user, Color backgroundColor) {
         this.user = user;
-        
+
         initComponents();
         lblAvatar.setSize(60, 60);
 
@@ -46,7 +43,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setMaximumSize(new Dimension(290, 90));
         setMinimumSize(new Dimension(290, 90));
         setBackground(backgroundColor);
-        
+
         lblAvatar.setBackground(backgroundColor);
 
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
@@ -111,13 +108,11 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        if(LoggedInUser.isAdmin()) return;
-        
-        Main main = OtherHelper.getMainFrame(this);
-        
+        Main main = Main.getInstance();
+
         CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
         c.show(main.getPnlTabContent(), "profile");
-        
+
         main.profile.loadProfile(user);
         main.getBtnSearch().doClick();
     }//GEN-LAST:event_formMousePressed
