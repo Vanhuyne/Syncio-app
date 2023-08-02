@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
@@ -13,11 +15,14 @@ import online.syncio.view.Main;
 
 public class SearchedUserCard extends javax.swing.JPanel {
     private User user;
+    private UserDAO userDAO;
 
     private Image defaultImage = new javax.swing.ImageIcon(getClass()
             .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
 
     public SearchedUserCard(User user) {
+        MongoDBConnect.connect();
+        this.userDAO = MongoDBConnect.getUserDAO();
         this.user = user;
         
         initComponents();
@@ -31,7 +36,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
         lblUsername.setText(user.getUsername().trim());
-        lblFollowers.setText(user.getFollowing().size() + " following");
+        lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
     }
     
     

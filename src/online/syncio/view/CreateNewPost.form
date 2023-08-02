@@ -608,6 +608,7 @@
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="0"/>
                         <Property name="text" type="java.lang.String" value="\ud83d\udcf8" containsInvalidXMLChars="true"/>
+                        <Property name="toolTipText" type="java.lang.String" value=""/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="SansSerif" size="24" style="0"/>
                         </Property>

@@ -1,23 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package online.syncio.view;
 
-/**
- *
- * @author conro
- */
 public class CommentUI extends javax.swing.JPanel {
 
-    /**
-     * Creates new form CommentUI
-     */
-    public CommentUI(String user, String cmt, String date) {
-        initComponents();
-        lblAccount.setText(user);
-        lblCmt.setText(cmt);
-        lblDate.setText(date);
+    public CommentUI(String username, String cmt, String date) {
+        initComponents();        
+        
+        lblComment.setText("<html><body style=\"font-family:'sans-serif'\"><p style=\"width:190px\"><b>" + username + "</b>   " + cmt + "</p><span font color='gray' style=\"font-size:8px\">" + date + "</span></body></html>");
     }
 
     /**
@@ -29,55 +17,24 @@ public class CommentUI extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblAccount = new online.syncio.component.MyLabel();
-        lblCmt = new online.syncio.component.MyLabel();
-        lblDate = new online.syncio.component.MyLabel();
+        lblComment = new online.syncio.component.MyLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(276, 55));
         setMinimumSize(new java.awt.Dimension(276, 55));
         setPreferredSize(new java.awt.Dimension(276, 55));
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        lblAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
-        lblAccount.setText(" 56duong");
-        lblAccount.setMaximumSize(new java.awt.Dimension(57, 54));
-        lblAccount.setMinimumSize(new java.awt.Dimension(57, 54));
-        lblAccount.setPreferredSize(new java.awt.Dimension(57, 54));
-
-        lblCmt.setText("Load cái comment vô đây");
-        lblCmt.setFont(new java.awt.Font("SF Pro Display Medium", 0, 12)); // NOI18N
-
-        lblDate.setText("00-00-0000");
-        lblDate.setFont(new java.awt.Font("SF Pro Display Medium", 0, 8)); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCmt, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        lblComment.setBackground(new java.awt.Color(255, 255, 255));
+        lblComment.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        lblComment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
+        lblComment.setText("<html><b>56duong</b> comment<br><span style='font-size:8px'>2022-02-02 02:02:02</span></html>");
+        lblComment.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblComment.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        lblComment.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        add(lblComment);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private online.syncio.component.MyLabel lblAccount;
-    private online.syncio.component.MyLabel lblCmt;
-    private online.syncio.component.MyLabel lblDate;
+    private online.syncio.component.MyLabel lblComment;
     // End of variables declaration//GEN-END:variables
 }

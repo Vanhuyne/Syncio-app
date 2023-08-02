@@ -260,6 +260,11 @@ public class Login extends javax.swing.JFrame {
             
             User u = userDAO.getByEmail(userEmail);
             if(u != null && u.getPassword().equals("")) {
+                if (u.getFlag() == 1) {
+                    GlassPanePopup.showPopup(new MyDialog("Account Unavailable", "We're sorry, but your account is currently unavailable.\nPlease try again later or contact support for assistance."), "dialog");
+                    return;
+                }
+                
                 // log in
                 LoggedInUser.setCurrentUser(u); //set loggedin user
 
