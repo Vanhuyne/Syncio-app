@@ -77,7 +77,7 @@ public final class Main extends javax.swing.JFrame {
     
 
     public void addComponents() {
-        panelList = new JPanel[]{new Home(), messagePanel, new Notification(), new EditProfile()};
+        panelList = new JPanel[]{new Home(), messagePanel, new Notification(), profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
