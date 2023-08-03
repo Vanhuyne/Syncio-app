@@ -31,6 +31,7 @@ public class Home extends JPanel {
 
     private int curIndex = 0;
     FindIterable<Post> posts;
+    FindIterable<Post> postsOther;
     private MongoCursor<ChangeStreamDocument<Post>> changeStreamCursor;
 
     public Home() {
@@ -115,42 +116,31 @@ public class Home extends JPanel {
                     feedPanel.repaint();
                 });
             }
+            
+            removeLoading();
+            feedPanel.add(new MayULike());
+            addLoading();
+            postsOther = postDAO.getAllPostOther(currentUser);
 
-            // Coanh bắt đầu đếm số PostUI được thêm vào feedPanel
-            int feedCount = feedPanel.getComponentCount();
-            // Sau đó Coanh đếm số post trong posts
-            int postCount = posts.into(new ArrayList<>()).size();
-            // Bây giờ Coanh lại lôi hết đống Post trong Collection ra
-            List<Post> postsAll = postDAO.getAll();
-            // Coanh tạo ra một bản sao của postsAll để không ảnh hưởng đến danh sách gốc
-            List<Post> postsOther = new ArrayList<>(postsAll);
-            // Coanh tiến hành loại bỏ các post có trong danh sách posts khỏi postsOther
-            postsOther.removeAll(posts.into(new ArrayList<>()));
-            // Sau khi cái đống post trong posts đã được add hết
-            if (feedCount == postCount) {
-                // Coanh sẽ add cái Panel siêu cấp vip pro này vào
-                feedPanel.add(new MayULike());
-                // Sau đó Coanh đi copy cái sau này của Dương ném vào. ezzzz
-                // Load initial posts from the regular database query
-                for (Post post : postsOther) {
-                    // Check if pnlSearch is visible before adding PostUI components
-                    while (isSearchPanelVisible()) {
-                        try {
-                            Thread.sleep(50); // Wait for 100 milliseconds before checking again
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+            // Load initial posts from the regular database query
+            for (Post post : postsOther) {
+                // Check if pnlSearch is visible before adding PostUI components
+                while (isSearchPanelVisible()) {
+                    try {
+                        Thread.sleep(50); // Wait for 100 milliseconds before checking again
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-
-                    PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
-                    SwingUtilities.invokeLater(() -> {
-                        removeLoading();
-                        feedPanel.add(postUI);
-                        addLoading();
-                        feedPanel.revalidate();
-                        feedPanel.repaint();
-                    });
                 }
+
+                PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
+                SwingUtilities.invokeLater(() -> {
+                    removeLoading();
+                    feedPanel.add(postUI);
+                    addLoading();
+                    feedPanel.revalidate();
+                    feedPanel.repaint();
+                });
             }
 
             // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)

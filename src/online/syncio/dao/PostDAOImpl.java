@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.in;
+import static com.mongodb.client.model.Filters.nin;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.FullDocument;
@@ -153,6 +154,26 @@ public class PostDAOImpl implements PostDAO {
         ChangeStreamIterable<Post> changeStreamPosts = postCollection.watch();
         changeStreamPosts.fullDocument(FullDocument.UPDATE_LOOKUP);
         return changeStreamPosts;
+    }
+
+    @Override
+    public FindIterable<Post> getAllPostOther(User user) {
+        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+
+        // Get the list of follower IDs from the user object
+        List<String> followerIds = new ArrayList<>();
+        for (UserIDAndDate userIDAndDate : user.getFollowing()) {
+            followerIds.add(userIDAndDate.getUserID());
+        }
+        
+        // add itself
+        followerIds.add(user.getId().toString());
+
+        // Create a filter to find posts where the userID matches any of the follower IDs
+        Bson filter = nin("userID", followerIds);
+
+        // Execute the query and return the result
+        return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
     
 }
