@@ -9,6 +9,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -150,6 +151,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public ChangeStreamIterable<Post> getChangeStream() {
         ChangeStreamIterable<Post> changeStreamPosts = postCollection.watch();
+        changeStreamPosts.fullDocument(FullDocument.UPDATE_LOOKUP);
         return changeStreamPosts;
     }
     

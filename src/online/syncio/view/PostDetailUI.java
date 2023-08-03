@@ -2,6 +2,7 @@ package online.syncio.view;
 
 import com.mongodb.MongoInterruptedException;
 import com.mongodb.client.ChangeStreamIterable;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
@@ -57,29 +58,46 @@ public class PostDetailUI extends javax.swing.JPanel {
     private void startPostChangeStream() {
         changeStreamThread = new Thread(() -> {
             try {
-                changeStreamPosts.forEach((ChangeStreamDocument<Post> changeDocument) -> {
+                ChangeStreamIterable<Post> changeStreamPosts = postDAO.getChangeStream();
+
+                // ChangeStreamDocuments should be iterated using the iterator() method
+                MongoCursor<ChangeStreamDocument<Post>> iterator = changeStreamPosts.iterator();
+                while (iterator.hasNext()) {
+                    ChangeStreamDocument<Post> changeDocument = iterator.next();
+
                     // Handle the change event here
                     Post updatedPost = changeDocument.getFullDocument();
-                    
+
                     if (updatedPost != null) {
                         List<UserIDAndDateAndText> commentList = updatedPost.getCommentList();
+
+                        // Check if the 'postID' variable is initialized and matches the updated post's ID
+                        // If postID is not initialized, this condition will be skipped
                         if (commentList != null && updatedPost.getId().toString().equals(postID)) {
+                            System.out.println("co");
+
+                            // Assuming 'post' is the instance of the current post being displayed in your GUI
                             List<UserIDAndDateAndText> existingComments = post.getCommentList();
+
+                            // Check if the number of comments has increased
                             if (existingComments.size() < commentList.size()) {
-                                UserIDAndDateAndText newComment = commentList.get(commentList.size() - 1);
-                                String userID = userDAO.getByID(newComment.getUserID()).getUsername();
-                                String text = newComment.getText();
-                                String date = newComment.getDate();
+                                // Add the new comment(s) to the UI
                                 SwingUtilities.invokeLater(() -> {
-                                    pnlCmt.add(new CommentUI(userID, text, date));
+                                    for (int i = existingComments.size(); i < commentList.size(); i++) {
+                                        UserIDAndDateAndText newComment = commentList.get(i);
+                                        String user_id = userDAO.getByID(newComment.getUserID()).getUsername();
+                                        String text = newComment.getText();
+                                        String date = newComment.getDate();
+                                        pnlCmt.add(new CommentUI(user_id, text, date));
+                                    }
+
                                     pnlCmt.revalidate();
-                                    pnlCmt.repaint();   
+                                    pnlCmt.repaint();
                                 });
                             }
                         }
                     }
-                    
-                });
+                }
             } catch (MongoInterruptedException e) {
                 // Handle any exceptions here
                 e.printStackTrace();
