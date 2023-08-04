@@ -34,6 +34,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.view.Main;
 import online.syncio.view.MessagePanel;
 
 public class ChatArea extends JPanel {
@@ -178,13 +179,13 @@ public class ChatArea extends JPanel {
     public void setMessagingUser(User messagingUser) {
         this.messagingUser = messagingUser;
         setTitle(messagingUser.getUsername());
-        setName(messagingUser.getUsername().trim().toLowerCase());
+        setName(messagingUser.getUsername().toLowerCase());
 
-        loadExistingMessages();
+        getMessageHistory();
     }
 
-    public void loadExistingMessages() {
-        FindIterable<Message> messageList = messageDAO.findAllByTwoUsernames(currentUser.getUsername(),
+    public void getMessageHistory() {
+        FindIterable<Message> messageList = messageDAO.findAllByTwoUsers(currentUser.getUsername(),
                 messagingUser.getUsername());
 
         if (messageList != null) {
@@ -198,11 +199,11 @@ public class ChatArea extends JPanel {
                         }
                     });
                 }
-
-                scrollToBottom();
             });
 
             thread.start();
+        } else {
+            Main.getInstance().getMessagePanel().createCardForHistoryPanel(messagingUser);
         }
     }
 
@@ -315,7 +316,6 @@ public class ChatArea extends JPanel {
         body.repaint();
         body.revalidate();
         scrollBody.revalidate();
-        scrollToBottom();
     }
 
     public void addChatBox(Message message, ImageIcon avatar, ChatBox.BoxType type) {
@@ -333,7 +333,6 @@ public class ChatArea extends JPanel {
         body.repaint();
         body.revalidate();
         scrollBody.revalidate();
-        scrollToBottom();
     }
 
     public void clearChatBox() {
@@ -342,7 +341,7 @@ public class ChatArea extends JPanel {
         body.revalidate();
     }
 
-    private void scrollToBottom() {
+    public void scrollToBottom() {
         animationScroll.scrollVertical(scrollBody, scrollBody.getVerticalScrollBar().getMaximum());
     }
 

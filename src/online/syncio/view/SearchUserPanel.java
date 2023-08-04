@@ -2,6 +2,9 @@ package online.syncio.view;
 
 import com.mongodb.client.FindIterable;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -44,8 +47,23 @@ public class SearchUserPanel extends JPanel {
         pnlResult.removeAll();
         Box.createVerticalStrut(20);
 
+        MouseListener mouseEvent = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                SearchedUserCard card = (SearchedUserCard) e.getSource();
+
+                Main main = Main.getInstance();
+
+                main.profile.loadProfile(card.getUser());
+                main.showTab("profile");
+                main.getBtnSearch().doClick();
+            }
+        };
+
         for (User user : userList) {
-            pnlResult.add(new SearchedUserCard(user));
+            SearchedUserCard card = new SearchedUserCard(user);
+            card.addMouseListener(mouseEvent);
+
+            pnlResult.add(card);
             Box.createVerticalStrut(20);
 
             pnlResult.revalidate();

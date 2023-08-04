@@ -41,12 +41,14 @@ public class Profile extends JPanel {
     }
 
     public void loadProfile(User user) {
-        if(user == null) return;
-        
+        if (user == null) {
+            return;
+        }
+
         this.user = user; //user is showing
         this.posts = postDAO.getAllByUserID(user.getId().toString());
-         
-        if(user.getId().toString().equals(LoggedInUser.getCurrentUser().getId().toString())) {
+
+        if (user.getId().toString().equals(LoggedInUser.getCurrentUser().getId().toString())) {
             // own profile
             btnEditProfileMessage.setText("Edit profile");
             btnFollow.setVisible(false);
@@ -65,8 +67,8 @@ public class Profile extends JPanel {
 
             boolean f = false;
             //check myfollowing contain user is shown
-            for(UserIDAndDate u : following) {
-                if(u.getUserID().equals(user.getId().toString())) {
+            for (UserIDAndDate u : following) {
+                if (u.getUserID().equals(user.getId().toString())) {
                     btnFollow.setText("Unfollow");
                     f = true;
                     break;
@@ -89,7 +91,7 @@ public class Profile extends JPanel {
         lblPostNum.setText(postNum + " posts");
         lblFollowingNum.setText(followersSize + " following");
         lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
-              
+
         pnlProfilePost.setUserPosts(posts);
 
         Thread thread = new Thread(() -> {
@@ -282,6 +284,13 @@ public class Profile extends JPanel {
             CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
             c.show(this.main.getPnlTabContent(), "editprofile");
         }
+
+        if (btnEditProfileMessage.getText().equalsIgnoreCase("message")) {
+            CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
+            c.show(this.main.getPnlTabContent(), "message");
+
+            this.main.getMessagePanel().openMessage(lblUsername.getText().trim());
+        }
     }//GEN-LAST:event_btnEditProfileMessageActionPerformed
 
     private void btnFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowActionPerformed
@@ -289,8 +298,7 @@ public class Profile extends JPanel {
         if (result > 0) {
             toggleFollow();
             lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
-        }
-        else {
+        } else {
             System.out.println(result);
         }
     }//GEN-LAST:event_btnFollowActionPerformed

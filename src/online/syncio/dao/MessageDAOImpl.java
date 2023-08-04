@@ -63,7 +63,7 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
-    public FindIterable<Message> findAllByTwoUsernames(String user1, String user2) {
+    public FindIterable<Message> findAllByTwoUsers(String user1, String user2) {
         String sender1 = user1;
         String recipient1 = user2;
 
@@ -79,19 +79,9 @@ public class MessageDAOImpl implements MessageDAO {
         return messageList;
     }
 
-    @Override
-    public Message findNewMessageWithCurrentUser(String currentUser, String messagedUsername) {
-        String sender = messagedUsername;
-        String recipient = currentUser;
-
-        Bson filter = Filters.and(Filters.eq("sender", sender), Filters.eq("recipient", recipient));
-
-        Message message = messageCollection.find(filter).sort(Sorts.descending("dateSent")).first();
-        return message;
-    }
 
     @Override
-    public Set<String> findMessagedUsers(String currentUser) {
+    public Set<String> getMessagingUsers(String currentUser) {
         Bson filter = Filters.or(
                 Filters.eq("sender", currentUser),
                 Filters.eq("recipient", currentUser)
@@ -116,6 +106,8 @@ public class MessageDAOImpl implements MessageDAO {
                 }
             }
         }
+
+        usernames.remove(currentUser);
 
         return usernames;
     }

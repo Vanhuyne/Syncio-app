@@ -34,7 +34,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
-        lblUsername.setText(user.getUsername().trim());
+        lblUsername.setText(user.getUsername());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
     }
 
@@ -56,7 +56,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
-        lblUsername.setText(user.getUsername().trim());
+        lblUsername.setText(user.getUsername());
         lblFollowers.setText("");
     }
 
@@ -70,14 +70,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(290, 90));
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                formMouseEntered(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                formMousePressed(evt);
-            }
-        });
 
         lblAvatar.setBackground(new java.awt.Color(255, 255, 255));
         lblAvatar.setPreferredSize(new java.awt.Dimension(60, 60));
@@ -115,21 +107,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-//        System.out.println(user.getUsername());
-//
-//        Main main = Main.getInstance();
-
-//        CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
-//        c.show(main.getPnlTabContent(), "profile");
-//        main.getMessagePanel().openMessage(user);
-//        main.showTab("message");
-//        main.getBtnSearch().doClick();
-    }//GEN-LAST:event_formMousePressed
-
-    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
-    }//GEN-LAST:event_formMouseEntered
 
     public User getUser() {
         return user;

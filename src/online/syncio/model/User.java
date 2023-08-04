@@ -9,11 +9,11 @@ import org.bson.types.ObjectId;
 public class User {
 
     private ObjectId id;
-    private String username;
-    private String password;
-    private String email;
+    private String username = "";
+    private String password = "";
+    private String email = "";
     public Binary avt;
-    private String bio;
+    private String bio = "";
     private int role;
     private String dateCreated = TimeHelper.getCurrentDateTime();
     private int flag;
@@ -23,10 +23,10 @@ public class User {
     }
 
     public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> following) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.bio = bio;
+        this.username = username.trim();
+        this.password = password.trim();
+        this.email = email.trim();
+        this.bio = bio.trim();
         this.role = role;
         this.flag = flag;
         this.following = following;
@@ -69,7 +69,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return password.trim();
     }
 
     public void setPassword(String password) {
@@ -77,7 +77,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return email.trim();
     }
 
     public void setEmail(String email) {
@@ -93,7 +93,7 @@ public class User {
     }
 
     public String getBio() {
-        return bio;
+        return bio.trim();
     }
 
     public void setBio(String bio) {

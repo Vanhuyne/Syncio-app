@@ -35,32 +35,84 @@ public class MessagePanel extends JPanel {
         cardLayout = (CardLayout) pnlChatArea.getLayout();
 
         pnlUserList.setLayout(new BoxLayout(pnlUserList, BoxLayout.Y_AXIS));
-        getMessagedUser();
+        addUserToHistoryPanel();
     }
 
-    public void getMessagedUser() {
+    public void addUserToHistoryPanel() {
         pnlUserList.removeAll();
 
-        messageUserSet = messageDAO.findMessagedUsers(LoggedInUser.getCurrentUser().getUsername());
+        messageUserSet = messageDAO.getMessagingUsers(LoggedInUser.getCurrentUser().getUsername());
         lblLoggedInUsername.setText(LoggedInUser.getCurrentUser().getUsername());
 
         for (String username : messageUserSet) {
-            User user = userDAO.getByUsername(username);
-            SearchedUserCard card = new SearchedUserCard(user);
-
-            card.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    openMessage(card.getUser());
-                }
-            });
-
-            pnlUserList.add(card);
-            Box.createVerticalStrut(20);
+            MessagePanel.this.createCardForHistoryPanel(username);
         }
 
         pnlUserList.revalidate();
         pnlUserList.repaint();
+    }
+
+    public void createCardForHistoryPanel(String username) {
+        User user = userDAO.getByUsername(username);
+        SearchedUserCard card = new SearchedUserCard(user);
+
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                openMessage(card.getUser());
+            }
+        });
+
+        pnlUserList.add(card);
+        Box.createVerticalStrut(20);
+
+        pnlUserList.revalidate();
+        pnlUserList.repaint();
+    }
+
+    public void createCardForHistoryPanel(User user) {
+        SearchedUserCard card = new SearchedUserCard(user);
+
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                openMessage(card.getUser());
+            }
+        });
+
+        pnlUserList.add(card);
+        Box.createVerticalStrut(20);
+
+        pnlUserList.revalidate();
+        pnlUserList.repaint();
+    }
+
+    public void openMessage(String messagingUsername) {
+        Component[] componentList = pnlChatArea.getComponents();
+
+        boolean found = false;
+
+        User messagingUser = userDAO.getByUsername(messagingUsername);
+
+        try {
+
+            for (Component c : componentList) {
+                if (c instanceof ChatArea
+                        && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
+                    cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
+                    found = true;
+
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            createMessage(messagingUser);
+            found = true;
+        }
+
+        if (!found) {
+            createMessage(messagingUser);
+        }
     }
 
     public void openMessage(User messagingUser) {
@@ -70,10 +122,9 @@ public class MessagePanel extends JPanel {
 
         try {
             for (Component c : componentList) {
-                System.out.println(c.getName().trim());
                 if (c instanceof ChatArea
-                        && c.getName().equalsIgnoreCase(messagingUser.getUsername().trim())) {
-                    cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase().trim());
+                        && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
+                    cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
                     found = true;
 
                     break;
@@ -93,8 +144,8 @@ public class MessagePanel extends JPanel {
         ChatArea ca = new ChatArea();
         ca.setMessagingUser(messagingUser);
 
-        pnlChatArea.add(ca, ca.getName().trim());
-        cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase().trim());
+        pnlChatArea.add(ca, ca.getName().toLowerCase());
+        cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
     }
 
     @SuppressWarnings("unchecked")
@@ -110,11 +161,14 @@ public class MessagePanel extends JPanel {
         setBackground(new java.awt.Color(0, 204, 0));
 
         pnlUsers.setBackground(new java.awt.Color(255, 255, 255));
+        pnlUsers.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, new java.awt.Color(219, 219, 219)));
 
         lblLoggedInUsername.setForeground(new java.awt.Color(0, 0, 0));
         lblLoggedInUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLoggedInUsername.setText("Tên đăng nhập của người dùng");
         lblLoggedInUsername.setFont(new java.awt.Font("SF Pro Display Medium", 0, 18)); // NOI18N
+
+        scrollPane.setBorder(null);
 
         pnlUserList.setBackground(new java.awt.Color(255, 255, 255));
         pnlUserList.setLayout(new javax.swing.BoxLayout(pnlUserList, javax.swing.BoxLayout.LINE_AXIS));
@@ -126,8 +180,8 @@ public class MessagePanel extends JPanel {
             pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlUsersLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
         );
@@ -136,7 +190,7 @@ public class MessagePanel extends JPanel {
             .addGroup(pnlUsersLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(675, Short.MAX_VALUE))
+                .addContainerGap(674, Short.MAX_VALUE))
             .addGroup(pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlUsersLayout.createSequentialGroup()
                     .addGap(0, 70, Short.MAX_VALUE)
@@ -158,7 +212,7 @@ public class MessagePanel extends JPanel {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(pnlUsers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 800, Short.MAX_VALUE)))
+                    .addGap(0, 799, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
