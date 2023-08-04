@@ -36,7 +36,6 @@ public class ComponentInit {
     }
 
     public static void applyProperties(JLabel label) {
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
         label.setBackground(new Color(0f, 0f, 0f, 0f));
     }
 

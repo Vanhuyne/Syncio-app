@@ -57,6 +57,11 @@ public class Home extends JPanel {
             main.getPnlSearch().setBounds(main.getPnlSearch().getX(), getY(), main.getPnlSearch().getWidth(), main.getPnlSearch().getHeight());
             main.getPnlSearch().revalidate();
             main.getPnlSearch().repaint();
+            
+            // Update the position of pnlSearch relative to the pnlHome container
+            main.getPnlNotifications().setBounds(main.getPnlNotifications().getX(), getY(), main.getPnlNotifications().getWidth(), main.getPnlNotifications().getHeight());
+            main.getPnlNotifications().revalidate();
+            main.getPnlNotifications().repaint();
         });
 
     }
@@ -101,7 +106,7 @@ public class Home extends JPanel {
                 // Check if pnlSearch is visible before adding PostUI components
                 while (isSearchPanelVisible()) {
                     try {
-                        Thread.sleep(50); // Wait for 100 milliseconds before checking again
+                        Thread.sleep(40); // Wait for 100 milliseconds before checking again
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -156,7 +161,7 @@ public class Home extends JPanel {
     }
 
     public boolean isSearchPanelVisible() {
-        return main.getPnlSearch().isVisible();
+        return main.getPnlSearch().isVisible() || main.getPnlNotifications().isVisible();
     }
 
     @SuppressWarnings("unchecked")

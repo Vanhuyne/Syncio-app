@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 public class ImageFilter {
 
     public static void main(String[] args) {
-        File file = new File("src/online/syncio/resources/images/icons/profile_24px.png");
+        File file = new File("src/online/syncio/resources/images/icons/s.jpg");
         //File file = new File("License Plate Photos/ca_10.jpeg");
         BufferedImage img = null;
 
@@ -22,17 +22,17 @@ public class ImageFilter {
 
         if (img != null) {
             display(img);
-            //img = brighten(img);
-            img = toGrayScale(img);
-            //img = toGrayScale2(img);
+            img = brighten(img, 20);
+//            img = toGrayScale(img);
+//            img = toGrayScale2(img);
             //display(img);
-            //img = pixelate(img);
-            //img = pixelate2(img, 3);
-            //img = resize(img, 150);
-            //img = blur(img);
-            img = blur(blur(img));
-            img = heavyblur(img);
-            img = detectEdges(img);
+//            img = pixelate(img);
+//            img = pixelate2(img, 3);
+//            img = resize(img, 150);
+//            img = blur(img);
+//            img = blur(blur(img));
+//            img = heavyblur(img);
+//            img = detectEdges(img);
             display(img);
         }
     }
@@ -43,6 +43,7 @@ public class ImageFilter {
         JFrame frame = new JFrame();
         JLabel label = new JLabel();
         frame.setSize(img.getWidth(), img.getHeight());
+        frame.setLocationRelativeTo(null);
         label.setIcon(new ImageIcon(img));
         frame.getContentPane().add(label, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
