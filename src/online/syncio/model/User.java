@@ -34,20 +34,20 @@ public class User {
 
     public User(ObjectId id, String username, String password, String email, String bio, int role, int flag) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.bio = bio;
+        this.username = username.trim();
+        this.password = password.trim();
+        this.email = email.trim();
+        this.bio = bio.trim();
         this.role = role;
         this.flag = flag;
     }
 
     public User(String id, String username, String password, String email, String bio, int role, int flag) {
         this.id = new ObjectId(id);
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.bio = bio;
+        this.username = username.trim();
+        this.password = password.trim();
+        this.email = email.trim();
+        this.bio = bio.trim();
         this.role = role;
         this.flag = flag;
     }
@@ -65,7 +65,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.trim();
     }
 
     public String getPassword() {
@@ -73,7 +73,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password.trim();
     }
 
     public String getEmail() {
@@ -81,7 +81,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.trim();
     }
 
     public Binary getAvt() {
@@ -97,7 +97,7 @@ public class User {
     }
 
     public void setBio(String bio) {
-        this.bio = bio;
+        this.bio = bio.trim();
     }
 
     public int getRole() {

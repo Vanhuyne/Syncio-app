@@ -1,26 +1,25 @@
 package online.syncio.component;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.view.Main;
 
 public class SearchedUserCard extends javax.swing.JPanel {
 
     private User user;
     private UserDAO userDAO;
 
-    private Image defaultImage = new javax.swing.ImageIcon(getClass()
-            .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
+    private Image defaultImage;
 
     public SearchedUserCard(User user) {
+        this.defaultImage = new javax.swing.ImageIcon(getClass()
+                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
+
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.user = user;
@@ -40,6 +39,8 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }
 
     public SearchedUserCard(User user, Color backgroundColor) {
+        this.defaultImage = new javax.swing.ImageIcon(getClass()
+                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
         this.user = user;
 
         initComponents();
@@ -56,7 +57,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
         lblUsername.setText(user.getUsername().trim());
-//        lblFollowers.setText(user.getFollowing().size() + " followers");
         lblFollowers.setText("");
     }
 
@@ -117,19 +117,27 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        Main main = Main.getInstance();
+//        System.out.println(user.getUsername());
+//
+//        Main main = Main.getInstance();
 
-        CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
-        c.show(main.getPnlTabContent(), "profile");
-
-        main.getMessagePanel().openMessage(user);
-//        main.profile.loadProfile(user);
-        main.showTab("message");
-        main.getBtnSearch().doClick();
+//        CardLayout c = (CardLayout) main.getPnlTabContent().getLayout();
+//        c.show(main.getPnlTabContent(), "profile");
+//        main.getMessagePanel().openMessage(user);
+//        main.showTab("message");
+//        main.getBtnSearch().doClick();
     }//GEN-LAST:event_formMousePressed
 
     private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
     }//GEN-LAST:event_formMouseEntered
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAvatar;

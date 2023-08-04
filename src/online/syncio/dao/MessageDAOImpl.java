@@ -1,13 +1,18 @@
 package online.syncio.dao;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import online.syncio.model.Message;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -83,5 +88,42 @@ public class MessageDAOImpl implements MessageDAO {
 
         Message message = messageCollection.find(filter).sort(Sorts.descending("dateSent")).first();
         return message;
+    }
+
+    @Override
+    public Set<String> findMessagedUsers(String currentUser) {
+        Bson filter = Filters.or(
+                Filters.eq("sender", currentUser),
+                Filters.eq("recipient", currentUser)
+        );
+
+        Set<String> usernames = new HashSet<>();
+
+        try (MongoCursor<Message> cursor = messageCollection.find(filter).sort(Sorts.descending("dateSent")).iterator()) {
+            while (cursor.hasNext()) {
+                Message message = cursor.next();
+                String sender = message.getSender();
+                String recipient = message.getRecipient();
+
+                // Add sender to usernames if it is not the currentUser
+                if (!sender.equalsIgnoreCase(currentUser)) {
+                    usernames.add(sender);
+                }
+
+                // Add recipient to usernames if it is not the currentUser
+                if (!recipient.equalsIgnoreCase(currentUser)) {
+                    usernames.add(recipient);
+                }
+            }
+        }
+
+        return usernames;
+    }
+
+    @Override
+    public ChangeStreamIterable<Message> getChangeStream() {
+        ChangeStreamIterable<Message> changeStreamMessage = messageCollection.watch();
+        changeStreamMessage.fullDocument(FullDocument.UPDATE_LOOKUP);
+        return changeStreamMessage;
     }
 }
