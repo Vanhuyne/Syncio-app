@@ -415,9 +415,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        txpCmt.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(2, 3, 2, 3)));
-        txpCmt.setBorderThickness(0);
-        jScrollPane1.setViewportView(txpCmt);
+        txtCmt.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(2, 3, 2, 3)));
+        txtCmt.setBorderThickness(0);
+        jScrollPane1.setViewportView(txtCmt);
 
         btnSend.setBackground(new java.awt.Color(254, 255, 255));
         btnSend.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)));
