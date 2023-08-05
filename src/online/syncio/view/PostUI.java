@@ -141,10 +141,10 @@ public class PostUI extends javax.swing.JPanel {
         btnNext = new online.syncio.component.MyButton();
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
-        myPanel1 = new online.syncio.component.MyPanel();
+        pnlOwner = new online.syncio.component.MyPanel();
         lblUsername = new javax.swing.JLabel();
         lblDateCreated = new javax.swing.JLabel();
-        myPanel2 = new online.syncio.component.MyPanel();
+        pnlAction = new online.syncio.component.MyPanel();
         lblHeart = new online.syncio.component.MyLabel();
         lblTotalLike = new javax.swing.JLabel();
         lblComment = new online.syncio.component.MyLabel();
@@ -160,6 +160,7 @@ public class PostUI extends javax.swing.JPanel {
         lblViewAllCmt.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         lblViewAllCmt.setForeground(new java.awt.Color(102, 102, 102));
         lblViewAllCmt.setText("View all comments");
+        lblViewAllCmt.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblViewAllCmt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblViewAllCmtMousePressed(evt);
@@ -223,8 +224,8 @@ public class PostUI extends javax.swing.JPanel {
                 .addContainerGap(184, Short.MAX_VALUE))
         );
 
-        myPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        myPanel1.setPreferredSize(new java.awt.Dimension(0, 54));
+        pnlOwner.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOwner.setPreferredSize(new java.awt.Dimension(0, 54));
 
         lblUsername.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
@@ -235,26 +236,26 @@ public class PostUI extends javax.swing.JPanel {
         lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDateCreated.setText("02:42 05/07/2023");
 
-        javax.swing.GroupLayout myPanel1Layout = new javax.swing.GroupLayout(myPanel1);
-        myPanel1.setLayout(myPanel1Layout);
-        myPanel1Layout.setHorizontalGroup(
-            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, myPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlOwnerLayout = new javax.swing.GroupLayout(pnlOwner);
+        pnlOwner.setLayout(pnlOwnerLayout);
+        pnlOwnerLayout.setHorizontalGroup(
+            pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOwnerLayout.createSequentialGroup()
                 .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblDateCreated))
         );
-        myPanel1Layout.setVerticalGroup(
-            myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(myPanel1Layout.createSequentialGroup()
+        pnlOwnerLayout.setVerticalGroup(
+            pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlOwnerLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(myPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(lblDateCreated))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
-        myPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAction.setBackground(new java.awt.Color(255, 255, 255));
 
         lblHeart.setForeground(new java.awt.Color(255, 0, 0));
         lblHeart.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -290,23 +291,23 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername2.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         lblUsername2.setText("sanhvc");
 
-        javax.swing.GroupLayout myPanel2Layout = new javax.swing.GroupLayout(myPanel2);
-        myPanel2.setLayout(myPanel2Layout);
-        myPanel2Layout.setHorizontalGroup(
-            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnlActionLayout = new javax.swing.GroupLayout(pnlAction);
+        pnlAction.setLayout(pnlActionLayout);
+        pnlActionLayout.setHorizontalGroup(
+            pnlActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblUsername2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(myPanel2Layout.createSequentialGroup()
+            .addGroup(pnlActionLayout.createSequentialGroup()
                 .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(lblTotalLike, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        myPanel2Layout.setVerticalGroup(
-            myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, myPanel2Layout.createSequentialGroup()
+        pnlActionLayout.setVerticalGroup(
+            pnlActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlActionLayout.createSequentialGroup()
                 .addGap(0, 10, Short.MAX_VALUE)
-                .addGroup(myPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlActionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblHeart, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblComment, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
@@ -328,8 +329,8 @@ public class PostUI extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-            .addComponent(myPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-            .addComponent(myPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlOwner, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+            .addComponent(pnlAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblViewAllCmt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -338,11 +339,11 @@ public class PostUI extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(myPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlOwner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(pnlImages, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(myPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
@@ -391,9 +392,9 @@ public class PostUI extends javax.swing.JPanel {
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
     private javax.swing.JLabel lblViewAllCmt;
-    private online.syncio.component.MyPanel myPanel1;
-    private online.syncio.component.MyPanel myPanel2;
+    private online.syncio.component.MyPanel pnlAction;
     private online.syncio.component.MyPanel pnlImages;
+    private online.syncio.component.MyPanel pnlOwner;
     private online.syncio.component.MyTextPane txtCaption;
     // End of variables declaration//GEN-END:variables
 }

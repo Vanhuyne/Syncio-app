@@ -9,10 +9,13 @@ import java.util.Map;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import online.syncio.component.MyTextPane;
 import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAOImpl;
@@ -37,44 +40,48 @@ public class TextHelper {
     }
 
     public static void addColoredText(JTextPane textPane, String text) {
-    Document doc = textPane.getDocument();
-    try {
-        int pos = 0;
-        int length = text.length();
-        
-        for (int i = 0; i < length; ) {
-            int codePoint = text.codePointAt(i);
-            int charCount = Character.charCount(codePoint);
-            String emoji = text.substring(i, i + charCount);
+        Document doc = textPane.getDocument();
+        try {
+            int pos = 0;
+            int length = text.length();
 
-            Color emojiColor = emojiColorMap.getOrDefault(emoji, Color.BLACK);
+            for (int i = 0; i < length; ) {
+                int codePoint = text.codePointAt(i);
+                int charCount = Character.charCount(codePoint);
+                String emoji = text.substring(i, i + charCount);
 
-            String plainText = text.substring(pos, i);
-            SimpleAttributeSet style = new SimpleAttributeSet();
-            StyleConstants.setForeground(style, Color.BLACK);
-            doc.insertString(doc.getLength(), plainText, style);
+                Color emojiColor = emojiColorMap.getOrDefault(emoji, Color.BLACK);
 
-            StyleConstants.setForeground(style, emojiColor);
-            StyleConstants.setFontSize(style, 16); // You can adjust the font size as needed
-            doc.insertString(doc.getLength(), emoji, style);
+                String plainText = text.substring(pos, i);
+                SimpleAttributeSet style = new SimpleAttributeSet();
+                StyleConstants.setForeground(style, Color.BLACK);
+                doc.insertString(doc.getLength(), plainText, style);
 
-            pos = i + charCount;
-            i += charCount;
+                StyleConstants.setForeground(style, emojiColor);
+                StyleConstants.setFontSize(style, 16); // You can adjust the font size as needed
+                doc.insertString(doc.getLength(), emoji, style);
+
+                pos = i + charCount;
+                i += charCount;
+            }
+
+            if (pos < length) {
+                String remainingText = text.substring(pos);
+                SimpleAttributeSet style = new SimpleAttributeSet();
+                StyleConstants.setForeground(style, Color.BLACK);
+                doc.insertString(doc.getLength(), remainingText, style);
+            }
+
+        } catch (BadLocationException e) {
+            e.printStackTrace();
         }
 
-        if (pos < length) {
-            String remainingText = text.substring(pos);
-            SimpleAttributeSet style = new SimpleAttributeSet();
-            StyleConstants.setForeground(style, Color.BLACK);
-            doc.insertString(doc.getLength(), remainingText, style);
-        }
-
-    } catch (BadLocationException e) {
-        e.printStackTrace();
+        textPane.requestFocus();
     }
-
-    textPane.requestFocus();
-}
+    
+    
+    
+    
     
     
     

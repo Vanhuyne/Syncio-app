@@ -175,5 +175,13 @@ public class PostDAOImpl implements PostDAO {
         // Execute the query and return the result
         return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
+
+    
+    
+    @Override
+    public FindIterable<Post> getAllByUserIDFindIterable(String userID) {
+        Bson filter = eq("userID", userID);
+        return postCollection.find(filter).sort(Sorts.descending("datePosted"));
+    }
     
 }

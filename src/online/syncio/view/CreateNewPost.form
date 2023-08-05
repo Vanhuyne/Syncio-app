@@ -216,7 +216,9 @@
                               <Component id="rdoNormal" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                               <Component id="rdoGrayscale" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="278" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                              <Component id="rdoBrighten" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="185" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -227,8 +229,9 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="rdoGrayscale" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="rdoNormal" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="rdoBrighten" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="10" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -254,6 +257,17 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdoNormalActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="online.syncio.component.MyRadioButton" name="rdoBrighten">
+                      <Properties>
+                        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                          <ComponentRef name="filterGroup"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Brighten"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdoBrightenActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

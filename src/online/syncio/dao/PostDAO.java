@@ -12,6 +12,7 @@ public interface PostDAO extends DAO<Post> {
     public FindIterable<Post> getAllPostOfFollowers(User user);
     public FindIterable<Post> getAllPostOther(User user);
     public List<Post> getAllByUserID(String userID);
+    public FindIterable<Post> getAllByUserIDFindIterable(String userID);
     public boolean addLike(String postID, String userID);
     public boolean removeLike(String postID, String userID);
     public boolean addComment(String text, String userID, String postID);

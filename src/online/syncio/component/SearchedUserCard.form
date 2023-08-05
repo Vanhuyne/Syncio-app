@@ -6,7 +6,7 @@
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[290, 90]"/>
+      <Dimension value="[314, 90]"/>
     </Property>
   </Properties>
   <AuxValues>

@@ -6,15 +6,33 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.Icon;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import online.syncio.utils.TextHelper;
 
 public class MyTextPane extends JTextPane {
+    private static final Map<String, Color> emojiColorMap = new HashMap<>();
+    static {
+        // Add emojis and their corresponding colors to the map
+        emojiColorMap.put("👌", new Color(255, 204, 0));
+        emojiColorMap.put("✨", new Color(255, 204, 0));
+        emojiColorMap.put("👍", new Color(255, 204, 0));
+        emojiColorMap.put("❤", new Color(255, 0, 0));
+        emojiColorMap.put("📸", new Color(102, 102, 102));
+        emojiColorMap.put("😂", Color.BLACK);
+        emojiColorMap.put("😁", Color.BLACK);
+        // Add more emojis and colors as needed
+    }
+    
     private int radius = 0;
     private Color borderColor = new Color(219, 219, 219);
     private int borderThickness = 1;
@@ -122,6 +140,67 @@ public class MyTextPane extends JTextPane {
         setCaretPosition(len);
         setCharacterAttributes(aset, false);
         replaceSelection(msg);
+    }
+    
+    
+    
+    public void appendIcon(Icon icon) {
+        insertIcon(icon);
+    }
+   
+        
+        
+    public void appendBoldText(String text) {
+        SimpleAttributeSet boldStyle = new SimpleAttributeSet();
+        StyleConstants.setBold(boldStyle, true);
+
+        SimpleAttributeSet regularStyle = new SimpleAttributeSet();
+        StyleConstants.setBold(regularStyle, false);
+
+        Document doc = getDocument();
+        try {
+            doc.insertString(doc.getLength(), text, boldStyle);
+            doc.insertString(doc.getLength(), " ", regularStyle); // Set the style to regular
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    public void appendTextWithEmojis(String text) {
+        char[] characters = text.toCharArray();
+
+        for (int i = 0; i < characters.length; ) {
+            int codePoint = Character.codePointAt(characters, i);
+            int charCount = Character.charCount(codePoint);
+            String token = new String(characters, i, charCount);
+
+            Color emojiColor = emojiColorMap.getOrDefault(token, Color.BLACK);
+            append(token, emojiColor);
+
+            i += charCount; // Move the index to the next code point
+        }
+    }
+    
+    
+    
+    public void appendColoredText(String text, Color color, int fontSize) {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
+
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "SansSerif");
+        aset = sc.addAttribute(aset, StyleConstants.FontSize, fontSize);
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_LEFT);
+
+        int len = getDocument().getLength();
+        setCaretPosition(len);
+        setCharacterAttributes(aset, false);
+        replaceSelection(text);
+        
+        // Reset font size to default
+        AttributeSet defaultStyle = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.FontSize, 14); // Change 14 to your default font size
+        setCharacterAttributes(defaultStyle, false);
     }
     
 }

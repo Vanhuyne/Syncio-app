@@ -3,23 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/CommentUI.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/MyPanel.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/MainFrame1.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/PostDAOImpl.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/PostUI.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/MessagePanel.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/UserDAO.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/SearchedUserCard.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/PostDAO.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/PostDetailUI.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/NotificationsPanel.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Profile.java</file>
             <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Main.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/CreateNewPost.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/ManagementReportedPost.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Login.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/LoginController.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/UserDAOImpl.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/TextHelper.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/ProfilePostPanel.java</file>
-            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/message/ChatArea.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/Home.java</file>
         </group>
     </open-files>
 </project-private>
