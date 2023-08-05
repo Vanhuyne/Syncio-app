@@ -23,13 +23,13 @@ public class Post {
     }
 
     public Post(String userID, List<UserIDAndDate> likeList) {
-        this.userID = userID.trim();;
+        this.userID = userID.trim();
         this.likeList = likeList;
     }
 
     public Post(String userID, String caption, ArrayList<Binary> lPhoto) {
-        this.userID = userID.trim();;
-        this.caption = caption.trim();;
+        this.userID = userID.trim();
+        this.caption = caption.trim();
         this.photoList = lPhoto;
     }
 
