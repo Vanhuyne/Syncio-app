@@ -243,6 +243,10 @@ public final class EditProfile extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
+        if(OtherHelper.getMainFrame(this).getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
+            OtherHelper.getMainFrame(this).getPnlNotifications().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
+        }
+        
         LoggedInUser.logOut();
         OtherHelper.deleteSessionValue("LOGGED_IN_USER");
         Main.getInstance().dispose();

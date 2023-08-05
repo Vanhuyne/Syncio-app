@@ -102,7 +102,7 @@ public class Profile extends JPanel {
                     // Handle the change event here
                     // For example, extract the updated post data from changeDocument and update pnlProfilePost
                     Post updatedPost = changeDocument.getFullDocument();
-                    if (updatedPost != null && updatedPost.getUserID().equals(this.user.getId().toString())) {
+                    if (posts.size() != postDAO.getAllByUserID(user.getId().toString()).size() && updatedPost != null && updatedPost.getUserID().equals(this.user.getId().toString())) {
                         SwingUtilities.invokeLater(() -> {
                             // Update the user's posts UI
                             pnlProfilePost.addUserPost(updatedPost);

@@ -1,5 +1,7 @@
 package online.syncio.view;
 
+import online.syncio.component.MyTextPane;
+
 public class CommentUI extends javax.swing.JPanel {
 
     public CommentUI(String username, String cmt, String date) {

@@ -111,6 +111,14 @@ public class ImageHelper {
     
     
     
+    public static ImageIcon resizing(BufferedImage bufferedImage, int width, int height) {
+        Image image = new ImageIcon(bufferedImage).getImage();
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+        return new ImageIcon(scaledImage);
+    }
+    
+    
+    
     public static byte[] readAsByte(String path) {
         try {
             FileInputStream fis = new FileInputStream(path);

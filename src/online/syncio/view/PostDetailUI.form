@@ -494,10 +494,17 @@
                             <Component class="online.syncio.component.MyTextPane" name="txpCmt">
                               <Properties>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                  <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-                                    <MatteColorBorder bottom="0" left="0" right="0" top="1">
-                                      <Color PropertyName="color" blue="db" green="db" red="db" type="rgb"/>
-                                    </MatteColorBorder>
+                                  <Border info="org.netbeans.modules.form.compat2.border.CompoundBorderInfo">
+                                    <CompoundBorder>
+                                      <Border PropertyName="outside" info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
+                                        <MatteColorBorder bottom="0" left="0" right="0" top="1">
+                                          <Color PropertyName="color" blue="db" green="db" red="db" type="rgb"/>
+                                        </MatteColorBorder>
+                                      </Border>
+                                      <Border PropertyName="inside" info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                                        <EmptyBorder bottom="2" left="3" right="3" top="2"/>
+                                      </Border>
+                                    </CompoundBorder>
                                   </Border>
                                 </Property>
                                 <Property name="borderThickness" type="int" value="0"/>
@@ -535,6 +542,9 @@
                     </Container>
                     <Container class="online.syncio.component.MyScrollPane" name="scrollPane">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="null"/>
                         </Property>

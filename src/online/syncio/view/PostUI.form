@@ -35,8 +35,8 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="pnlImages" alignment="0" pref="402" max="32767" attributes="0"/>
-          <Component id="myPanel1" alignment="0" pref="402" max="32767" attributes="0"/>
-          <Component id="myPanel2" max="32767" attributes="0"/>
+          <Component id="pnlOwner" alignment="0" pref="402" max="32767" attributes="0"/>
+          <Component id="pnlAction" max="32767" attributes="0"/>
           <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="lblViewAllCmt" min="-2" pref="119" max="-2" attributes="0"/>
@@ -47,11 +47,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="myPanel1" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlOwner" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="pnlImages" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="myPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlAction" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
@@ -71,6 +71,9 @@
           <Color blue="66" green="66" red="66" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="View all comments"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblViewAllCmtMousePressed"/>
@@ -173,7 +176,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="online.syncio.component.MyPanel" name="myPanel1">
+    <Container class="online.syncio.component.MyPanel" name="pnlOwner">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -230,7 +233,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="online.syncio.component.MyPanel" name="myPanel2">
+    <Container class="online.syncio.component.MyPanel" name="pnlAction">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>

@@ -2,12 +2,15 @@ package online.syncio.view;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Date;
+import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
@@ -30,6 +33,8 @@ public final class Main extends javax.swing.JFrame {
     private MessagePanel messagePanel;
 
     private UserDAO userDAO;
+    NotificationsPanel pnlNotifications;
+    public Date GOLBAL_DATE = null;
 
     public Main() {
         instance = this;
@@ -61,6 +66,16 @@ public final class Main extends javax.swing.JFrame {
 
         messagePanel = new MessagePanel();
 
+        pnlNotifications = new NotificationsPanel();
+        pnlNotifications.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
+        pnlNotifications.setAlignmentX(1.0F);
+        pnlNotifications.setMaximumSize(new Dimension(540, 679));
+        pnlNotifications.setMinimumSize(new Dimension(540, 679));
+        pnlNotifications.setPreferredSize(new Dimension(540, 679));
+        pnlContainer.add(pnlNotifications);
+        pnlNotifications.setVisible(false);
+        pnlContainer.setComponentZOrder(pnlNotifications, 0);
+        
         addComponents();
     }
     
@@ -77,7 +92,7 @@ public final class Main extends javax.swing.JFrame {
     
 
     public void addComponents() {
-        panelList = new JPanel[]{new Home(), messagePanel, new Notification(), profile, new EditProfile()};
+        panelList = new JPanel[]{new Home(), messagePanel, profile, new EditProfile()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -87,8 +102,6 @@ public final class Main extends javax.swing.JFrame {
             if (pnlName.equalsIgnoreCase("messagepanel")) {
                 pnlName = "message";
             }
-
-            System.out.println(pnlName);
 
             pnlTabContent.add(pnl, pnlName);
         }
@@ -122,6 +135,8 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    
+    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -180,6 +195,9 @@ public final class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -203,7 +221,7 @@ public final class Main extends javax.swing.JFrame {
         pnlContainer.setVerifyInputWhenFocusTarget(false);
         pnlContainer.setLayout(new javax.swing.OverlayLayout(pnlContainer));
 
-        pnlSearch.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 540));
+        pnlSearch.setBorder(null);
         pnlSearch.setAlignmentX(1.0F);
         pnlSearch.setMaximumSize(new java.awt.Dimension(540, 679));
         pnlSearch.setMinimumSize(new java.awt.Dimension(540, 679));
@@ -284,6 +302,11 @@ public final class Main extends javax.swing.JFrame {
         btnNotification.setMinimumSize(new java.awt.Dimension(200, 50));
         btnNotification.setName("notification"); // NOI18N
         btnNotification.setPreferredSize(new java.awt.Dimension(200, 50));
+        btnNotification.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNotificationActionPerformed(evt);
+            }
+        });
         pnlLeftMenu.add(btnNotification);
 
         btnCreate.setBackground(null);
@@ -326,6 +349,11 @@ public final class Main extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         btnHome.doClick();
+        if(LoggedInUser.getCurrentUser() != null) {
+            pnlNotifications.displayNotifications();
+            pnlNotifications.revalidate();
+            pnlNotifications.repaint();
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -335,8 +363,33 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        pnlSearch.setVisible(!pnlSearch.isVisible());
+        if(pnlSearch.isVisible()) {
+            pnlSearch.setVisible(false);
+        }
+        else {
+            pnlSearch.setVisible(true);
+            pnlNotifications.setVisible(false);
+        }
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnNotificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificationActionPerformed
+        if(pnlNotifications.isVisible()) {
+            pnlNotifications.setVisible(false);
+        }
+        else {
+            GOLBAL_DATE = new Date();
+            System.out.println(GOLBAL_DATE);
+            pnlNotifications.setVisible(true);
+            pnlSearch.setVisible(false);
+        }
+    }//GEN-LAST:event_btnNotificationActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        if(GOLBAL_DATE != null && LoggedInUser.getCurrentUser() != null) {
+            System.out.println("da cap nhat");
+            pnlNotifications.writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), GOLBAL_DATE);
+        }
+    }//GEN-LAST:event_formWindowClosed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -379,6 +432,14 @@ public final class Main extends javax.swing.JFrame {
         this.pnlSearch = pnlSearch;
     }
 
+    public NotificationsPanel getPnlNotifications() {
+        return pnlNotifications;
+    }
+
+    public void setPnlNotifications(NotificationsPanel pnlNotifications) {
+        this.pnlNotifications = pnlNotifications;
+    }
+
     public MyPanel getMyPanel1() {
         return pnlContainer;
     }
@@ -399,6 +460,12 @@ public final class Main extends javax.swing.JFrame {
         return messagePanel;
     }
 
+    public Date getGOLBAL_DATE() {
+        return GOLBAL_DATE;
+    }
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

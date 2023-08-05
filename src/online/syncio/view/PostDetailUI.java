@@ -19,6 +19,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.OtherHelper;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
@@ -74,7 +75,6 @@ public class PostDetailUI extends javax.swing.JPanel {
                         // Check if the 'postID' variable is initialized and matches the updated post's ID
                         // If postID is not initialized, this condition will be skipped
                         if (commentList != null && updatedPost.getId().toString().equals(postID)) {
-                            System.out.println("co");
 
                             // Assuming 'post' is the instance of the current post being displayed in your GUI
                             List<UserIDAndDateAndText> existingComments = post.getCommentList();
@@ -94,6 +94,10 @@ public class PostDetailUI extends javax.swing.JPanel {
                                     pnlCmt.revalidate();
                                     pnlCmt.repaint();
                                 });
+                                
+                                if(post.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString())) {
+                                    OtherHelper.getMainFrame(this).getPnlNotifications().displayNotifications();
+                                }
                             }
                         }
                     }
@@ -421,7 +425,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        txpCmt.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)));
+        txpCmt.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)), javax.swing.BorderFactory.createEmptyBorder(2, 3, 2, 3)));
         txpCmt.setBorderThickness(0);
         jScrollPane1.setViewportView(txpCmt);
 
@@ -458,6 +462,7 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         pnlCmtContainer.add(myPanel1, java.awt.BorderLayout.PAGE_END);
 
+        scrollPane.setBackground(new java.awt.Color(255, 255, 255));
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
