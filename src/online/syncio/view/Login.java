@@ -28,11 +28,10 @@ import online.syncio.utils.TextHelper;
 
 public class Login extends javax.swing.JFrame {
 
-    private static String APPLICATION_NAME = "Syncio";
-    private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static String TOKENS_DIRECTORY_PATH = "tokens";
-    private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
-    private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
+    private static final String APPLICATION_NAME = "Syncio";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
+    private static final String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
     private LoginController controller;
 
@@ -264,12 +263,12 @@ public class Login extends javax.swing.JFrame {
 
             User u = userDAO.getByEmail(userEmail);
 
-            if(u != null && u.getPassword().equals("")) {
+            if (u != null && u.getPassword().equals("")) {
                 if (u.getFlag() == 1) {
                     GlassPanePopup.showPopup(new MyDialog("Account Unavailable", "We're sorry, but your account is currently unavailable.\nPlease try again later or contact support for assistance."), "dialog");
                     return;
                 }
-                
+
                 // log in
                 LoggedInUser.setCurrentUser(u); //set loggedin user
 

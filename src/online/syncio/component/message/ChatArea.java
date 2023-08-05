@@ -1,5 +1,6 @@
 package online.syncio.component.message;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,9 +12,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javaswingdev.FontAwesome;
 import javaswingdev.FontAwesomeIcon;
 import javaswingdev.GoogleMaterialDesignIcon;
@@ -36,6 +34,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.view.Main;
 import online.syncio.view.MessagePanel;
 
 public class ChatArea extends JPanel {
@@ -52,13 +51,7 @@ public class ChatArea extends JPanel {
     private FindIterable<MessagePanel> messageList;
 
     private User currentUser;
-
     private User messagingUser;
-
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private Runnable updateRecievingMessageTask;
-
-    private String lastSentDate = "";
 
     public void addChatEvent(ChatEvent event) {
         events.add(event);
@@ -163,33 +156,36 @@ public class ChatArea extends JPanel {
             }
         });
 
-        updateRecievingMessageTask = () -> {
-            Message newMessage = messageDAO.findNewMessageWithCurrentUser(
-                    currentUser.getUsername(), messagingUser.getUsername());
+        ChangeStreamIterable<Message> changeStream = messageDAO.getChangeStream();
 
-            if (newMessage != null) {
-                if (!newMessage.getSender().equalsIgnoreCase(currentUser.getUsername())
-                        && !newMessage.getDateSent().equalsIgnoreCase(lastSentDate)) {
-                    SwingUtilities.invokeLater(() -> addChatBox(newMessage, ChatBox.BoxType.LEFT));
+        Thread changeStreamThread = new Thread(() -> {
+            changeStream.forEach(changeDocument -> {
+                Message newMessage = changeDocument.getFullDocument();
 
-                    lastSentDate = newMessage.getDateSent();
+                // Tin nhắn mới có người gửi là messagingUser và người nhận là user đăng nhập
+                if (newMessage != null
+                        && (newMessage.getRecipient().equalsIgnoreCase(currentUser.getUsername())
+                        && newMessage.getSender().equalsIgnoreCase(messagingUser.getUsername()))) {
+                    SwingUtilities.invokeLater(() -> {
+                        addChatBox(newMessage, ChatBox.BoxType.LEFT);
+                    });
                 }
-            }
-        };
+            });
+        });
+
+        changeStreamThread.start();
     }
 
     public void setMessagingUser(User messagingUser) {
         this.messagingUser = messagingUser;
         setTitle(messagingUser.getUsername());
-        setName(messagingUser.getUsername().trim().toLowerCase());
+        setName(messagingUser.getUsername().toLowerCase());
 
-        loadExistingMessages();
-
-        scheduler.scheduleAtFixedRate(updateRecievingMessageTask, 0, 3, TimeUnit.SECONDS);
+        getMessageHistory();
     }
 
-    public void loadExistingMessages() {
-        FindIterable<Message> messageList = messageDAO.findAllByTwoUsernames(currentUser.getUsername(),
+    public void getMessageHistory() {
+        FindIterable<Message> messageList = messageDAO.findAllByTwoUsers(currentUser.getUsername(),
                 messagingUser.getUsername());
 
         if (messageList != null) {
@@ -202,13 +198,12 @@ public class ChatArea extends JPanel {
                             addChatBox(m, ChatBox.BoxType.LEFT);
                         }
                     });
-
-                    if (!m.getSender().equalsIgnoreCase(currentUser.getUsername())) {
-                        lastSentDate = m.getDateSent();
-                    }
                 }
             });
+
             thread.start();
+        } else {
+            Main.getInstance().getMessagePanel().createCardForHistoryPanel(messagingUser);
         }
     }
 
@@ -305,20 +300,22 @@ public class ChatArea extends JPanel {
 
     public void addChatBox(Message message, ChatBox.BoxType type) {
         int values = scrollBody.getVerticalScrollBar().getValue();
+
         if (type == ChatBox.BoxType.LEFT) {
             body.add(new ChatBox(type, message), "width ::80%");
         } else {
             body.add(new ChatBox(type, message), "al right,width ::80%");
         }
+
         SwingUtilities.invokeLater(() -> {
             body.revalidate();
             scrollBody.getVerticalScrollBar().setValue(values);
             bottom.revalidate();
         });
+
         body.repaint();
         body.revalidate();
         scrollBody.revalidate();
-        scrollToBottom();
     }
 
     public void addChatBox(Message message, ImageIcon avatar, ChatBox.BoxType type) {
@@ -336,7 +333,6 @@ public class ChatArea extends JPanel {
         body.repaint();
         body.revalidate();
         scrollBody.revalidate();
-        scrollToBottom();
     }
 
     public void clearChatBox() {
@@ -345,7 +341,7 @@ public class ChatArea extends JPanel {
         body.revalidate();
     }
 
-    private void scrollToBottom() {
+    public void scrollToBottom() {
         animationScroll.scrollVertical(scrollBody, scrollBody.getVerticalScrollBar().getMaximum());
     }
 

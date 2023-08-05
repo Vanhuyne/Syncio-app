@@ -3,7 +3,6 @@ package online.syncio.view;
 import com.mongodb.MongoInterruptedException;
 import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,7 +35,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
-        
+
         this.postID = postID;
         post = postDAO.getByID(postID);
 
@@ -45,17 +44,15 @@ public class PostDetailUI extends javax.swing.JPanel {
         // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         //pnlCmtContainer.setPreferredSize(new Dimension(lblAccount.getWidth(), pnlCmtContainer.getHeight()));
-        
+
         showInfoPost(postID);
-        
+
         changeStreamPosts = postDAO.getChangeStream();
 
         // Start the change stream listener
         startPostChangeStream();
     }
-    
-    
-    
+
     private void startPostChangeStream() {
         changeStreamThread = new Thread(() -> {
             try {
@@ -109,16 +106,14 @@ public class PostDetailUI extends javax.swing.JPanel {
         });
         changeStreamThread.start();
     }
-    
-    
 
     public void addEmoji(JLabel lbl, Color color) {
-        int length = txpCmt.getDocument().getLength();
+        int length = txtCmt.getDocument().getLength();
 
         if (length < 500) {
-            txpCmt.append(lbl.getText(), color);
-            txpCmt.append("", Color.BLACK);
-            txpCmt.requestFocus();
+            txtCmt.append(lbl.getText(), color);
+            txtCmt.append("", Color.BLACK);
+            txtCmt.requestFocus();
         }
     }
 
@@ -131,7 +126,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             pnlCmt.add(new CommentUI(userDAO.getByID(cmt.getUserID()).getUsername(), cmt.getText(), cmt.getDate()));
         }
         pnlCmt.revalidate();
-        pnlCmt.repaint();   
+        pnlCmt.repaint();
     }
 
     private void showInfoPost(String postID) {
@@ -143,8 +138,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             if (post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
-            }
-            else {
+            } else {
                 btnNext.setVisible(true);
                 btnPrev.setVisible(true);
             }
@@ -167,9 +161,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             pnlLeft.setImg("");
         }
     }
-    
-    
-    
+
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
@@ -180,8 +172,6 @@ public class PostDetailUI extends javax.swing.JPanel {
             pnlLeft.repaint();
         }
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -211,7 +201,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmtContainer = new online.syncio.component.MyPanel();
         myPanel1 = new online.syncio.component.MyPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txpCmt = new online.syncio.component.MyTextPane();
+        txtCmt = new online.syncio.component.MyTextPane();
         btnSend = new online.syncio.component.MyButton();
         scrollPane = new online.syncio.component.MyScrollPane();
         pnlCmt = new online.syncio.component.MyPanel();
@@ -528,12 +518,12 @@ public class PostDetailUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPrevActionPerformed
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
-        String cmt = txpCmt.getText().trim();
+        String cmt = txtCmt.getText().trim();
         String uID = LoggedInUser.getCurrentUser().getId().toString();
 
         if (postDAO.addComment(cmt, uID, postID)) {
             System.out.println("Đã gửi comment");
-            txpCmt.setText("");
+            txtCmt.setText("");
             new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
             post = postDAO.getByID(postID);
             pnlCmt.removeAll();
@@ -564,6 +554,6 @@ public class PostDetailUI extends javax.swing.JPanel {
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlRight;
     private online.syncio.component.MyScrollPane scrollPane;
-    private online.syncio.component.MyTextPane txpCmt;
+    private online.syncio.component.MyTextPane txtCmt;
     // End of variables declaration//GEN-END:variables
 }

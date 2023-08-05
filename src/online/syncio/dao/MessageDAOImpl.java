@@ -1,13 +1,18 @@
 package online.syncio.dao;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import online.syncio.model.Message;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -58,7 +63,7 @@ public class MessageDAOImpl implements MessageDAO {
     }
 
     @Override
-    public FindIterable<Message> findAllByTwoUsernames(String user1, String user2) {
+    public FindIterable<Message> findAllByTwoUsers(String user1, String user2) {
         String sender1 = user1;
         String recipient1 = user2;
 
@@ -74,14 +79,43 @@ public class MessageDAOImpl implements MessageDAO {
         return messageList;
     }
 
+
     @Override
-    public Message findNewMessageWithCurrentUser(String currentUser, String messagedUsername) {
-        String sender = messagedUsername;
-        String recipient = currentUser;
+    public Set<String> getMessagingUsers(String currentUser) {
+        Bson filter = Filters.or(
+                Filters.eq("sender", currentUser),
+                Filters.eq("recipient", currentUser)
+        );
 
-        Bson filter = Filters.and(Filters.eq("sender", sender), Filters.eq("recipient", recipient));
+        Set<String> usernames = new HashSet<>();
 
-        Message message = messageCollection.find(filter).sort(Sorts.descending("dateSent")).first();
-        return message;
+        try (MongoCursor<Message> cursor = messageCollection.find(filter).sort(Sorts.descending("dateSent")).iterator()) {
+            while (cursor.hasNext()) {
+                Message message = cursor.next();
+                String sender = message.getSender();
+                String recipient = message.getRecipient();
+
+                // Add sender to usernames if it is not the currentUser
+                if (!sender.equalsIgnoreCase(currentUser)) {
+                    usernames.add(sender);
+                }
+
+                // Add recipient to usernames if it is not the currentUser
+                if (!recipient.equalsIgnoreCase(currentUser)) {
+                    usernames.add(recipient);
+                }
+            }
+        }
+
+        usernames.remove(currentUser);
+
+        return usernames;
+    }
+
+    @Override
+    public ChangeStreamIterable<Message> getChangeStream() {
+        ChangeStreamIterable<Message> changeStreamMessage = messageCollection.watch();
+        changeStreamMessage.fullDocument(FullDocument.UPDATE_LOOKUP);
+        return changeStreamMessage;
     }
 }

@@ -1,6 +1,5 @@
 package online.syncio.component;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -22,10 +21,12 @@ public class SearchedUserCard extends javax.swing.JPanel {
     private UserDAO userDAO;
     private PostDAO postDAO;
 
-    private Image defaultImage = new javax.swing.ImageIcon(getClass()
-            .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
+    private Image defaultImage;
 
     public SearchedUserCard(User user) {
+        this.defaultImage = new javax.swing.ImageIcon(getClass()
+                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
+
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
         this.user = user;
@@ -40,7 +41,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
-        lblUsername.setText(user.getUsername().trim());
+        lblUsername.setText(user.getUsername());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
         
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -59,6 +60,8 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }
 
     public SearchedUserCard(User user, Color backgroundColor) {
+        this.defaultImage = new javax.swing.ImageIcon(getClass()
+                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
         this.user = user;
 
         initComponents();
@@ -74,7 +77,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
         lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
 
-        lblUsername.setText(user.getUsername().trim());
+        lblUsername.setText(user.getUsername());
         lblFollowers.setText("");
     }
     
@@ -117,6 +120,8 @@ public class SearchedUserCard extends javax.swing.JPanel {
         });
     }
 
+  
+  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,13 +178,18 @@ public class SearchedUserCard extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        
-    }//GEN-LAST:event_formMousePressed
+  
+  
+    public User getUser() {
+        return user;
+    }
 
-    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
-    }//GEN-LAST:event_formMouseEntered
+    public void setUser(User user) {
+        this.user = user;
+    }
 
+  
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyLabel lblAvatar;
     private online.syncio.component.MyLabel lblFollowers;

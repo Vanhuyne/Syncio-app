@@ -10,8 +10,8 @@ import org.bson.types.ObjectId;
 public class Post {
 
     private ObjectId id;
-    private String userID;
-    private String caption;
+    private String userID = "";
+    private String caption = "";
     private String datePosted = TimeHelper.getCurrentDateTime();
     public List<Binary> photoList;
     private List<UserIDAndDate> likeList = new ArrayList<>();
@@ -23,13 +23,13 @@ public class Post {
     }
 
     public Post(String userID, List<UserIDAndDate> likeList) {
-        this.userID = userID;
+        this.userID = userID.trim();;
         this.likeList = likeList;
     }
 
     public Post(String userID, String caption, ArrayList<Binary> lPhoto) {
-        this.userID = userID;
-        this.caption = caption;
+        this.userID = userID.trim();;
+        this.caption = caption.trim();;
         this.photoList = lPhoto;
     }
 
@@ -42,19 +42,19 @@ public class Post {
     }
 
     public String getUserID() {
-        return userID;
+        return userID.trim();
     }
 
     public void setUserID(String userID) {
-        this.userID = userID;
+        this.userID = userID.trim();
     }
 
     public String getCaption() {
-        return caption;
+        return caption.trim();
     }
 
     public Post setCaption(String caption) {
-        this.caption = caption;
+        this.caption = caption.trim();
         return this;
     }
 
