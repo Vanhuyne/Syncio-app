@@ -11,10 +11,21 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.bson.types.Binary;
@@ -77,6 +88,17 @@ public class ImageHelper {
         return bimage;
     }
     
+    public static Binary bufferedImageToBinary(BufferedImage image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "jpg", baos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] byteArray = baos.toByteArray();
+        return new Binary(byteArray);
+    }
+    
     
     
     /**
@@ -119,6 +141,52 @@ public class ImageHelper {
     
     
     
+    public static Image resizeImageToWidth(BufferedImage bufferedImage, int width) {
+        return bufferedImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
+    }
+    
+    
+    public static Binary resizingAndCompressingWidthToBinary(BufferedImage bufferedImage, int width, float compressionQuality) {
+        try {
+            //resize image
+            bufferedImage = imageToBufferedImage(bufferedImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT));
+            
+            BufferedImage compressedImage = new BufferedImage(
+                bufferedImage.getWidth(), bufferedImage.getHeight(),
+                BufferedImage.TYPE_INT_RGB
+            );
+
+            Graphics2D g2d = compressedImage.createGraphics();
+            g2d.drawImage(bufferedImage, 0, 0, null);
+            g2d.dispose();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+            ImageWriter writer = writers.next();
+
+            ImageOutputStream ios = ImageIO.createImageOutputStream(byteArrayOutputStream);
+            writer.setOutput(ios);
+
+            ImageWriteParam param = writer.getDefaultWriteParam();
+
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(compressionQuality);
+            writer.write(null, new IIOImage(compressedImage, null, null), param);
+
+            ios.close();
+            writer.dispose();
+
+            return ImageHelper.bufferedImageToBinary(compressedImage);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    
+    
     public static byte[] readAsByte(String path) {
         try {
             FileInputStream fis = new FileInputStream(path);
@@ -153,6 +221,20 @@ public class ImageHelper {
         }
         
         return imageBytes;
+    }
+    
+    
+    
+    public static void write(String path, byte[] data) {
+        try {
+            FileOutputStream fos = new FileOutputStream(path);
+            
+            fos.write(data);
+            fos.close();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     

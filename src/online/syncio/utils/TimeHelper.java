@@ -10,7 +10,7 @@ public class TimeHelper {
 
     public static String getCurrentDateTime() {
         Date currentTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(currentTime);
     }
 
