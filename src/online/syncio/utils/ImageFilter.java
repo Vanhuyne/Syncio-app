@@ -6,6 +6,7 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.geom.AffineTransform;
+import org.bson.types.Binary;
 
 public class ImageFilter {
 
@@ -50,6 +51,8 @@ public class ImageFilter {
         frame.pack();
         frame.setVisible(true);
     }
+    
+    
 
     // convert image to grayscale
     public static BufferedImage toGrayScale(BufferedImage img) {
@@ -61,6 +64,21 @@ public class ImageFilter {
         g.dispose();
         return grayImage;
     }
+    
+    // convert image to grayscale
+    public static Binary toGrayScale(Binary img) {
+        System.out.println("  Converting to GrayScale.");
+        BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(img);
+        
+        BufferedImage grayImage = new BufferedImage(
+                bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Graphics g = grayImage.getGraphics();
+        g.drawImage(bufferedImage, 0, 0, null);
+        g.dispose();
+        return ImageHelper.bufferedImageToBinary(grayImage);
+    }
+    
+    
 
     public static BufferedImage toGrayScale2(BufferedImage img) {
         System.out.println("  Converting to GrayScale2.");
@@ -81,6 +99,30 @@ public class ImageFilter {
         }
         return grayImage;
     }
+    
+    public static Binary toGrayScale2(Binary img) {
+        System.out.println("  Converting to GrayScale2.");
+        BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(img);
+        
+        BufferedImage grayImage = new BufferedImage(
+                bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        int rgb = 0, r = 0, g = 0, b = 0;
+        for (int y = 0; y < bufferedImage.getHeight(); y++) {
+            for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                rgb = (int) (bufferedImage.getRGB(x, y));
+                r = ((rgb >> 16) & 0xFF);
+                g = ((rgb >> 8) & 0xFF);
+                b = (rgb & 0xFF);
+                rgb = (int) ((r + g + b) / 3);
+                //rgb = (int)(0.299 * r + 0.587 * g + 0.114 * b);
+                rgb = (255 << 24) | (rgb << 16) | (rgb << 8) | rgb;
+                grayImage.setRGB(x, y, rgb);
+            }
+        }
+        return ImageHelper.bufferedImageToBinary(grayImage);
+    }
+    
+    
 
     // apply 2x2 pixelation to a grayscale image
     public static BufferedImage pixelate(BufferedImage img) {
@@ -254,6 +296,38 @@ public class ImageFilter {
             }
         }
         return newImage;
+    }
+    
+    
+    
+    // brighten color image by a percentage
+    public static Binary brighten(Binary img, int percentage) {
+        BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(img);
+        
+        int r = 0, g = 0, b = 0, rgb = 0, p = 0;
+        int amount = (int) (percentage * 255 / 100); // rgb scale is 0-255, so 255 is 100%
+        BufferedImage newImage = new BufferedImage(
+                bufferedImage.getWidth(), bufferedImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < bufferedImage.getHeight(); y += 1) {
+            for (int x = 0; x < bufferedImage.getWidth(); x += 1) {
+                rgb = bufferedImage.getRGB(x, y);
+                r = ((rgb >> 16) & 0xFF) + amount;
+                g = ((rgb >> 8) & 0xFF) + amount;
+                b = (rgb & 0xFF) + amount;
+                if (r > 255) {
+                    r = 255;
+                }
+                if (g > 255) {
+                    g = 255;
+                }
+                if (b > 255) {
+                    b = 255;
+                }
+                p = (255 << 24) | (r << 16) | (g << 8) | b;
+                newImage.setRGB(x, y, p);
+            }
+        }
+        return ImageHelper.bufferedImageToBinary(newImage);
     }
 
 }

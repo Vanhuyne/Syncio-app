@@ -61,7 +61,7 @@ public class CreateNewPost extends javax.swing.JPanel {
     public void addEmoji(JLabel lbl, Color color) {
         int length = txtCaption.getDocument().getLength();
 
-        if (length < 300) {
+        if (length < 500) {
             txtCaption.append(lbl.getText(), color);
             txtCaption.append("", Color.BLACK);
             txtCaption.requestFocus();
@@ -70,7 +70,7 @@ public class CreateNewPost extends javax.swing.JPanel {
 
     public void showCaptionLength() {
         int length = txtCaption.getDocument().getLength();
-        lblCountNumber.setText(length + "/300");
+        lblCountNumber.setText(length + "/500");
     }
 
     public void imageSelected(boolean isSelected) {
@@ -624,7 +624,7 @@ public class CreateNewPost extends javax.swing.JPanel {
     private void txtCaptionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCaptionKeyTyped
         int length = txtCaption.getDocument().getLength();
 
-        if (length >= 300 && !(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
+        if (length >= 500 && !(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE)) {
             evt.consume();
         }
     }//GEN-LAST:event_txtCaptionKeyTyped

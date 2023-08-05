@@ -78,6 +78,8 @@ public class Home extends JPanel {
     private void loadMorePosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
+            int postsLoaded = 0;
+            
             // Set up MongoDB change stream
             ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
 
@@ -120,6 +122,19 @@ public class Home extends JPanel {
                     feedPanel.revalidate();
                     feedPanel.repaint();
                 });
+                
+                postsLoaded++;
+
+                if (postsLoaded >= 5) {
+                    // Introduce a 2-second delay after loading 5 posts
+                    try {
+                        Thread.sleep(3000); // 3000 milliseconds = 2 seconds
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    postsLoaded = 0; // Reset the counter
+                }
             }
             
             removeLoading();

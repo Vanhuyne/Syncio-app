@@ -42,14 +42,26 @@ public class CreateNewPostController {
         ArrayList<Binary> lPhoto = new ArrayList<>();
         var imagePaths = new ArrayList<String>();
         imagePaths = popup.getImagePaths();
+        
+        if (imagePaths.size() > 5) {
+            GlassPanePopup.showPopup(new MyDialog("Error", "You can only select between 0 and 5 images."), "dialog");
+            return;
+        }
+        
+        int expectWidth = 720;
         for (int i = 0; i < imagePaths.size(); i++) {
+            String path = imagePaths.get(i);
+            
             if (popup.getImageFilter().get(i) == 1) {
-                lPhoto.add(new Binary(ImageHelper.readAsByte(ImageFilter.toGrayScale(ImageHelper.stringToBufferedImage(imagePaths.get(i))))));
-            } else {
-                lPhoto.add(new Binary(ImageHelper.readAsByte(imagePaths.get(i))));
+                lPhoto.add(ImageFilter.toGrayScale2(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f)));
+            }
+            else if (popup.getImageFilter().get(i) == 2) {
+                lPhoto.add(ImageFilter.brighten(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f), 10));
+            }
+            else {
+                lPhoto.add(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f));
             }
         }
-
         if ((caption.equals("") || caption.equalsIgnoreCase(popup.getTxtCaption().getPlaceholder())) && lPhoto.isEmpty()) {
             GlassPanePopup.showPopup(new MyDialog("Error", "Please select an image or add a caption before sharing the post"), "dialog");
             return;

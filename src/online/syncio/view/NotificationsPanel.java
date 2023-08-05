@@ -13,9 +13,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import online.syncio.component.MyLabel;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
@@ -36,7 +34,7 @@ public class NotificationsPanel extends JPanel {
     private Date desiredDateTime;
     
     private static FindIterable<Post> posts;
-    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); // Format of your date-time string
+    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format of your date-time string
     private static InputStream is;
     
     MyLabel lblLoading;
