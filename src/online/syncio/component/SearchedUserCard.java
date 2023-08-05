@@ -1,5 +1,6 @@
 package online.syncio.component;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -132,14 +133,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(314, 90));
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                formMouseEntered(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                formMousePressed(evt);
-            }
-        });
 
         lblAvatar.setBackground(new java.awt.Color(255, 255, 255));
         lblAvatar.setPreferredSize(new java.awt.Dimension(60, 60));
