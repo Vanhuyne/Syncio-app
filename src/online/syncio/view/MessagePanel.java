@@ -42,7 +42,6 @@ public class MessagePanel extends JPanel {
         pnlUserList.removeAll();
 
         messageUserSet = messageDAO.getMessagingUsers(LoggedInUser.getCurrentUser().getUsername());
-        lblLoggedInUsername.setText(LoggedInUser.getCurrentUser().getUsername());
 
         for (String username : messageUserSet) {
             MessagePanel.this.createCardForHistoryPanel(username);
@@ -153,24 +152,21 @@ public class MessagePanel extends JPanel {
     private void initComponents() {
 
         pnlUsers = new javax.swing.JPanel();
-        lblLoggedInUsername = new online.syncio.component.MyLabel();
         scrollPane = new online.syncio.component.MyScrollPane();
         pnlUserList = new javax.swing.JPanel();
         pnlChatArea = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 204, 0));
+        setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
 
         pnlUsers.setBackground(new java.awt.Color(255, 255, 255));
         pnlUsers.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, new java.awt.Color(219, 219, 219)));
 
-        lblLoggedInUsername.setForeground(new java.awt.Color(0, 0, 0));
-        lblLoggedInUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblLoggedInUsername.setText("Tên đăng nhập của người dùng");
-        lblLoggedInUsername.setFont(new java.awt.Font("SF Pro Display Medium", 0, 18)); // NOI18N
-
-        scrollPane.setBorder(null);
+        scrollPane.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
 
         pnlUserList.setBackground(new java.awt.Color(255, 255, 255));
+        pnlUserList.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
+        pnlUserList.setPreferredSize(new java.awt.Dimension(270, 726));
         pnlUserList.setLayout(new javax.swing.BoxLayout(pnlUserList, javax.swing.BoxLayout.LINE_AXIS));
         scrollPane.setViewportView(pnlUserList);
 
@@ -178,23 +174,11 @@ public class MessagePanel extends JPanel {
         pnlUsers.setLayout(pnlUsersLayout);
         pnlUsersLayout.setHorizontalGroup(
             pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlUsersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
         pnlUsersLayout.setVerticalGroup(
             pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlUsersLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(lblLoggedInUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(674, Short.MAX_VALUE))
-            .addGroup(pnlUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlUsersLayout.createSequentialGroup()
-                    .addGap(0, 70, Short.MAX_VALUE)
-                    .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
         );
 
         pnlChatArea.setBackground(new java.awt.Color(255, 255, 255));
@@ -204,15 +188,15 @@ public class MessagePanel extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1080, Short.MAX_VALUE)
+            .addGap(0, 1079, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(0, 280, Short.MAX_VALUE)
+                    .addGap(0, 279, Short.MAX_VALUE)
                     .addComponent(pnlChatArea, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(pnlUsers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 799, Short.MAX_VALUE)))
+                    .addGap(0, 798, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,7 +209,6 @@ public class MessagePanel extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private online.syncio.component.MyLabel lblLoggedInUsername;
     private javax.swing.JPanel pnlChatArea;
     private javax.swing.JPanel pnlUserList;
     private javax.swing.JPanel pnlUsers;

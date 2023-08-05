@@ -36,7 +36,7 @@ public class NotificationsPanel extends JPanel {
     private Date desiredDateTime;
     
     private static FindIterable<Post> posts;
-    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format of your date-time string
+    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); // Format of your date-time string
     private static InputStream is;
     
     MyLabel lblLoading;
@@ -56,7 +56,7 @@ public class NotificationsPanel extends JPanel {
     
     public void readDesiredDateTime(String userID) {
         Properties properties = new Properties();
-        try (InputStream inputStream = is) {
+        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
             properties.load(inputStream);
             String desiredDateTimeStr = properties.getProperty(userID + "." + DESIRED_DATETIME_KEY);
             if (desiredDateTimeStr != null) {
@@ -108,12 +108,13 @@ public class NotificationsPanel extends JPanel {
             int nums = 0;
             for (UserIDAndDateAndText comment : comments) {
                 String commentDateTimeStr = comment.getDate();
-                if (commentDateTimeStr != null) { // Check if the date is not null
+                if (commentDateTimeStr != null) {
+                    // Check if the date is not null
                     try {
                         Date commentDateTime = dateTimeFormat.parse(commentDateTimeStr);
 
-                        if (!filterComments || (desiredDateTime != null && commentDateTime.after(desiredDateTime))) {
-                            System.out.println(comment.getDate() + "-" + comment.getText());
+                        if (desiredDateTime != null && commentDateTime.after(desiredDateTime)) {
+//                            System.out.println(comment.getDate() + "-" + comment.getText());
                             nums++;
                         }
                         else {

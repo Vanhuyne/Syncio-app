@@ -30,7 +30,8 @@ public class PostDetailUI extends javax.swing.JPanel {
     private int imageIndex = 0;
     private ChangeStreamIterable<Post> changeStreamPosts;
     private Thread changeStreamThread;
-
+    private Main main = Main.getInstance();
+    
     public PostDetailUI(String postID) {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -93,7 +94,7 @@ public class PostDetailUI extends javax.swing.JPanel {
                                 });
                                 
                                 if(post.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString())) {
-                                    OtherHelper.getMainFrame(this).getPnlNotifications().displayNotifications();
+                                    main.getPnlNotifications().displayNotifications();
                                 }
                             }
                         }

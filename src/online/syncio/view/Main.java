@@ -378,9 +378,9 @@ public final class Main extends javax.swing.JFrame {
         }
         else {
             GOLBAL_DATE = new Date();
-            System.out.println(GOLBAL_DATE);
             pnlNotifications.setVisible(true);
             pnlSearch.setVisible(false);
+//            pnlNotifications.displayNotifications();
         }
     }//GEN-LAST:event_btnNotificationActionPerformed
 
