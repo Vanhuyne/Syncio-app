@@ -311,6 +311,7 @@ public class ChatArea extends JPanel {
             body.revalidate();
             scrollBody.getVerticalScrollBar().setValue(values);
             bottom.revalidate();
+            scrollToBottom();
         });
 
         body.repaint();
@@ -329,6 +330,7 @@ public class ChatArea extends JPanel {
             body.revalidate();
             scrollBody.getVerticalScrollBar().setValue(values);
             bottom.revalidate();
+            scrollToBottom();
         });
         body.repaint();
         body.revalidate();
