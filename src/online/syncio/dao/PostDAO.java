@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import java.util.List;
 import online.syncio.model.Post;
 import online.syncio.model.User;
+import online.syncio.model.UserIDAndDateAndText;
 
 public interface PostDAO extends DAO<Post> {
     public MongoCollection<Post> getAllByCollection();
@@ -17,4 +18,7 @@ public interface PostDAO extends DAO<Post> {
     public boolean removeLike(String postID, String userID);
     public boolean addComment(String text, String userID, String postID);
     public ChangeStreamIterable<Post> getChangeStream();
+    public List<UserIDAndDateAndText> getReportList(String postID);
+    public boolean addReport(String text, String userID, String postID);
+    public boolean isUserIDInListReport(String userID, String postID);
 }

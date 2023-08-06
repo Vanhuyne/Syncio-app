@@ -183,5 +183,41 @@ public class PostDAOImpl implements PostDAO {
         Bson filter = eq("userID", userID);
         return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
+    @Override
+    public boolean addReport(String text, String userID, String postID) {
+        Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
+        Bson add = Updates.push("reportList", new UserIDAndDateAndText(userID, text ));
+        postCollection.updateOne(cmtFilter, add);
+        return true;
+    }
     
+    @Override
+    public List<UserIDAndDateAndText> getReportList(String postID) {
+        // Tạo truy vấn dựa vào postID
+        Document query = new Document("_id", new ObjectId(postID));
+
+        Post post = postCollection.find(query).first();
+
+        // Kiểm tra xem bài viết có tồn tại và có reportList không
+        if (post != null && post.getReportList() != null) {
+            return post.getReportList();
+        }
+        return new ArrayList<>();
+    }
+    
+    @Override
+    public boolean isUserIDInListReport(String userID,  String postID ) {
+  
+            ObjectId postIdObject = new ObjectId(postID);
+            // Create the filter to find the document with the given postID and userID in the reportList
+            Document query = new Document("_id", postIdObject)
+                    .append("reportList.userID", userID);
+
+            // Use the countDocuments method to check if any document matches the query
+            long count = postCollection.countDocuments(query);
+
+            // If the count is greater than 0, it means the userID exists in the reportList for the given postID
+            return count > 0;
+
+    }
 }
