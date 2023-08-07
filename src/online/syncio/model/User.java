@@ -23,10 +23,10 @@ public class User {
     }
 
     public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> following) {
-        this.username = username.trim();
-        this.password = password.trim();
-        this.email = email.trim();
-        this.bio = bio.trim();
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.bio = bio;
         this.role = role;
         this.flag = flag;
         this.following = following;
@@ -34,20 +34,20 @@ public class User {
 
     public User(ObjectId id, String username, String password, String email, String bio, int role, int flag) {
         this.id = id;
-        this.username = username.trim();
-        this.password = password.trim();
-        this.email = email.trim();
-        this.bio = bio.trim();
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.bio = bio;
         this.role = role;
         this.flag = flag;
     }
 
     public User(String id, String username, String password, String email, String bio, int role, int flag) {
         this.id = new ObjectId(id);
-        this.username = username.trim();
-        this.password = password.trim();
-        this.email = email.trim();
-        this.bio = bio.trim();
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.bio = bio;
         this.role = role;
         this.flag = flag;
     }
@@ -65,23 +65,23 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username.trim();
+        this.username = username;
     }
 
     public String getPassword() {
-        return password.trim();
+        return password;
     }
 
     public void setPassword(String password) {
-        this.password = password.trim();
+        this.password = password;
     }
 
     public String getEmail() {
-        return email.trim();
+        return email;
     }
 
     public void setEmail(String email) {
-        this.email = email.trim();
+        this.email = email;
     }
 
     public Binary getAvt() {
@@ -93,11 +93,11 @@ public class User {
     }
 
     public String getBio() {
-        return bio.trim();
+        return bio;
     }
 
     public void setBio(String bio) {
-        this.bio = bio.trim();
+        this.bio = bio;
     }
 
     public int getRole() {

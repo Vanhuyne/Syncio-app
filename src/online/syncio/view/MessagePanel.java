@@ -35,7 +35,7 @@ public class MessagePanel extends JPanel {
         cardLayout = (CardLayout) pnlChatArea.getLayout();
 
         pnlUserList.setLayout(new BoxLayout(pnlUserList, BoxLayout.Y_AXIS));
-        addUserToHistoryPanel();
+        if(LoggedInUser.getCurrentUser() != null) addUserToHistoryPanel();
     }
 
     public void addUserToHistoryPanel() {
