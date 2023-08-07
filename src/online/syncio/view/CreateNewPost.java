@@ -83,7 +83,6 @@ public class CreateNewPost extends javax.swing.JPanel {
             btnNext.setVisible(false);
             rdoNormal.setVisible(false);
             rdoGrayscale.setVisible(false);
-            rdoBrighten.setVisible(false);
         } else {
             lblImage.setVisible(false);
             btnSelectImage.setVisible(false);
@@ -91,7 +90,6 @@ public class CreateNewPost extends javax.swing.JPanel {
             lblCountImage.setVisible(true);
             rdoNormal.setVisible(true);
             rdoGrayscale.setVisible(true);
-            rdoBrighten.setVisible(true);
             if (imagePaths.size() > 1) {
                 lblCountImage.setText(imageIndex + 1 + "/" + imagePaths.size());
                 btnPrev.setVisible(true);
@@ -112,14 +110,9 @@ public class CreateNewPost extends javax.swing.JPanel {
                 rdoNormal.setSelected(true);
             } else if (imageFilter.get(i) == 1) {
                 rdoGrayscale.setSelected(true);
-            } else if (imageFilter.get(i) == 2) {
-                rdoBrighten.setSelected(true);
             }
-
             if (rdoGrayscale.isSelected()) {
                 pnlLeft.setImg(ImageFilter.toGrayScale2(ImageHelper.stringToBufferedImage(imagePaths.get(i))));
-            } else if (rdoBrighten.isSelected()) {
-                pnlLeft.setImg(ImageFilter.brighten(ImageHelper.stringToBufferedImage(imagePaths.get(i)), 10));
             } else {
                 pnlLeft.setImg(imagePaths.get(i));
             }
@@ -140,9 +133,6 @@ public class CreateNewPost extends javax.swing.JPanel {
         if (rdoGrayscale.isSelected()) {
             imageFilter.set(i, 1);
         }
-        if (rdoBrighten.isSelected()) {
-            imageFilter.set(i, 2);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -160,7 +150,6 @@ public class CreateNewPost extends javax.swing.JPanel {
         pnlFilter = new online.syncio.component.MyPanel();
         rdoGrayscale = new online.syncio.component.MyRadioButton();
         rdoNormal = new online.syncio.component.MyRadioButton();
-        rdoBrighten = new online.syncio.component.MyRadioButton();
         pnlLeft = new online.syncio.component.MyPanel();
         btnSelectImage = new online.syncio.component.MyButton();
         btnRemoveImage = new online.syncio.component.MyButton();
@@ -282,14 +271,6 @@ public class CreateNewPost extends javax.swing.JPanel {
             }
         });
 
-        filterGroup.add(rdoBrighten);
-        rdoBrighten.setText("Brighten");
-        rdoBrighten.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdoBrightenActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlFilterLayout = new javax.swing.GroupLayout(pnlFilter);
         pnlFilter.setLayout(pnlFilterLayout);
         pnlFilterLayout.setHorizontalGroup(
@@ -299,9 +280,7 @@ public class CreateNewPost extends javax.swing.JPanel {
                 .addComponent(rdoNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(rdoGrayscale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(rdoBrighten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addContainerGap(282, Short.MAX_VALUE))
         );
         pnlFilterLayout.setVerticalGroup(
             pnlFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,8 +288,7 @@ public class CreateNewPost extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addGroup(pnlFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rdoGrayscale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rdoNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rdoBrighten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rdoNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -667,11 +645,6 @@ public class CreateNewPost extends javax.swing.JPanel {
         selectImage(imageIndex);
     }//GEN-LAST:event_rdoNormalActionPerformed
 
-    private void rdoBrightenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoBrightenActionPerformed
-        updateFilter(imageIndex);
-        selectImage(imageIndex);
-    }//GEN-LAST:event_rdoBrightenActionPerformed
-
     public void uploadImage() {
         JFileChooser fc = new JFileChooser();
         fc.setMultiSelectionEnabled(true);
@@ -752,7 +725,6 @@ public class CreateNewPost extends javax.swing.JPanel {
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.component.MyPanel pnlRight;
     private online.syncio.component.MyPanel pnlTop;
-    private online.syncio.component.MyRadioButton rdoBrighten;
     private online.syncio.component.MyRadioButton rdoGrayscale;
     private online.syncio.component.MyRadioButton rdoNormal;
     private online.syncio.component.MyTextPane txtCaption;
