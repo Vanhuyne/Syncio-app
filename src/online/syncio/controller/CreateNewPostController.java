@@ -57,8 +57,6 @@ public class CreateNewPostController {
                 switch (popup.getImageFilter().get(i)) {
                     case 1 ->
                         lPhoto.add(ImageFilter.toGrayScale2(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f)));
-                    case 2 ->
-                        lPhoto.add(ImageFilter.brighten(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f), 10));
                     default ->
                         lPhoto.add(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f));
                 }

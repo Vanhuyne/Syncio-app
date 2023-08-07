@@ -24,7 +24,7 @@ public class MessagePanel extends JPanel {
 
         controller = new MessageController(this);
 
-        controller.addUserToHistoryPanel();
+        if(LoggedInUser.getCurrentUser() != null) controller.addUserToHistoryPanel();
     }
 
     public JPanel getChatArea() {
