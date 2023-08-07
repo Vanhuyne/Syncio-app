@@ -55,7 +55,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
                 main.getMessagePanel().openMessage(user);
 
                 main.showTab("message");
-                main.getBtnSearch().doClick();
             }
         });
     }

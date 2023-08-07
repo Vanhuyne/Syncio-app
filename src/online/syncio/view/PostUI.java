@@ -3,12 +3,11 @@ package online.syncio.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import online.syncio.component.GlassPanePopup;
-import online.syncio.component.MyDialog;
 import online.syncio.component.MyLabel;
+import online.syncio.component.Options;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
@@ -16,10 +15,8 @@ import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.TextHelper;
-import online.syncio.model.LoggedInUser;
-import online.syncio.model.UserIDAndDateAndText;
 
-public class PostUI extends javax.swing.JPanel {
+public class PostUI extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
 
     private PostDAO postDAO;
     private UserDAO userDAO;
@@ -50,15 +47,9 @@ public class PostUI extends javax.swing.JPanel {
         }
 
         showInfoPost(postID);
-        pnlReport.setVisible(false);
     }
-    public void loadReport(){ 
-        List<UserIDAndDateAndText> listReport = postDAO.getReportList(postID);
-                for (UserIDAndDateAndText report : listReport) {
-                    lblReport.setText(report.getText());
-                    lblReport.setForeground(Color.red);
-          }
-    }
+    
+    
 
     public boolean isLiked() {
         // Check if any documents matched the condition
@@ -83,6 +74,18 @@ public class PostUI extends javax.swing.JPanel {
         lblTotalLike.setText(post.getLikeList().size() + " likes");
     }
 
+    
+    public void loadReport() {
+        if(post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+            lblReport.setText("Reported");
+        }
+        else {
+            lblReport.setText("Report");
+        }
+    }
+    
+    
+    
     private void showInfoPost(String postID) {
         loadReport();
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
@@ -115,7 +118,7 @@ public class PostUI extends javax.swing.JPanel {
             pnlImages.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(imageIndex)));
             int imgHeight = pnlImages.getImgHeight();
 
-            if (imgHeight > 300) {
+            if (imgHeight > 400) {
                 pnlImages.setPreferredSize(new Dimension(400, 400));
             } else if (imgHeight > 300) {
                 pnlImages.setPreferredSize(new Dimension(400, 300));
@@ -140,17 +143,8 @@ public class PostUI extends javax.swing.JPanel {
             pnlImages.repaint();
         }
     }
-    public String convertTextToCode(String text){
-        String result = "";
-        if(text.equalsIgnoreCase("Sexual post"))
-            result = "3";
-        else if (text.equalsIgnoreCase("False Information"))
-            result = "2";
-        else 
-            result = "1";
-                      
-        return result;
-    }
+
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -166,10 +160,6 @@ public class PostUI extends javax.swing.JPanel {
         btnNext = new online.syncio.component.MyButton();
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
-        pnlReport = new online.syncio.component.MyPanel();
-        lblSexual = new online.syncio.component.MyLabel();
-        lblFalseInfor = new online.syncio.component.MyLabel();
-        lblSpam = new online.syncio.component.MyLabel();
         pnlOwner = new online.syncio.component.MyPanel();
         lblUsername = new javax.swing.JLabel();
         lblDateCreated = new javax.swing.JLabel();
@@ -226,52 +216,6 @@ public class PostUI extends javax.swing.JPanel {
         lblCountImage.setForeground(new java.awt.Color(219, 219, 219));
         lblCountImage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        lblSexual.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSexual.setText("Sexual post");
-        lblSexual.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblSexualMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblSexualMousePressed(evt);
-            }
-        });
-
-        lblFalseInfor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFalseInfor.setText("False Information");
-        lblFalseInfor.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblFalseInforMousePressed(evt);
-            }
-        });
-
-        lblSpam.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSpam.setText("It 's spam");
-        lblSpam.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblSpamMousePressed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlReportLayout = new javax.swing.GroupLayout(pnlReport);
-        pnlReport.setLayout(pnlReportLayout);
-        pnlReportLayout.setHorizontalGroup(
-            pnlReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblSexual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblFalseInfor, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
-            .addComponent(lblSpam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        pnlReportLayout.setVerticalGroup(
-            pnlReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlReportLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(lblSexual, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFalseInfor, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblSpam, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
         javax.swing.GroupLayout pnlImagesLayout = new javax.swing.GroupLayout(pnlImages);
         pnlImages.setLayout(pnlImagesLayout);
         pnlImagesLayout.setHorizontalGroup(
@@ -279,7 +223,7 @@ public class PostUI extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlImagesLayout.createSequentialGroup()
                 .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnlImagesLayout.createSequentialGroup()
-                        .addContainerGap(306, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlImagesLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -287,11 +231,6 @@ public class PostUI extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(10, 10, 10))
-            .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlImagesLayout.createSequentialGroup()
-                    .addContainerGap(244, Short.MAX_VALUE)
-                    .addComponent(pnlReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
         );
         pnlImagesLayout.setVerticalGroup(
             pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,10 +242,6 @@ public class PostUI extends javax.swing.JPanel {
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(184, Short.MAX_VALUE))
-            .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlImagesLayout.createSequentialGroup()
-                    .addComponent(pnlReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 283, Short.MAX_VALUE)))
         );
 
         pnlOwner.setBackground(new java.awt.Color(255, 255, 255));
@@ -316,16 +251,29 @@ public class PostUI extends javax.swing.JPanel {
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblUsername.setText(" sanhvc");
         lblUsername.setToolTipText("");
+        lblUsername.setMaximumSize(new java.awt.Dimension(255, 24));
+        lblUsername.setMinimumSize(new java.awt.Dimension(255, 24));
+        lblUsername.setPreferredSize(new java.awt.Dimension(255, 24));
 
         lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
         lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblDateCreated.setText("02:42 05/07/2023");
+        lblDateCreated.setText("2022-02-02 02:02:02");
+        lblDateCreated.setMaximumSize(new java.awt.Dimension(115, 15));
+        lblDateCreated.setMinimumSize(new java.awt.Dimension(115, 15));
+        lblDateCreated.setPreferredSize(new java.awt.Dimension(115, 15));
 
+        lblReport.setForeground(new java.awt.Color(255, 0, 0));
         lblReport.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblReport.setText("...");
+        lblReport.setText("Reported");
+        lblReport.setFont(new java.awt.Font("SF Pro Display Bold", 0, 9)); // NOI18N
+        lblReport.setFontBold(2);
+        lblReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblReport.setMaximumSize(new java.awt.Dimension(40, 16));
+        lblReport.setMinimumSize(new java.awt.Dimension(40, 16));
+        lblReport.setPreferredSize(new java.awt.Dimension(40, 16));
         lblReport.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblReportMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblReportMousePressed(evt);
             }
         });
 
@@ -334,21 +282,21 @@ public class PostUI extends javax.swing.JPanel {
         pnlOwnerLayout.setHorizontalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOwnerLayout.createSequentialGroup()
-                .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDateCreated)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8))
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1))
         );
         pnlOwnerLayout.setVerticalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlOwnerLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsername)
-                    .addComponent(lblDateCreated)
-                    .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -425,13 +373,13 @@ public class PostUI extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
-            .addComponent(pnlOwner, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblViewAllCmt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlOwner, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,72 +417,27 @@ public class PostUI extends javax.swing.JPanel {
         GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
     }//GEN-LAST:event_lblViewAllCmtMousePressed
 
-    private void lblReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblReportMouseClicked
+    
+    
+    private void lblReportMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblReportMousePressed
+        Options options = new Options();
+        if(lblReport.getText().equals("Reported")) return;
+        options.setReasonSelectedCallback(this);
+        GlassPanePopup.showPopup(options, "report");
+    }//GEN-LAST:event_lblReportMousePressed
 
-        String userID = LoggedInUser.getCurrentUser().getId().toString();
-        if(!postDAO.isUserIDInListReport(userID, postID )){
-            pnlReport.setVisible(isClick);
-
-            // Update click
-            isClick = !isClick;
-
-        }else {
-            GlassPanePopup.showPopup(new MyDialog("Error", "You added report this post .\n Can't report more."), "dialog");
-            return;
+    
+    
+    @Override
+    public void onReasonSelected(int reason) {
+        if(reason != -1) {
+            if (postDAO.addReport(reason, userID, postID)) {
+                lblReport.setText("Reported");
+            }
         }
-    }//GEN-LAST:event_lblReportMouseClicked
-
-    private void lblSexualMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSexualMouseClicked
-        // settext (1,2,3)
-        String text = convertTextToCode(lblSexual.getText());
-
-        lblReport.setText(text);
-        pnlReport.setVisible(false);
-        String userID = LoggedInUser.getCurrentUser().getId().toString();
-
-        if (postDAO.addReport(text, userID, postID)) {
-            System.out.println("them report thanh cong");
-
-        }
-        lblReport.setEnabled(true);
-        lblReport.setForeground(Color.red);
-    }//GEN-LAST:event_lblSexualMouseClicked
-
-    private void lblSexualMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSexualMousePressed
-
-    }//GEN-LAST:event_lblSexualMousePressed
-
-    private void lblFalseInforMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblFalseInforMousePressed
-        String text = convertTextToCode(lblFalseInfor.getText());
-
-        lblReport.setText(text);
-        pnlReport.setVisible(false);
-        String userID = LoggedInUser.getCurrentUser().getId().toString();
-
-        if (postDAO.addReport(text, userID, postID)) {
-            System.out.println("them report thanh cong");
-
-        }
-        lblReport.setEnabled(true);
-        lblReport.setForeground(Color.red);
-    }//GEN-LAST:event_lblFalseInforMousePressed
-
-    private void lblSpamMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblSpamMousePressed
-        // settext (1,2,3)
-        String text = convertTextToCode(lblSpam.getText());
-
-        lblReport.setText(text);
-        pnlReport.setVisible(false);
-        String userID = LoggedInUser.getCurrentUser().getId().toString();
-
-        if (postDAO.addReport(text, userID, postID)) {
-            System.out.println("them report thanh cong");
-
-        }
-        lblReport.setEnabled(true);
-        lblReport.setForeground(Color.red);
-    }//GEN-LAST:event_lblSpamMousePressed
-
+    }
+    
+    
     public MyLabel getLblComment() {
         return lblComment;
     }
@@ -550,11 +453,8 @@ public class PostUI extends javax.swing.JPanel {
     private online.syncio.component.MyLabel lblComment;
     private online.syncio.component.MyLabel lblCountImage;
     private javax.swing.JLabel lblDateCreated;
-    private online.syncio.component.MyLabel lblFalseInfor;
     private online.syncio.component.MyLabel lblHeart;
     private online.syncio.component.MyLabel lblReport;
-    private online.syncio.component.MyLabel lblSexual;
-    private online.syncio.component.MyLabel lblSpam;
     private javax.swing.JLabel lblTotalLike;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
@@ -562,7 +462,6 @@ public class PostUI extends javax.swing.JPanel {
     private online.syncio.component.MyPanel pnlAction;
     private online.syncio.component.MyPanel pnlImages;
     private online.syncio.component.MyPanel pnlOwner;
-    private online.syncio.component.MyPanel pnlReport;
     private online.syncio.component.MyTextPane txtCaption;
     // End of variables declaration//GEN-END:variables
 }

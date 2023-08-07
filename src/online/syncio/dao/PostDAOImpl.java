@@ -168,10 +168,12 @@ public class PostDAOImpl implements PostDAO {
         return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
 
+    
+    
     @Override
-    public boolean addReport(String text, String userID, String postID) {
+    public boolean addReport(int text, String userID, String postID) {
         Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
-        Bson add = Updates.push("reportList", new UserIDAndDateAndText(userID, text));
+        Bson add = Updates.push("reportList", new UserIDAndDateAndText(userID, text + ""));
         postCollection.updateOne(cmtFilter, add);
         return true;
     }
