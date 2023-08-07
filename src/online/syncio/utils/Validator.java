@@ -181,7 +181,7 @@ public class Validator {
     * @return An error message if the input is not a valid email address, otherwise an empty string.
     */
     public static String email(JTextComponent txt, String title, String input, Boolean allowNull, String placeholderText) {
-        if(isNotNull(null, input, placeholderText) && !input.matches("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$")) {
+        if(isNotNull(null, input, placeholderText) && !input.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")) {
             if(txt != null) txt.requestFocus();
             return title + " address format is invalid" + "\n";
         }

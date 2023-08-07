@@ -80,6 +80,7 @@ public class Signup extends javax.swing.JFrame {
         btnContinueWithGoogle = new online.syncio.component.MyButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("Signup"); // NOI18N
 
         pnlContainer.setRoundBottomLeft(20);
         pnlContainer.setRoundBottomRight(20);
@@ -102,11 +103,14 @@ public class Signup extends javax.swing.JFrame {
         lblTitle.setFont(new java.awt.Font("SF Pro Display Bold", 0, 36)); // NOI18N
         lblTitle.setFontBold(2);
 
+        txtEmail.setName("txtEmail"); // NOI18N
+
         btnSignup.setBackground(new java.awt.Color(0, 149, 246));
         btnSignup.setForeground(new java.awt.Color(255, 255, 255));
         btnSignup.setText("Sign up");
         btnSignup.setBorderColor(new java.awt.Color(255, 255, 255));
         btnSignup.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnSignup.setName("btnSignup"); // NOI18N
         btnSignup.setPreferredSize(new java.awt.Dimension(92, 20));
         btnSignup.setRadius(10);
         btnSignup.addActionListener(new java.awt.event.ActionListener() {
@@ -133,11 +137,15 @@ public class Signup extends javax.swing.JFrame {
             }
         });
 
+        txtUsername.setName("txtUsername"); // NOI18N
+
         pnlPassword.setBackground(new java.awt.Color(255, 255, 255));
 
         txtPassword.setText("myPasswordField1");
+        txtPassword.setName("txtPassword"); // NOI18N
 
         txtPasswordConfirm.setText("myPasswordField1");
+        txtPasswordConfirm.setName("txtPasswordConfirm"); // NOI18N
 
         javax.swing.GroupLayout pnlPasswordLayout = new javax.swing.GroupLayout(pnlPassword);
         pnlPassword.setLayout(pnlPasswordLayout);

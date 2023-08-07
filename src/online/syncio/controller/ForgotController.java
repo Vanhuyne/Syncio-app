@@ -62,6 +62,7 @@ public class ForgotController {
                 //neu co thi gui
                 if (userDAO.checkEmail(email)) {
                     int o = (int) (Math.random() * 900000) + 100000;
+                    forgot.setOtp(o);
                     otp = o;
                     String subject = "RESET PASSWORD";
                     String recipientName = email;

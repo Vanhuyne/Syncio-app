@@ -58,12 +58,14 @@ public class MyDialog extends javax.swing.JPanel {
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitle.setText("Unsaved changes");
         lblTitle.setFont(new java.awt.Font("SF Pro Display Regular", 0, 18)); // NOI18N
+        lblTitle.setName("lblTitle"); // NOI18N
 
         lblText.setForeground(new java.awt.Color(115, 115, 115));
         lblText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblText.setText("<html><p style='text-align: center;'>You have unsaved changes. Are you sure you want to cancel?</p></html>");
         lblText.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lblText.setFont(lblText.getFont().deriveFont(lblText.getFont().getStyle() & ~java.awt.Font.BOLD));
+        lblText.setName("lblText"); // NOI18N
 
         btnDismiss.setBackground(null);
         btnDismiss.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)));
@@ -71,6 +73,7 @@ public class MyDialog extends javax.swing.JPanel {
         btnDismiss.setText("Dismiss");
         btnDismiss.setBorderThickness(0);
         btnDismiss.setFontBold(2);
+        btnDismiss.setName("btnDismiss"); // NOI18N
         btnDismiss.setRadius(20);
         btnDismiss.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

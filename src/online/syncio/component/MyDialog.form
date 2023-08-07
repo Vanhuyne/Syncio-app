@@ -96,6 +96,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Pro Display Regular" size="18" style="0"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="lblTitle" noResource="true"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblText">
@@ -111,6 +112,7 @@
                 <Font bold="false" component="lblText" property="font" relativeSize="true" size="0"/>
               </FontInfo>
             </Property>
+            <Property name="name" type="java.lang.String" value="lblText" noResource="true"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyButton" name="btnDismiss">
@@ -131,6 +133,7 @@
             <Property name="text" type="java.lang.String" value="Dismiss"/>
             <Property name="borderThickness" type="int" value="0"/>
             <Property name="fontBold" type="int" value="2"/>
+            <Property name="name" type="java.lang.String" value="btnDismiss" noResource="true"/>
             <Property name="radius" type="int" value="20"/>
           </Properties>
           <Events>
