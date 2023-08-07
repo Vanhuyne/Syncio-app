@@ -55,9 +55,6 @@ public class CreateNewPostController {
             if (popup.getImageFilter().get(i) == 1) {
                 lPhoto.add(ImageFilter.toGrayScale2(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f)));
             }
-            else if (popup.getImageFilter().get(i) == 2) {
-                lPhoto.add(ImageFilter.brighten(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f), 10));
-            }
             else {
                 lPhoto.add(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f));
             }
