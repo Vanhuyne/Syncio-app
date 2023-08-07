@@ -203,7 +203,7 @@ public class ChatArea extends JPanel {
 
             thread.start();
         } else {
-            Main.getInstance().getMessagePanel().createCardForHistoryPanel(messagingUser);
+            Main.getInstance().getMessagePanel().getController().createCardForHistoryPanel(messagingUser.getUsername());
         }
     }
 

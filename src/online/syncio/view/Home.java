@@ -1,22 +1,16 @@
 package online.syncio.view;
 
-import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import online.syncio.component.MyPanel;
+import online.syncio.component.MyScrollPane;
+import online.syncio.controller.HomeController;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
-import online.syncio.dao.UserDAO;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
-import online.syncio.resources.images.other.MayULike;
 
 public class Home extends JPanel {
 
@@ -24,32 +18,20 @@ public class Home extends JPanel {
     private User currentUser;
     private String currentUserID;
 
-    private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
-    private List<String> postIDList = new ArrayList<>();
-    private List<String> followerIDList = new ArrayList<>();
 
-    private int curIndex = 0;
     FindIterable<Post> posts;
     FindIterable<Post> postsOther;
-    private MongoCursor<ChangeStreamDocument<Post>> changeStreamCursor;
+
+    private HomeController controller;
 
     public Home() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
-        if (LoggedInUser.isUser()) {
-            currentUser = LoggedInUser.getCurrentUser();
-            currentUserID = currentUser.getId().toString();
-            posts = postDAO.getAllPostOfFollowers(currentUser);
+        controller = new HomeController(this);
 
-            // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
-            scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-            loadMorePosts();
-        } else {
-            System.out.println("chưa đăng nhập");
-        }
+        controller.recheckLoggedInUser();
 
         // Add an AdjustmentListener to the vertical scrollbar of the scroll pane
         scrollPane.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
@@ -57,7 +39,7 @@ public class Home extends JPanel {
             main.getPnlSearch().setBounds(main.getPnlSearch().getX(), getY(), main.getPnlSearch().getWidth(), main.getPnlSearch().getHeight());
             main.getPnlSearch().revalidate();
             main.getPnlSearch().repaint();
-            
+
             // Update the position of pnlSearch relative to the pnlHome container
             main.getPnlNotifications().setBounds(main.getPnlNotifications().getX(), getY(), main.getPnlNotifications().getWidth(), main.getPnlNotifications().getHeight());
             main.getPnlNotifications().revalidate();
@@ -75,108 +57,12 @@ public class Home extends JPanel {
         feedPanel.remove(lblLoading);
     }
 
-    private void loadMorePosts() {
-        // Create a thread for loading and displaying posts
-        Thread thread = new Thread(() -> {
-            int postsLoaded = 0;
-            
-            // Set up MongoDB change stream
-            ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
-
-            // Listen for change stream events in a separate thread
-            Thread changeStreamThread = new Thread(() -> {
-                changeStream.forEach(changeDocument -> {
-                    // Handle the change event here
-                    // For example, extract the new post data from changeDocument and update your feed UI
-                    Post newPost = changeDocument.getFullDocument();
-                    if (newPost != null) {
-                        SwingUtilities.invokeLater(() -> {
-                            PostUI postUI = new PostUI(newPost.getId().toString(), currentUserID);
-                            removeLoading();
-                            feedPanel.add(postUI);
-                            addLoading();
-                            feedPanel.revalidate();
-                            feedPanel.repaint();
-                        });
-                    }
-                });
-            });
-            changeStreamThread.start();
-
-            // Load initial posts from the regular database query
-            for (Post post : posts) {
-                // Check if pnlSearch is visible before adding PostUI components
-                while (isSearchPanelVisible()) {
-                    try {
-                        Thread.sleep(40); // Wait for 100 milliseconds before checking again
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
-                SwingUtilities.invokeLater(() -> {
-                    removeLoading();
-                    feedPanel.add(postUI);
-                    addLoading();
-                    feedPanel.revalidate();
-                    feedPanel.repaint();
-                });
-                
-                postsLoaded++;
-
-                if (postsLoaded >= 5) {
-                    // Introduce a 2-second delay after loading 5 posts
-                    try {
-                        Thread.sleep(3000); // 3000 milliseconds = 2 seconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    postsLoaded = 0; // Reset the counter
-                }
-            }
-            
-            removeLoading();
-            feedPanel.add(new MayULike());
-            addLoading();
-            postsOther = postDAO.getAllPostOther(currentUser);
-
-            // Load initial posts from the regular database query
-            for (Post post : postsOther) {
-                // Check if pnlSearch is visible before adding PostUI components
-                while (isSearchPanelVisible()) {
-                    try {
-                        Thread.sleep(50); // Wait for 100 milliseconds before checking again
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
-                SwingUtilities.invokeLater(() -> {
-                    removeLoading();
-                    feedPanel.add(postUI);
-                    addLoading();
-                    feedPanel.revalidate();
-                    feedPanel.repaint();
-                });
-            }
-
-            // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
-            try {
-                changeStreamThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        // Start the thread
-        thread.start();
+    public MyPanel getFeedPanel() {
+        return feedPanel;
     }
 
-    public boolean isSearchPanelVisible() {
-        return main.getPnlSearch().isVisible() || main.getPnlNotifications().isVisible();
+    public MyScrollPane getScrollPane() {
+        return scrollPane;
     }
 
     @SuppressWarnings("unchecked")

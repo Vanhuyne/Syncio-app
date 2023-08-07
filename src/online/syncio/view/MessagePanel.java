@@ -2,29 +2,15 @@ package online.syncio.view;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import online.syncio.component.SearchedUserCard;
-import online.syncio.component.message.ChatArea;
-import online.syncio.dao.MessageDAO;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.UserDAO;
-import online.syncio.model.LoggedInUser;
-import online.syncio.model.User;
+import online.syncio.controller.MessageController;
 
 public class MessagePanel extends JPanel {
 
     private CardLayout cardLayout;
 
-    private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private MessageDAO messageDAO = MongoDBConnect.getMessageDAO();
-    private Set<String> messageUserSet = new HashSet<>();
+    private MessageController controller;
 
     public MessagePanel() {
         initComponents();
@@ -35,116 +21,22 @@ public class MessagePanel extends JPanel {
         cardLayout = (CardLayout) pnlChatArea.getLayout();
 
         pnlUserList.setLayout(new BoxLayout(pnlUserList, BoxLayout.Y_AXIS));
-        addUserToHistoryPanel();
+
+        controller = new MessageController(this);
+
+        controller.addUserToHistoryPanel();
     }
 
-    public void addUserToHistoryPanel() {
-        pnlUserList.removeAll();
-
-        messageUserSet = messageDAO.getMessagingUsers(LoggedInUser.getCurrentUser().getUsername());
-
-        for (String username : messageUserSet) {
-            MessagePanel.this.createCardForHistoryPanel(username);
-        }
-
-        pnlUserList.revalidate();
-        pnlUserList.repaint();
+    public JPanel getChatArea() {
+        return pnlChatArea;
     }
 
-    public void createCardForHistoryPanel(String username) {
-        User user = userDAO.getByUsername(username);
-        SearchedUserCard card = new SearchedUserCard(user);
-
-        card.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                openMessage(card.getUser());
-            }
-        });
-
-        pnlUserList.add(card);
-        Box.createVerticalStrut(20);
-
-        pnlUserList.revalidate();
-        pnlUserList.repaint();
+    public JPanel getPnlUserList() {
+        return pnlUserList;
     }
 
-    public void createCardForHistoryPanel(User user) {
-        SearchedUserCard card = new SearchedUserCard(user);
-
-        card.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                openMessage(card.getUser());
-            }
-        });
-
-        pnlUserList.add(card);
-        Box.createVerticalStrut(20);
-
-        pnlUserList.revalidate();
-        pnlUserList.repaint();
-    }
-
-    public void openMessage(String messagingUsername) {
-        Component[] componentList = pnlChatArea.getComponents();
-
-        boolean found = false;
-
-        User messagingUser = userDAO.getByUsername(messagingUsername);
-
-        try {
-
-            for (Component c : componentList) {
-                if (c instanceof ChatArea
-                        && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
-                    cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
-                    found = true;
-
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            createMessage(messagingUser);
-            found = true;
-        }
-
-        if (!found) {
-            createMessage(messagingUser);
-        }
-    }
-
-    public void openMessage(User messagingUser) {
-        Component[] componentList = pnlChatArea.getComponents();
-
-        boolean found = false;
-
-        try {
-            for (Component c : componentList) {
-                if (c instanceof ChatArea
-                        && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
-                    cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
-                    found = true;
-
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            createMessage(messagingUser);
-            found = true;
-        }
-
-        if (!found) {
-            createMessage(messagingUser);
-        }
-    }
-
-    public void createMessage(User messagingUser) {
-        ChatArea ca = new ChatArea();
-        ca.setMessagingUser(messagingUser);
-
-        pnlChatArea.add(ca, ca.getName().toLowerCase());
-        cardLayout.show(pnlChatArea, messagingUser.getUsername().toLowerCase());
+    public MessageController getController() {
+        return controller;
     }
 
     @SuppressWarnings("unchecked")
