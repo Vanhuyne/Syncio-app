@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import online.syncio.controller.MessageController;
+import online.syncio.model.LoggedInUser;
 
 public class MessagePanel extends JPanel {
 
