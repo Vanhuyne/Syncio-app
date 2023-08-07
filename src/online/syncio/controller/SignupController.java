@@ -17,7 +17,7 @@ import online.syncio.view.Signup;
 public class SignupController {
 
     private Signup signup;
-    private UserDAO userDAO;
+    UserDAO userDAO;
     private String us; 
 
     

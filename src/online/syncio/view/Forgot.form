@@ -3,6 +3,7 @@
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="name" type="java.lang.String" value="Forgot" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -154,6 +155,9 @@
                   </Properties>
                 </Component>
                 <Component class="online.syncio.component.MyTextField" name="txtEmail">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="txtEmail" noResource="true"/>
+                  </Properties>
                 </Component>
                 <Component class="online.syncio.component.MyButton" name="btnGetOTP">
                   <Properties>
@@ -170,6 +174,7 @@
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="SF Pro Display Medium" size="16" style="0"/>
                     </Property>
+                    <Property name="name" type="java.lang.String" value="btnGetOTP" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[92, 20]"/>
                     </Property>
@@ -192,10 +197,14 @@
                   </Events>
                 </Component>
                 <Component class="online.syncio.component.MyTextField" name="txtOTP">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="txtOTP" noResource="true"/>
+                  </Properties>
                 </Component>
                 <Component class="online.syncio.component.MyPasswordField" name="txtPasswordConfirm">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="myPasswordField1"/>
+                    <Property name="name" type="java.lang.String" value="txtPasswordConfirm" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="online.syncio.component.MyLabel" name="lblNote">
@@ -210,6 +219,7 @@
                 <Component class="online.syncio.component.MyPasswordField" name="txtPassword">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="myPasswordField1"/>
+                    <Property name="name" type="java.lang.String" value="txtPassword" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

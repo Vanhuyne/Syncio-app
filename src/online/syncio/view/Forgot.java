@@ -66,6 +66,7 @@ public class Forgot extends javax.swing.JFrame {
         txtPassword = new online.syncio.component.MyPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("Forgot"); // NOI18N
 
         pnlContainer.setRoundBottomLeft(20);
         pnlContainer.setRoundBottomRight(20);
@@ -88,11 +89,14 @@ public class Forgot extends javax.swing.JFrame {
         lblTitle.setFont(new java.awt.Font("SF Pro Display Bold", 0, 34)); // NOI18N
         lblTitle.setFontBold(2);
 
+        txtEmail.setName("txtEmail"); // NOI18N
+
         btnGetOTP.setBackground(new java.awt.Color(0, 149, 246));
         btnGetOTP.setForeground(new java.awt.Color(255, 255, 255));
         btnGetOTP.setText("Get OTP");
         btnGetOTP.setBorderColor(new java.awt.Color(255, 255, 255));
         btnGetOTP.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnGetOTP.setName("btnGetOTP"); // NOI18N
         btnGetOTP.setPreferredSize(new java.awt.Dimension(92, 20));
         btnGetOTP.setRadius(10);
         btnGetOTP.addActionListener(new java.awt.event.ActionListener() {
@@ -110,7 +114,10 @@ public class Forgot extends javax.swing.JFrame {
             }
         });
 
+        txtOTP.setName("txtOTP"); // NOI18N
+
         txtPasswordConfirm.setText("myPasswordField1");
+        txtPasswordConfirm.setName("txtPasswordConfirm"); // NOI18N
 
         lblNote.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblNote.setText("The one that you use to sign in with");
@@ -121,6 +128,7 @@ public class Forgot extends javax.swing.JFrame {
         });
 
         txtPassword.setText("myPasswordField1");
+        txtPassword.setName("txtPassword"); // NOI18N
 
         javax.swing.GroupLayout pnlFormLayout = new javax.swing.GroupLayout(pnlForm);
         pnlForm.setLayout(pnlFormLayout);

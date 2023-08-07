@@ -74,6 +74,7 @@ public class Login extends javax.swing.JFrame {
         chkRememberMe = new online.syncio.component.MyCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("Login"); // NOI18N
 
         pnlContainer.setRoundBottomLeft(20);
         pnlContainer.setRoundBottomRight(20);
@@ -96,11 +97,14 @@ public class Login extends javax.swing.JFrame {
         myLabel1.setFont(new java.awt.Font("SF Pro Display Bold", 0, 36)); // NOI18N
         myLabel1.setFontBold(2);
 
+        txtUser.setName("txtUser"); // NOI18N
+
         btnLogin.setBackground(new java.awt.Color(0, 149, 246));
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
         btnLogin.setText("Login");
         btnLogin.setBorderColor(new java.awt.Color(255, 255, 255));
         btnLogin.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnLogin.setName("btnLogin"); // NOI18N
         btnLogin.setPreferredSize(new java.awt.Dimension(92, 20));
         btnLogin.setRadius(10);
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +140,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         txtPassword.setText("myPasswordField1");
+        txtPassword.setName("txtPassword"); // NOI18N
 
         btnContinueWithGoogle.setBackground(new java.awt.Color(254, 255, 255));
         btnContinueWithGoogle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/google_28px.png"))); // NOI18N
