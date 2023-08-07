@@ -18,7 +18,6 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.OtherHelper;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
@@ -31,7 +30,7 @@ public class PostDetailUI extends javax.swing.JPanel {
     private ChangeStreamIterable<Post> changeStreamPosts;
     private Thread changeStreamThread;
     private Main main = Main.getInstance();
-    
+
     public PostDetailUI(String postID) {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -92,9 +91,9 @@ public class PostDetailUI extends javax.swing.JPanel {
                                     pnlCmt.revalidate();
                                     pnlCmt.repaint();
                                 });
-                                
-                                if(post.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString())) {
-                                    main.getPnlNotifications().displayNotifications();
+
+                                if (post.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString())) {
+                                    main.getPnlNotifications().getController().displayNotifications();
                                 }
                             }
                         }

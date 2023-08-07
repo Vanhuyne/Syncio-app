@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.text.BadLocationException;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
@@ -16,14 +17,12 @@ import org.bson.types.Binary;
 public class CreateNewPostController {
 
     private CreateNewPost popup;
-    private PostDAO postDAO;
-    private UserDAO userDAO;
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
     public CreateNewPostController(CreateNewPost popup) {
         this.popup = popup;
 
-        postDAO = this.popup.getPostDAO();
-        userDAO = this.popup.getUserDAO();
     }
 
     public void uploadPost() {
@@ -40,23 +39,27 @@ public class CreateNewPostController {
         }
 
         ArrayList<Binary> lPhoto = new ArrayList<>();
-        var imagePaths = new ArrayList<String>();
+        ArrayList<String> imagePaths = new ArrayList<>();
         imagePaths = popup.getImagePaths();
-        
+
         if (imagePaths.size() > 5) {
             GlassPanePopup.showPopup(new MyDialog("Error", "You can only select between 0 and 5 images."), "dialog");
             return;
         }
-        
+
         int expectWidth = 720;
         for (int i = 0; i < imagePaths.size(); i++) {
             String path = imagePaths.get(i);
-            
-            if (popup.getImageFilter().get(i) == 1) {
-                lPhoto.add(ImageFilter.toGrayScale2(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f)));
-            }
-            else {
+
+            if (null == popup.getImageFilter().get(i)) {
                 lPhoto.add(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f));
+            } else {
+                switch (popup.getImageFilter().get(i)) {
+                    case 1 ->
+                        lPhoto.add(ImageFilter.toGrayScale2(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f)));
+                    default ->
+                        lPhoto.add(ImageHelper.resizingAndCompressingWidthToBinary(ImageHelper.stringToBufferedImage(path), expectWidth, 1f));
+                }
             }
         }
         if ((caption.equals("") || caption.equalsIgnoreCase(popup.getTxtCaption().getPlaceholder())) && lPhoto.isEmpty()) {

@@ -15,7 +15,7 @@ public class WindowTitleBar extends javax.swing.JPanel {
 
     private JFrame frame;
     private Main main = Main.getInstance();
-    
+
     /**
      * Constructs a new instance of the WindowTitleBar.
      */
@@ -23,10 +23,10 @@ public class WindowTitleBar extends javax.swing.JPanel {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
     }
-    
+
     /**
      * Sets the JFrame associated with the title bar.
-     * 
+     *
      * @param frame the JFrame to be associated with the title bar
      */
     public void setFrame(JFrame frame) {
@@ -118,10 +118,11 @@ public class WindowTitleBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        if(main.getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
-            main.getPnlNotifications().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
+        if (main.getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
+            main.getPnlNotifications().getController().writeDesiredDateTime(
+                    LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
         }
-        
+
         // Add a shutdown hook to close the MongoDB connection before exiting
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             MongoDBConnect.close();
@@ -134,7 +135,6 @@ public class WindowTitleBar extends javax.swing.JPanel {
             frame.setState(JFrame.ICONIFIED);
         }
     }//GEN-LAST:event_btnMinimizeActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnClose;

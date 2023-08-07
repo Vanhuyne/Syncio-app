@@ -7,20 +7,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.UserDAO;
+import online.syncio.controller.MainController;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
-import online.syncio.utils.OtherHelper;
 
 public final class Main extends javax.swing.JFrame {
 
@@ -32,39 +30,22 @@ public final class Main extends javax.swing.JFrame {
     public Profile profile;
     private MessagePanel messagePanel;
 
-    private UserDAO userDAO;
     NotificationsPanel pnlNotifications;
     public Date GOLBAL_DATE = null;
 
+    private MainController controller;
+
     public Main() {
         instance = this;
+        controller = new MainController(this);
 
-        this.userDAO = MongoDBConnect.getUserDAO();
+        controller.recheckLoggedInUser();
 
         setUndecorated(true);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
-
-        pnlSearch.setVisible(false);
-
-        if(OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
-            // da login = remember me
-            LoggedInUser.setCurrentUser(userDAO.getByID(OtherHelper.getSessionValue("LOGGED_IN_USER")));
-            this.profile = new Profile(LoggedInUser.getCurrentUser());
-        }
-        else if(LoggedInUser.getCurrentUser() != null) {
-            //da login = username password
-            this.profile = new Profile(LoggedInUser.getCurrentUser());
-        }
-        else if(LoggedInUser.getCurrentUser() == null) {
-            //chua login
-            btnProfile.setText("Log in");
-            this.profile = new Profile(null);
-        }
-
-        messagePanel = new MessagePanel();
 
         pnlNotifications = new NotificationsPanel();
         pnlNotifications.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
@@ -75,10 +56,14 @@ public final class Main extends javax.swing.JFrame {
         pnlContainer.add(pnlNotifications);
         pnlNotifications.setVisible(false);
         pnlContainer.setComponentZOrder(pnlNotifications, 0);
-        
+
+        pnlSearch.setVisible(false);
+
+        messagePanel = new MessagePanel();
+
         addComponents();
     }
-    
+
     //rounded frame
     @Override
     public void paint(Graphics g) {
@@ -88,8 +73,6 @@ public final class Main extends javax.swing.JFrame {
         g2.setRenderingHints(rh);
         super.paint(g);
     }
-    
-    
 
     public void addComponents() {
         panelList = new JPanel[]{new Home(), messagePanel, profile, new EditProfile()};
@@ -113,21 +96,20 @@ public final class Main extends javax.swing.JFrame {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
                 String name1 = btn1.getName().trim();
-                
+
                 if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
                     //chua login
                     dispose();
                     new Login().setVisible(true);
-                    if(!name1.equals("profile")) {
+                    if (!name1.equals("profile")) {
                         //bntProfile is Login, user click on to login >< show popup
                         GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
                     }
-                }
-                else {
-                    if(name1.equals("profile")) {
-                        this.profile.loadProfile(LoggedInUser.getCurrentUser());
+                } else {
+                    if (name1.equals("profile")) {
+                        this.profile.getController().loadProfile(LoggedInUser.getCurrentUser());
                     }
-                    
+
                     showTab(name1, btn1);
                 }
 
@@ -135,8 +117,6 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
-    
-    
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -349,8 +329,8 @@ public final class Main extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         btnHome.doClick();
-        if(LoggedInUser.getCurrentUser() != null) {
-            pnlNotifications.displayNotifications();
+        if (LoggedInUser.getCurrentUser() != null) {
+            pnlNotifications.getController().displayNotifications();
             pnlNotifications.revalidate();
             pnlNotifications.repaint();
         }
@@ -363,31 +343,29 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        if(pnlSearch.isVisible()) {
+        if (pnlSearch.isVisible()) {
             pnlSearch.setVisible(false);
-        }
-        else {
+        } else {
             pnlSearch.setVisible(true);
             pnlNotifications.setVisible(false);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnNotificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificationActionPerformed
-        if(pnlNotifications.isVisible()) {
+        if (pnlNotifications.isVisible()) {
             pnlNotifications.setVisible(false);
-        }
-        else {
+        } else {
             GOLBAL_DATE = new Date();
             pnlNotifications.setVisible(true);
             pnlSearch.setVisible(false);
-//            pnlNotifications.displayNotifications();
         }
     }//GEN-LAST:event_btnNotificationActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        if(GOLBAL_DATE != null && LoggedInUser.getCurrentUser() != null) {
+        if (GOLBAL_DATE != null && LoggedInUser.getCurrentUser() != null) {
             System.out.println("da cap nhat");
-            pnlNotifications.writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), GOLBAL_DATE);
+            pnlNotifications.getController().writeDesiredDateTime(
+                    LoggedInUser.getCurrentUser().getId().toString(), GOLBAL_DATE);
         }
     }//GEN-LAST:event_formWindowClosed
 
@@ -464,8 +442,22 @@ public final class Main extends javax.swing.JFrame {
         return GOLBAL_DATE;
     }
 
-    
-    
+    public MyButton getBtnProfile() {
+        return btnProfile;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public void setBtnProfile(MyButton btnProfile) {
+        this.btnProfile = btnProfile;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;

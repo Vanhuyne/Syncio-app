@@ -1,25 +1,17 @@
 package online.syncio.view;
 
-import com.mongodb.client.FindIterable;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import online.syncio.component.SearchedUserCard;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.UserDAO;
-import online.syncio.model.User;
+import online.syncio.component.MyTextField;
+import online.syncio.controller.SearchController;
 
 public class SearchUserPanel extends JPanel {
 
-    private Main main = Main.getInstance();
-    private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private FindIterable<User> userList;
+    private SearchController controller;
 
     public SearchUserPanel() {
+        controller = new SearchController(this);
 
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -29,46 +21,12 @@ public class SearchUserPanel extends JPanel {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
     }
 
-    public void find() {
-        String searchText = txtSearch.getText().trim();
-
-        if (searchText.equalsIgnoreCase("Looking for someone?") || searchText.isBlank()) {
-            searchText = null;
-        }
-
-        userList = userDAO.getAllByUsernameOrEmailRoleFlag(searchText, 0, 0);
-
-        if (userList != null) {
-            loadResult();
-        }
+    public JPanel getPnlResult() {
+        return pnlResult;
     }
 
-    private void loadResult() {
-        pnlResult.removeAll();
-        Box.createVerticalStrut(20);
-
-        MouseListener mouseEvent = new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                SearchedUserCard card = (SearchedUserCard) e.getSource();
-
-                Main main = Main.getInstance();
-
-                main.profile.loadProfile(card.getUser());
-                main.showTab("profile");
-                main.getBtnSearch().doClick();
-            }
-        };
-
-        for (User user : userList) {
-            SearchedUserCard card = new SearchedUserCard(user);
-            card.addMouseListener(mouseEvent);
-
-            pnlResult.add(card);
-            Box.createVerticalStrut(20);
-
-            pnlResult.revalidate();
-            pnlResult.repaint();
-        }
+    public MyTextField getTxtSearch() {
+        return txtSearch;
     }
 
     @SuppressWarnings("unchecked")
@@ -157,7 +115,7 @@ public class SearchUserPanel extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-        find();
+        controller.find();
     }//GEN-LAST:event_txtSearchKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

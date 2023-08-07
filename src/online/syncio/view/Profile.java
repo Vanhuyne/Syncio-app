@@ -1,19 +1,16 @@
 package online.syncio.view;
 
-import com.mongodb.client.ChangeStreamIterable;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import online.syncio.component.ProfilePostPanel;
+import online.syncio.controller.ProfileController;
 import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
-import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
@@ -23,66 +20,54 @@ public class Profile extends JPanel {
     private Image defaultImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/avt_128px.png")).getImage();
 
     private Main main = Main.getInstance();
-    private UserDAO userDAO;
-    private PostDAO postDAO;
-    List<Post> posts;
-    private User user;
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
+
+    private ProfileController controller;
 
     public Profile(User user) {
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.postDAO = MongoDBConnect.getPostDAO();
-        this.user = user;
-
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        loadProfile(user);
+        controller = new ProfileController(this);
+
+        controller.loadProfile(user);
     }
 
-    public void loadProfile(User user) {
-        if (user == null) {
-            return;
-        }
+    public void loadOwnProfile(User user) {
+        btnEditProfileMessage.setText("Edit profile");
+        btnFollow.setVisible(false);
 
-        this.user = user; //user is showing
-        this.posts = postDAO.getAllByUserID(user.getId().toString());
+        lblAvatar.setSize(128, 128);
+        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
+        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
+    }
 
-        if (user.getId().toString().equals(LoggedInUser.getCurrentUser().getId().toString())) {
-            // own profile
-            btnEditProfileMessage.setText("Edit profile");
-            btnFollow.setVisible(false);
+    public void loadOtherUserProfile(User user) {
+        btnEditProfileMessage.setText("Message");
+        btnFollow.setVisible(true);
 
-            lblAvatar.setSize(128, 128);
-            ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
-        } else {
-            // another user profile
-            User currentUser = LoggedInUser.getCurrentUser();
-            ArrayList<UserIDAndDate> following = new ArrayList<>();
-            following = currentUser.getFollowing();
+        ArrayList<UserIDAndDate> following = LoggedInUser.getCurrentUser().getFollowing();
+        boolean followingUser = false;
 
-            btnEditProfileMessage.setText("Message");
-            btnFollow.setVisible(true);
-
-            boolean f = false;
-            //check myfollowing contain user is shown
-            for (UserIDAndDate u : following) {
-                if (u.getUserID().equals(user.getId().toString())) {
-                    btnFollow.setText("Unfollow");
-                    f = true;
-                    break;
-                }
-            }
-            if (!f) {
-                btnFollow.setText("Follow");
+        // Check if the logged-in user is following the shown user
+        for (UserIDAndDate u : following) {
+            if (u.getUserID().equals(user.getId().toString())) {
+                btnFollow.setText("Unfollow");
+                followingUser = true;
+                break;
             }
         }
 
+        if (!followingUser) {
+            btnFollow.setText("Follow");
+        }
+    }
+
+    public void setProfileInfo(User user) {
         String username = user.getUsername();
         String bio = user.getBio();
-        int postNum = posts.size();
-
+        int postNum = controller.getPostListSize();
         int followersSize = user.getFollowing().size();
 
         lblUsername.setText(username);
@@ -91,44 +76,6 @@ public class Profile extends JPanel {
         lblPostNum.setText(postNum + " posts");
         lblFollowingNum.setText(followersSize + " following");
         lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
-
-        pnlProfilePost.setUserPosts(posts);
-
-        Thread thread = new Thread(() -> {
-            // Set up MongoDB change stream for the user's posts
-            ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
-
-            // Listen for change stream events in a separate thread
-            Thread changeStreamThread = new Thread(() -> {
-                changeStream.forEach(changeDocument -> {
-                    // Handle the change event here
-                    // For example, extract the updated post data from changeDocument and update pnlProfilePost
-                    Post updatedPost = changeDocument.getFullDocument();
-                    if (posts.size() != postDAO.getAllByUserID(user.getId().toString()).size() && updatedPost != null && updatedPost.getUserID().equals(this.user.getId().toString())) {
-                        SwingUtilities.invokeLater(() -> {
-                            // Update the user's posts UI
-                            pnlProfilePost.addUserPost(updatedPost);
-                        });
-                    }
-                });
-            });
-            changeStreamThread.start();
-
-            // Load initial posts for the user from the regular database query
-            SwingUtilities.invokeLater(() -> {
-                pnlProfilePost.setUserPosts(posts);
-            });
-
-            // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
-            try {
-                changeStreamThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        // Start the thread
-        thread.start();
     }
 
     public void toggleFollow() {
@@ -137,6 +84,14 @@ public class Profile extends JPanel {
         } else {
             btnFollow.setText("Follow");
         }
+    }
+
+    public ProfilePostPanel getPnlProfilePost() {
+        return pnlProfilePost;
+    }
+
+    public ProfileController getController() {
+        return controller;
     }
 
     @SuppressWarnings("unchecked")
@@ -289,15 +244,15 @@ public class Profile extends JPanel {
             CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
             c.show(this.main.getPnlTabContent(), "message");
 
-            this.main.getMessagePanel().openMessage(lblUsername.getText().trim());
+            this.main.getMessagePanel().getController().openMessage(lblUsername.getText().trim());
         }
     }//GEN-LAST:event_btnEditProfileMessageActionPerformed
 
     private void btnFollowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowActionPerformed
-        int result = userDAO.toggleFollow(LoggedInUser.getCurrentUser().getId().toString(), user.getId().toString());
+        int result = userDAO.toggleFollow(LoggedInUser.getCurrentUser().getId().toString(), controller.getUser().getId().toString());
         if (result > 0) {
             toggleFollow();
-            lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
+            lblFollowerNum.setText(userDAO.getFollowerCount(controller.getUser().getId().toString()) + " followers");
         } else {
             System.out.println(result);
         }

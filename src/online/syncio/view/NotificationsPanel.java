@@ -1,145 +1,34 @@
 package online.syncio.view;
 
-import com.mongodb.client.FindIterable;
 import java.awt.Color;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
 import javax.swing.JPanel;
-import online.syncio.component.MyLabel;
-import online.syncio.component.SearchedUserCard;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.PostDAO;
-import online.syncio.dao.UserDAO;
-import online.syncio.model.LoggedInUser;
-import online.syncio.model.Post;
-import online.syncio.model.UserIDAndDateAndText;
+import online.syncio.controller.NotificationController;
 
 public class NotificationsPanel extends JPanel {
 
-    private static Main main = Main.getInstance();
-    private static UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private static PostDAO postDAO = MongoDBConnect.getPostDAO();
-    
-    private String CONFIG_FILE_PATH = "/online/syncio/config/config.properties";
-    private static final String DESIRED_DATETIME_KEY = "desiredDateTime";
-    private Date desiredDateTime;
-    
-    private static FindIterable<Post> posts;
-    private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format of your date-time string
-    private static InputStream is;
-    
-    MyLabel lblLoading;
-            
+    private NotificationController controller;
+
     public NotificationsPanel() {
-        
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         setOpaque(true);
 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        
-        is = getClass().getResourceAsStream(CONFIG_FILE_PATH);
-    }
-    
-    
-    
-    public void readDesiredDateTime(String userID) {
-        Properties properties = new Properties();
-        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
-            properties.load(inputStream);
-            String desiredDateTimeStr = properties.getProperty(userID + "." + DESIRED_DATETIME_KEY);
-            if (desiredDateTimeStr != null) {
-                desiredDateTime = dateTimeFormat.parse(desiredDateTimeStr);
-                System.out.println("Desired date and time for user " + userID + ": " + desiredDateTime);
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-    
-    public void writeDesiredDateTime(String userID, Date date) {
-        Properties properties = new Properties();
 
-        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        properties.setProperty(userID + "." + DESIRED_DATETIME_KEY, dateTimeFormat.format(date));
-
-        try (OutputStream outputStream = new FileOutputStream("src/" + CONFIG_FILE_PATH)) {
-            properties.store(outputStream, "Desired Date and Time for Users");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        controller = new NotificationController(this);
     }
 
-    
-    
-    // Method to display notifications based on the desiredDateTime
-    public void displayNotifications() {
-        pnlResult.removeAll();
-        
-        String currentUserID = LoggedInUser.getCurrentUser().getId().toString();
-        posts = postDAO.getAllByUserIDFindIterable(currentUserID);
-        
-        readDesiredDateTime(currentUserID);
-        
-        boolean filterComments = desiredDateTime != null; // Check if desiredDateTime is set
-        
-        for (Post post : posts) {
-            List<UserIDAndDateAndText> comments = post.getCommentList();
-            Collections.reverse(comments);
-
-            int nums = 0;
-            for (UserIDAndDateAndText comment : comments) {
-                String commentDateTimeStr = comment.getDate();
-                if (commentDateTimeStr != null) {
-                    // Check if the date is not null
-                    try {
-                        Date commentDateTime = dateTimeFormat.parse(commentDateTimeStr);
-
-                        if (desiredDateTime != null && commentDateTime.after(desiredDateTime)) {
-//                            System.out.println(comment.getDate() + "-" + comment.getText());
-                            nums++;
-                        }
-                        else {
-                            break;
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if(nums > 0) {
-                pnlResult.add(new SearchedUserCard(post.getId().toString(), nums + " new comments on your post", comments.get(0).getDate()));
-            }
-        }
-        
-        pnlResult.revalidate();
-        pnlResult.repaint();
-    }
-    
-    
-    
     public void addLastNotification() {
-        
+
     }
 
-    
+    public NotificationController getController() {
+        return controller;
+    }
+
+    public JPanel getPnlResult() {
+        return pnlResult;
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
