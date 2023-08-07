@@ -39,8 +39,6 @@ public final class Main extends javax.swing.JFrame {
         instance = this;
         controller = new MainController(this);
 
-        controller.recheckLoggedInUser();
-
         setUndecorated(true);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
@@ -61,6 +59,8 @@ public final class Main extends javax.swing.JFrame {
 
         messagePanel = new MessagePanel();
 
+        controller.recheckLoggedInUser();
+        
         addComponents();
     }
 
