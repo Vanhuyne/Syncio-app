@@ -5,9 +5,13 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.exists;
 import static com.mongodb.client.model.Filters.in;
 import static com.mongodb.client.model.Filters.nin;
+import static com.mongodb.client.model.Filters.not;
+import static com.mongodb.client.model.Filters.size;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.FullDocument;
@@ -47,8 +51,6 @@ public class PostDAOImpl implements PostDAO {
         return false;
     }
 
-    
-    
     @Override
     public boolean updateByID(Post t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -58,15 +60,11 @@ public class PostDAOImpl implements PostDAO {
     public boolean deleteByID(String entityID) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    
 
     @Override
     public Post getByID(String postID) {
         return postCollection.find(eq("_id", new ObjectId(postID))).first();
     }
-    
-    
 
     @Override
     public List<Post> getAll() {
@@ -81,15 +79,11 @@ public class PostDAOImpl implements PostDAO {
         return lPost;
     }
 
-    
-    
     @Override
     public MongoCollection<Post> getAllByCollection() {
         return postCollection;
     }
 
-    
-    
     @Override
     public List<Post> getAllByUserID(String userID) {
         Bson filter = eq("userID", userID);
@@ -97,8 +91,6 @@ public class PostDAOImpl implements PostDAO {
         return posts.into(new ArrayList<>()); // Convert FindIterable directly to List
     }
 
-    
-    
     @Override
     public boolean addLike(String postID, String userID) {
         Bson likeFilter = Filters.eq("_id", new ObjectId(postID)); //get document
@@ -115,8 +107,6 @@ public class PostDAOImpl implements PostDAO {
         return true;
     }
 
-    
-    
     @Override
     public FindIterable<Post> getAllPostOfFollowers(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
@@ -126,7 +116,7 @@ public class PostDAOImpl implements PostDAO {
         for (UserIDAndDate userIDAndDate : user.getFollowing()) {
             followerIds.add(userIDAndDate.getUserID());
         }
-        
+
         // add itself
         followerIds.add(user.getId().toString());
 
@@ -137,8 +127,6 @@ public class PostDAOImpl implements PostDAO {
         return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
 
-    
-    
     @Override
     public boolean addComment(String text, String userID, String postID) {
         Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
@@ -146,9 +134,7 @@ public class PostDAOImpl implements PostDAO {
         postCollection.updateOne(cmtFilter, add);
         return true;
     }
-    
-    
-    
+
     @Override
     public ChangeStreamIterable<Post> getChangeStream() {
         ChangeStreamIterable<Post> changeStreamPosts = postCollection.watch();
@@ -165,7 +151,7 @@ public class PostDAOImpl implements PostDAO {
         for (UserIDAndDate userIDAndDate : user.getFollowing()) {
             followerIds.add(userIDAndDate.getUserID());
         }
-        
+
         // add itself
         followerIds.add(user.getId().toString());
 
@@ -176,21 +162,20 @@ public class PostDAOImpl implements PostDAO {
         return posts.find(filter).sort(Sorts.descending("datePosted"));
     }
 
-    
-    
     @Override
     public FindIterable<Post> getAllByUserIDFindIterable(String userID) {
         Bson filter = eq("userID", userID);
         return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
+
     @Override
     public boolean addReport(String text, String userID, String postID) {
         Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
-        Bson add = Updates.push("reportList", new UserIDAndDateAndText(userID, text ));
+        Bson add = Updates.push("reportList", new UserIDAndDateAndText(userID, text));
         postCollection.updateOne(cmtFilter, add);
         return true;
     }
-    
+
     @Override
     public List<UserIDAndDateAndText> getReportList(String postID) {
         // Tạo truy vấn dựa vào postID
@@ -204,20 +189,29 @@ public class PostDAOImpl implements PostDAO {
         }
         return new ArrayList<>();
     }
-    
+
     @Override
-    public boolean isUserIDInListReport(String userID,  String postID ) {
-  
-            ObjectId postIdObject = new ObjectId(postID);
-            // Create the filter to find the document with the given postID and userID in the reportList
-            Document query = new Document("_id", postIdObject)
-                    .append("reportList.userID", userID);
+    public boolean isUserIDInListReport(String userID, String postID) {
 
-            // Use the countDocuments method to check if any document matches the query
-            long count = postCollection.countDocuments(query);
+        ObjectId postIdObject = new ObjectId(postID);
+        // Create the filter to find the document with the given postID and userID in the reportList
+        Document query = new Document("_id", postIdObject)
+                .append("reportList.userID", userID);
 
-            // If the count is greater than 0, it means the userID exists in the reportList for the given postID
-            return count > 0;
+        // Use the countDocuments method to check if any document matches the query
+        long count = postCollection.countDocuments(query);
+
+        // If the count is greater than 0, it means the userID exists in the reportList for the given postID
+        return count > 0;
 
     }
+
+    @Override
+    public FindIterable<Post> getAllReportedPost() {
+        // Create a filter to find documents where "reportList" exists and is not an empty array
+        Bson filter = and(exists("reportList"), not(size("reportList", 0)));
+        // Execute the query and return the result
+        return postCollection.find(filter);
+    }
+
 }
