@@ -32,7 +32,7 @@ public interface PostDAO extends DAO<Post> {
 
     public FindIterable<Post> getAllReportedPost();
 
-    public boolean addReport(String text, String userID, String postID);
+    public boolean addReport(int text, String userID, String postID);
 
     public boolean isUserIDInListReport(String userID, String postID);
 }
