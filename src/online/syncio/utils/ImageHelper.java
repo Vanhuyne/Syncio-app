@@ -1,5 +1,6 @@
 package online.syncio.utils;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -130,6 +131,10 @@ public class ImageHelper {
     public static Image resizeImageToWidth(BufferedImage bufferedImage, int width) {
         return bufferedImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
     }
+    
+    public static Image resizeImageToHeight(BufferedImage bufferedImage, int height) {
+        return bufferedImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
+    }
 
     public static Binary resizingAndCompressingWidthToBinary(BufferedImage bufferedImage, int width, float compressionQuality) {
         try {
@@ -243,19 +248,45 @@ public class ImageHelper {
     }
 
     public static ImageIcon toRoundImage(BufferedImage image, int size) {
-        BufferedImage roundImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = roundImage.createGraphics();
+        if(image.getWidth() < image.getHeight()) {
+            image = imageToBufferedImage(resizeImageToWidth(image, size));
+        }
+        else {
+            image = imageToBufferedImage(resizeImageToHeight(image, size));
+        }
+        
+        BufferedImage mask = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        
+        Graphics2D g2d = mask.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        // Create a round shape
-        Ellipse2D.Float ellipse = new Ellipse2D.Float(0, 0, size, size);
-        g2d.clip(ellipse);
+        g2d.fillOval(0, 0, size - 1, size - 1);
+        g2d.dispose();
+    
+        BufferedImage masked = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        g2d = masked.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        // Draw the image within the round shape
-        g2d.drawImage(image, 0, 0, size, size, null);
+        g2d.drawImage(image, 0, 0, null);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
+        g2d.drawImage(mask, 0, 0, null);
         g2d.dispose();
 
-        return new ImageIcon(roundImage);
+        return new ImageIcon(masked);
     }
 
     public static Image getDefaultImage() {

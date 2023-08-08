@@ -110,7 +110,6 @@ public class MyPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getBackground());
         Area area = new Area(createRoundTopLeft());
         if (roundTopRight > 0) {

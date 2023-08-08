@@ -159,9 +159,9 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
         pnlOwner = new online.syncio.component.MyPanel();
-        lblUsername = new javax.swing.JLabel();
         lblDateCreated = new javax.swing.JLabel();
         lblReport = new online.syncio.component.MyLabel();
+        lblUsername = new online.syncio.component.MyLabel();
         pnlAction = new online.syncio.component.MyPanel();
         lblHeart = new online.syncio.component.MyLabel();
         lblTotalLike = new javax.swing.JLabel();
@@ -245,26 +245,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         pnlOwner.setBackground(new java.awt.Color(255, 255, 255));
         pnlOwner.setPreferredSize(new java.awt.Dimension(0, 54));
 
-        lblUsername.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
-        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
-        lblUsername.setText(" sanhvc");
-        lblUsername.setToolTipText("");
-        lblUsername.setMaximumSize(new java.awt.Dimension(255, 24));
-        lblUsername.setMinimumSize(new java.awt.Dimension(255, 24));
-        lblUsername.setPreferredSize(new java.awt.Dimension(255, 24));
-        lblUsername.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblUsername.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblUsernameMousePressed(evt);
-            }
-        });
-
         lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
         lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDateCreated.setText("2022-02-02 02:02:02");
-        lblDateCreated.setMaximumSize(new java.awt.Dimension(115, 15));
-        lblDateCreated.setMinimumSize(new java.awt.Dimension(115, 15));
-        lblDateCreated.setPreferredSize(new java.awt.Dimension(115, 15));
+        lblDateCreated.setMaximumSize(new java.awt.Dimension(117, 15));
+        lblDateCreated.setMinimumSize(new java.awt.Dimension(117, 15));
+        lblDateCreated.setPreferredSize(new java.awt.Dimension(117, 15));
 
         lblReport.setForeground(new java.awt.Color(255, 0, 0));
         lblReport.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -281,14 +267,20 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
             }
         });
 
+        lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
+        lblUsername.setText(" sanhvc");
+        lblUsername.setMaximumSize(new java.awt.Dimension(255, 24));
+        lblUsername.setMinimumSize(new java.awt.Dimension(255, 24));
+        lblUsername.setPreferredSize(new java.awt.Dimension(255, 24));
+
         javax.swing.GroupLayout pnlOwnerLayout = new javax.swing.GroupLayout(pnlOwner);
         pnlOwner.setLayout(pnlOwnerLayout);
         pnlOwnerLayout.setHorizontalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOwnerLayout.createSequentialGroup()
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1))
@@ -298,9 +290,9 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
             .addGroup(pnlOwnerLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblReport, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -451,13 +443,6 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         GlassPanePopup.showPopup(options, "report");
     }//GEN-LAST:event_lblReportMousePressed
 
-    private void lblUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsernameMousePressed
-        GlassPanePopup.closePopup("postdetail");
-        Main.getInstance().showTab("profile");
-        User user = userDAO.getByUsername(lblUsername.getText().trim());
-        Main.getInstance().profile.getController().loadProfile(user);
-    }//GEN-LAST:event_lblUsernameMousePressed
-
     private void lblUsername2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsername2MousePressed
         GlassPanePopup.closePopup("postdetail");
         Main.getInstance().showTab("profile");
@@ -492,7 +477,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
     private online.syncio.component.MyLabel lblHeart;
     private online.syncio.component.MyLabel lblReport;
     private javax.swing.JLabel lblTotalLike;
-    private javax.swing.JLabel lblUsername;
+    private online.syncio.component.MyLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
     private javax.swing.JLabel lblViewAllCmt;
     private online.syncio.component.MyPanel pnlAction;
