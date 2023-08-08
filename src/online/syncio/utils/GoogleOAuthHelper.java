@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import online.syncio.view.Signup;
+import online.syncio.view.login.Signup;
 
 public class GoogleOAuthHelper {
     
