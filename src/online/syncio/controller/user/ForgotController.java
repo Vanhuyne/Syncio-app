@@ -18,7 +18,7 @@ import online.syncio.view.login.Login;
 public class ForgotController {
 
     private long otpRequestedTimeMillis;
-    private final long OTP_VALID = 3 * 60 * 1000;
+    private final long OTP_VALID = 2 * 60 * 1000;
     private Date otpRequestedTime = new Date();
     private Forgot forgot;
     private UserDAO userDAO;
@@ -34,7 +34,7 @@ public class ForgotController {
 
     public void forgotAuthentication(String btntype) {
         // btntype -> Acction(String)
-        forgot.getbtnSumbit().setText("Get OTP");
+//        forgot.getbtnSumbit().setText("Get OTP");
         MyTextField txtEmail = forgot.getTxtEmail();
         MyTextField txtOTP = forgot.getTxtOTP();
         MyPasswordField txtPassword = forgot.getTxtPassword();
@@ -66,6 +66,7 @@ public class ForgotController {
                 if (userDAO.checkEmail(email)) {
                     int o = (int) (Math.random() * 900000) + 100000;
                     otp = o;
+                    forgot.setOtp(otp);
                     String subject = "RESET PASSWORD";
                     String recipientName = email;
                     String content = "<tr>\n"
@@ -96,7 +97,7 @@ public class ForgotController {
                 }
 
                 //sau khi gui => chuyen sang xac nhan otp
-                forgot.getLblNote().setText("<html><p style='text-align: center'>We sent an OTP code to reset your password. If you have not received an email, please check your spam folder. Your OTP will expire in 3 minutes.</p></html>");
+                forgot.getLblNote().setText("<html><p style='text-align: center'>We sent an OTP code to reset your password. If you have not received an email, please check your spam folder. Your OTP will expire in 2 minutes.</p></html>");
                 forgot.getTxtEmail().setEnabled(false);
                 forgot.getTxtOTP().setVisible(true);
                 forgot.getTxtOTP().requestFocus();

@@ -27,7 +27,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private String userID;
+    private String userID; //own post
     private String postID;
     private Post post;
     private int imageIndex = 0;
@@ -55,17 +55,17 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
     public boolean isLiked() {
         // Check if any documents matched the condition
-        return post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID));
+        return post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()));
     }
 
     public void updateLike() {
         if (isLiked()) {
             lblHeart.setIcon(unliked);
-            postDAO.removeLike(postID, userID);
+            postDAO.removeLike(postID, LoggedInUser.getCurrentUser().getId().toString());
         } else {
             post.getLikeList().add(new UserIDAndDate(userID));
             lblHeart.setIcon(liked);
-            postDAO.addLike(postID, userID);
+            postDAO.addLike(postID, LoggedInUser.getCurrentUser().getId().toString());
         }
 
         post = postDAO.getByID(postID);
@@ -73,7 +73,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
     }
 
     public void loadReport() {
-        if (post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+        if (post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()))) {
             lblReport.setText("Reported");
         } else {
             lblReport.setText("Report");
@@ -81,7 +81,8 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
     }
 
     private void showInfoPost() {
-        loadReport();
+        if(LoggedInUser.getCurrentUser() != null) loadReport();
+        
         lblUsername.setText(userDAO.getByID(userID).getUsername());
         lblUsername2.setText(userDAO.getByID(userID).getUsername());
         lblDateCreated.setText(post.getDatePosted());
@@ -102,7 +103,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
         lblTotalLike.setText(post.getLikeList().size() + " likes");
 
-        if (isLiked()) {
+        if (LoggedInUser.getCurrentUser() != null && isLiked()) {
             lblHeart.setIcon(liked);
         }
 
@@ -254,7 +255,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
         lblReport.setForeground(new java.awt.Color(255, 0, 0));
         lblReport.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblReport.setText("Reported");
+        lblReport.setText("Report");
         lblReport.setFont(new java.awt.Font("SF Pro Display Bold", 0, 9)); // NOI18N
         lblReport.setFontBold(2);
         lblReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

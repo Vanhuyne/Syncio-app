@@ -186,6 +186,7 @@ public class Profile extends JPanel {
         btnEditProfileMessage.setBackground(new java.awt.Color(239, 239, 239));
         btnEditProfileMessage.setText("Edit profile");
         btnEditProfileMessage.setBorderColor(new java.awt.Color(239, 239, 239));
+        btnEditProfileMessage.setName("btnEditProfileMessage"); // NOI18N
         btnEditProfileMessage.setRadius(10);
         btnEditProfileMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

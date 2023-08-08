@@ -10,12 +10,14 @@ import static org.assertj.swing.finder.WindowFinder.findFrame;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.fixture.JLabelFixture;
+import org.assertj.swing.timing.Pause;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ForgotTest {
 
+    String email = "accountToTest@gmail.com";
     private FrameFixture window;
     private Forgot forgotView;
 
@@ -24,9 +26,10 @@ public class ForgotTest {
         forgotView = GuiActionRunner.execute(() -> new Forgot());
         window = new FrameFixture(forgotView);
         window.show(); // shows the frame to test
-
     }
 
+    
+    
     @Test
     public void shouldShowErrorDialogOnEmptyEmail() {
         testErrorDialog("", "Error");
@@ -39,8 +42,6 @@ public class ForgotTest {
 
     @Test
     public void shouldShowErrorDialogOnIncorrectOTP() {
-        String email = "accountToTest@gmail.com";
-
         // Set up the signupController to use a specific OTP
         Forgot forgot = window.targetCastedTo(Forgot.class);
         ForgotController forgotController = new ForgotController(forgot) {
@@ -84,8 +85,6 @@ public class ForgotTest {
 
     @Test
     public void shouldChangePasswordOnCorrectOTP() {
-        String email = "accountToTest@gmail.com";
-
         // Set up the signupController to use a specific OTP
         Forgot forgot = window.targetCastedTo(Forgot.class);
         ForgotController forgotController = new ForgotController(forgot) {
@@ -127,7 +126,45 @@ public class ForgotTest {
 
         FrameFixture mainFrame = findFrame("Login").using(window.robot());
     }
+    
+    
+    
+    @Test
+    public void shouldShowErrorDialogOnExpiredOTP() {
+        // Set up the signupController to use a specific OTP
+        Forgot forgot = window.targetCastedTo(Forgot.class);
+        ForgotController forgotController = new ForgotController(forgot) {
+            @Override
+            public void forgotAuthentication(String type) {
+                if (type.equals("1")) {
+                    when((forgot.getOtp() + "").equals(forgot.getTxtOTP().getText())).thenReturn(true);
+                }
+                super.forgotAuthentication(type);
+            }
+        };
 
+        // Enter OTP and click Verify button
+        window.textBox("txtEmail").enterText(email);
+        window.button("btnGetOTP").click();
+
+        // custom search criteria (the button's text)
+        JButtonFixture button = window.button(new GenericTypeMatcher<JButton>(JButton.class) {
+            @Override
+            protected boolean isMatching(JButton button) {
+                return "Verify Code".equals(button.getText());
+            }
+        });
+
+        window.textBox("txtOTP").enterText(forgot.getOtp() + "");
+        Pause.pause(1001 * 60 * 2);
+        window.button("btnGetOTP").click();
+
+        FrameFixture newFrame = findFrame("Forgot").using(window.robot());
+        newFrame.label("lblTitle").requireText("Error code");
+    }
+
+    
+    
     @After
     public void tearDown() {
         window.cleanUp();
