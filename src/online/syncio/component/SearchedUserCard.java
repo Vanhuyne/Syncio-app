@@ -2,7 +2,7 @@ package online.syncio.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.ImageIcon;
 import online.syncio.dao.MongoDBConnect;
@@ -17,17 +17,10 @@ import org.bson.types.Binary;
 public class SearchedUserCard extends javax.swing.JPanel {
 
     private User user;
-    private UserDAO userDAO;
-    private PostDAO postDAO;
-
-    private Image defaultImage;
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
 
     public SearchedUserCard(User user) {
-        this.defaultImage = new javax.swing.ImageIcon(getClass()
-                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
-
-        MongoDBConnect.connect();
-        this.userDAO = MongoDBConnect.getUserDAO();
         this.user = user;
 
         initComponents();
@@ -37,8 +30,12 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setMaximumSize(new Dimension(290, 90));
         setMinimumSize(new Dimension(290, 90));
 
-        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
-        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
+        if (user.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
+        } else {
+            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
+        }
 
         lblUsername.setText(user.getUsername());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
@@ -46,8 +43,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }
 
     public SearchedUserCard(User user, Color backgroundColor) {
-        this.defaultImage = new javax.swing.ImageIcon(getClass()
-                .getResource("/online/syncio/resources/images/icons/profile_28px.png")).getImage();
+
         this.user = user;
 
         initComponents();
@@ -60,8 +56,12 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         lblAvatar.setBackground(backgroundColor);
 
-        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
-        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
+        if (user.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
+        } else {
+            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
+        }
 
         lblUsername.setText(user.getUsername());
         lblFollowers.setText("");
@@ -69,9 +69,6 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
     //notification
     public SearchedUserCard(String postID, String notificationText, String dateTime) {
-        MongoDBConnect.connect();
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.postDAO = MongoDBConnect.getPostDAO();
 
         initComponents();
 
@@ -87,12 +84,15 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         ImageIcon resizeImg;
         List<Binary> photos = post.getPhotoList();
+
         if (!photos.isEmpty()) {
             resizeImg = ImageHelper.resizing(ImageHelper.readBinaryAsBufferedImage(photos.get(0)), 60, 60);
             lblAvatar.setIcon(resizeImg);
+        } else if (user.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
         } else {
-            resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, 60));
+            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
         }
 
         lblUsername.setText(notificationText);

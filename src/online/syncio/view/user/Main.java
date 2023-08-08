@@ -1,6 +1,5 @@
 package online.syncio.view.user;
 
-import online.syncio.view.login.Login;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +19,7 @@ import online.syncio.controller.user.MainController;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
+import online.syncio.view.login.Login;
 
 public final class Main extends javax.swing.JFrame {
 
@@ -61,7 +61,7 @@ public final class Main extends javax.swing.JFrame {
         messagePanel = new MessagePanel();
 
         controller.recheckLoggedInUser();
-        
+
         addComponents();
     }
 

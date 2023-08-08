@@ -1,13 +1,12 @@
 package online.syncio.view.user;
 
-import online.syncio.view.user.Main;
-import online.syncio.view.user.CommentUI;
 import com.mongodb.MongoInterruptedException;
 import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,9 +26,8 @@ import online.syncio.view.login.Login;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
-    private PostDAO postDAO;
-    private UserDAO userDAO;
-    private String userID;
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private String postID;
     private Post post;
     private int imageIndex = 0;
@@ -38,10 +36,6 @@ public class PostDetailUI extends javax.swing.JPanel {
     private Main main = Main.getInstance();
 
     public PostDetailUI(String postID) {
-        MongoDBConnect.connect();
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.postDAO = MongoDBConnect.getPostDAO();
-
         this.postID = postID;
         post = postDAO.getByID(postID);
 
@@ -49,9 +43,8 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        //pnlCmtContainer.setPreferredSize(new Dimension(lblAccount.getWidth(), pnlCmtContainer.getHeight()));
 
-        showInfoPost(postID);
+        showInfoPost();
 
         changeStreamPosts = postDAO.getChangeStream();
 
@@ -123,10 +116,17 @@ public class PostDetailUI extends javax.swing.JPanel {
         }
     }
 
-    private void loadCmt(String postID) {
+    private void loadComments() {
         String userName = userDAO.getByID(post.getUserID()).getUsername();
         List<UserIDAndDateAndText> listCmt = post.getCommentList();
         lblAccount.setText(userName);
+
+        if (userDAO.getByUsername(userName).getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(userDAO.getByUsername(userName).getAvt());
+            lblAccount.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
+        } else {
+            lblAccount.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
+        }
 
         for (UserIDAndDateAndText cmt : listCmt) {
             pnlCmt.add(new CommentUI(userDAO.getByID(cmt.getUserID()).getUsername(), cmt.getText(), cmt.getDate()));
@@ -135,12 +135,12 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmt.repaint();
     }
 
-    private void showInfoPost(String postID) {
-        loadCmt(postID);
-        //GlassPanePopup.showPopup(new CommentUI2(user, "xinh vc"), "cmtui");
+    private void showInfoPost() {
+        loadComments();
+
         //raito
         pnlLeft.setSize(400, 400);
-        if (post.getPhotoList().size() > 0) {
+        if (!post.getPhotoList().isEmpty()) {
             if (post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
@@ -153,7 +153,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             pnlLeft.setImg(ImageHelper.readBinaryAsBufferedImage(post.getPhotoList().get(imageIndex)));
             int imgHeight = pnlLeft.getImgHeight();
 
-            if (imgHeight > 300) {
+            if (imgHeight > 400) {
                 pnlLeft.setPreferredSize(new Dimension(400, 400));
             } else if (imgHeight > 300) {
                 pnlLeft.setPreferredSize(new Dimension(400, 300));
@@ -169,7 +169,6 @@ public class PostDetailUI extends javax.swing.JPanel {
     }
 
     public void selectImage(int i) {
-//        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
             imageIndex = i;
             lblCountImage.setText(imageIndex + 1 + "/" + post.getPhotoList().size());
@@ -530,7 +529,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
             return;
         }
-        
+
         String cmt = txtCmt.getText().trim();
         String uID = LoggedInUser.getCurrentUser().getId().toString();
 
@@ -540,7 +539,7 @@ public class PostDetailUI extends javax.swing.JPanel {
             new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
             post = postDAO.getByID(postID);
             pnlCmt.removeAll();
-            loadCmt(postID);
+            loadComments();
         }
     }//GEN-LAST:event_btnSendActionPerformed
 

@@ -204,6 +204,9 @@
               <Properties>
                 <Property name="opaque" type="boolean" value="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblAvatarMousePressed"/>
+              </Events>
             </Component>
             <Component class="online.syncio.component.MyButton" name="btnFollow">
               <Properties>

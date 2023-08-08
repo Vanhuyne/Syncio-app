@@ -1,7 +1,7 @@
 package online.syncio.view.user;
 
-import online.syncio.view.login.Login;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
@@ -10,24 +10,20 @@ import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
+import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
 import online.syncio.utils.Validator;
-import online.syncio.view.admin.MainAdmin;
+import online.syncio.view.login.Login;
 
 public final class EditProfile extends JPanel {
 
-    private User currentUser;
-    private UserDAO userDAO;
+    private User currentUser = LoggedInUser.getCurrentUser();
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
     public EditProfile() {
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.currentUser = LoggedInUser.getCurrentUser();
-
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        if (currentUser != null) {
-            loadUserData();
-        }
+        loadUserData();
     }
 
     public void loadUserData() {
@@ -35,6 +31,13 @@ public final class EditProfile extends JPanel {
         txtUsername.setText(currentUser.getUsername());
         txtPassword.setText(currentUser.getPassword());
         txtEmail.setText(currentUser.getEmail());
+
+        if (currentUser.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(currentUser.getAvt());
+            lblAccount.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
+        } else {
+            lblAccount.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
+        }
 
         try {
             txtBio.setText(currentUser.getBio());
@@ -245,18 +248,17 @@ public final class EditProfile extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
-        if(OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
+        if (OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
             //admin
             LoggedInUser.logOut();
             OtherHelper.getMainAdmin(this).dispose();
             new Login().setVisible(true);
-        }
-        else if(LoggedInUser.getCurrentUser() != null) {
+        } else if (LoggedInUser.getCurrentUser() != null) {
             //user
             if (OtherHelper.getMainFrame(this).getGOLBAL_DATE() != null) {
                 OtherHelper.getMainFrame(this).getPnlNotifications().getController().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
             }
-            
+
             LoggedInUser.logOut();
             OtherHelper.deleteSessionValue("LOGGED_IN_USER");
             new Login().setVisible(true);

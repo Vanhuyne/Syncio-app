@@ -234,6 +234,12 @@
               <Dimension value="[255, 24]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblUsernameMousePressed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lblUsername.setCursor(new Cursor(Cursor.HAND_CURSOR));"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblDateCreated">
           <Properties>
@@ -387,6 +393,12 @@
             </Property>
             <Property name="text" type="java.lang.String" value="sanhvc"/>
           </Properties>
+          <Events>
+            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblUsername2MousePressed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="lblUsername2.setCursor(new Cursor(Cursor.HAND_CURSOR));"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

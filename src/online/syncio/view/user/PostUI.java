@@ -1,7 +1,9 @@
 package online.syncio.view.user;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -14,6 +16,7 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
+import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
@@ -22,25 +25,22 @@ import online.syncio.view.login.Login;
 
 public class PostUI extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
 
-    private PostDAO postDAO;
-    private UserDAO userDAO;
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private String userID;
     private String postID;
     private Post post;
-    private int totalLike;
     private int imageIndex = 0;
-    private boolean isClick = true;
 
     ImageIcon liked = new ImageIcon();
     ImageIcon unliked = new ImageIcon();
 
     public PostUI(String postID, String userID) {
-        this.userDAO = MongoDBConnect.getUserDAO();
-        this.postDAO = MongoDBConnect.getPostDAO();
-
         this.userID = userID;
         this.postID = postID;
+
         post = postDAO.getByID(postID);
+
         initComponents();
 
         try {
@@ -50,16 +50,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
             ex.printStackTrace();
         }
 
-        showInfoPost(postID);
+        showInfoPost();
     }
 
     public boolean isLiked() {
         // Check if any documents matched the condition
-        if (post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
-            return true;
-        } else {
-            return false;
-        }
+        return post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID));
     }
 
     public void updateLike() {
@@ -84,11 +80,18 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         }
     }
 
-    private void showInfoPost(String postID) {
+    private void showInfoPost() {
         loadReport();
-        lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
-        lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
+        lblUsername.setText(userDAO.getByID(userID).getUsername());
+        lblUsername2.setText(userDAO.getByID(userID).getUsername());
         lblDateCreated.setText(post.getDatePosted());
+
+        try {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(userDAO.getByID(userID).getAvt());
+            lblUsername.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
+        } catch (NullPointerException e) {
+            lblUsername.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
+        }
 
         if (!post.getCaption().equals("")) {
             txtCaption.setText("");
@@ -105,7 +108,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
         //raito
         pnlImages.setSize(400, 400);
-        if (post.getPhotoList().size() > 0) {
+        if (!post.getPhotoList().isEmpty()) {
             if (post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
@@ -249,6 +252,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         lblUsername.setMaximumSize(new java.awt.Dimension(255, 24));
         lblUsername.setMinimumSize(new java.awt.Dimension(255, 24));
         lblUsername.setPreferredSize(new java.awt.Dimension(255, 24));
+        lblUsername.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblUsernameMousePressed(evt);
+            }
+        });
 
         lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
         lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -330,6 +339,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
         lblUsername2.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         lblUsername2.setText("sanhvc");
+        lblUsername2.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblUsername2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblUsername2MousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlActionLayout = new javax.swing.GroupLayout(pnlAction);
         pnlAction.setLayout(pnlActionLayout);
@@ -400,7 +415,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
             GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
             return;
         }
-        
+
         updateLike();
     }//GEN-LAST:event_lblHeartMousePressed
 
@@ -427,7 +442,7 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
             GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
             return;
         }
-        
+
         Options options = new Options();
         if (lblReport.getText().equals("Reported")) {
             return;
@@ -435,6 +450,20 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         options.setReasonSelectedCallback(this);
         GlassPanePopup.showPopup(options, "report");
     }//GEN-LAST:event_lblReportMousePressed
+
+    private void lblUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsernameMousePressed
+        GlassPanePopup.closePopup("postdetail");
+        Main.getInstance().showTab("profile");
+        User user = userDAO.getByUsername(lblUsername.getText().trim());
+        Main.getInstance().profile.getController().loadProfile(user);
+    }//GEN-LAST:event_lblUsernameMousePressed
+
+    private void lblUsername2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsername2MousePressed
+        GlassPanePopup.closePopup("postdetail");
+        Main.getInstance().showTab("profile");
+        User user = userDAO.getByUsername(lblUsername.getText().trim());
+        Main.getInstance().profile.getController().loadProfile(user);
+    }//GEN-LAST:event_lblUsername2MousePressed
 
     @Override
     public void onReasonSelected(int reason) {

@@ -1,25 +1,23 @@
 package online.syncio.component;
 
+import java.awt.AlphaComposite;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import net.miginfocom.layout.BoundSize;
 import net.miginfocom.layout.ComponentWrapper;
@@ -102,11 +100,10 @@ public class GlassPanePopup {
 
     public static void closePopup(int index) {
         index = instance.getLayerPane().getComponentCount() - 1 - index;
-        if (index >= 0 && index < instance.getLayerPane().getComponentCount()) {
-            if (instance.getLayerPane().getComponent(index) instanceof Popup) {
-                Popup popup = (Popup) instance.getLayerPane().getComponent(index);
-                popup.setShowPopup(false);
-            }
+
+        if (index >= 0 && index < instance.getLayerPane().getComponentCount()
+                && instance.getLayerPane().getComponent(index) instanceof Popup popup) {
+            popup.setShowPopup(false);
         }
     }
 
@@ -116,19 +113,16 @@ public class GlassPanePopup {
 
     public static void closePopup(String name) {
         for (Component com : instance.layerPane.getComponents()) {
-            if (com.getName() != null && com.getName().equals(name)) {
-                if (com instanceof Popup) {
-                    Popup popup = (Popup) com;
-                    popup.setShowPopup(false);
-                }
+            if (com.getName() != null && com.getName().equals(name) && com instanceof Popup) {
+                Popup popup = (Popup) com;
+                popup.setShowPopup(false);
             }
         }
     }
 
     public static void closePopupAll() {
         for (Component com : instance.layerPane.getComponents()) {
-            if (com instanceof Popup) {
-                Popup popup = (Popup) com;
+            if (com instanceof Popup popup) {
                 popup.setShowPopup(false);
             }
         }

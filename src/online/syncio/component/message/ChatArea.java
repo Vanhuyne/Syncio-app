@@ -10,6 +10,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javaswingdev.FontAwesome;
@@ -34,6 +35,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.utils.ImageHelper;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.MessagePanel;
 
@@ -45,12 +47,12 @@ public class ChatArea extends JPanel {
     private AnimationFloatingButton animationFloatingButton;
     private List<ChatEvent> events = new ArrayList<>();
 
-    private UserDAO userDAO;
-    private PostDAO postDAO;
-    private MessageDAO messageDAO;
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
+    private PostDAO postDAO = MongoDBConnect.getPostDAO();
+    private MessageDAO messageDAO = MongoDBConnect.getMessageDAO();
     private FindIterable<MessagePanel> messageList;
 
-    private User currentUser;
+    private User currentUser = LoggedInUser.getCurrentUser();
     private User messagingUser;
 
     public void addChatEvent(ChatEvent event) {
@@ -58,15 +60,8 @@ public class ChatArea extends JPanel {
     }
 
     public ChatArea() {
-
         init();
         initAnimator();
-
-        userDAO = MongoDBConnect.getUserDAO();
-        postDAO = MongoDBConnect.getPostDAO();
-        messageDAO = MongoDBConnect.getMessageDAO();
-
-        currentUser = LoggedInUser.getCurrentUser();
 
         addEventsAndRunnable();
     }
@@ -190,12 +185,25 @@ public class ChatArea extends JPanel {
 
         if (messageList != null) {
             Thread thread = new Thread(() -> {
+                ImageIcon defaultAvatar = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
+
                 for (Message m : messageList) {
                     SwingUtilities.invokeLater(() -> {
                         if (m.getRecipient().equalsIgnoreCase(messagingUser.getUsername())) {
-                            addChatBox(m, ChatBox.BoxType.RIGHT);
+                            if (currentUser.getAvt() != null) {
+                                BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(currentUser.getAvt());
+                                addChatBox(m, ImageHelper.toRoundImage(bufferedImage, 40), ChatBox.BoxType.RIGHT);
+                            } else {
+                                addChatBox(m, defaultAvatar, ChatBox.BoxType.RIGHT);
+                            }
+
                         } else {
-                            addChatBox(m, ChatBox.BoxType.LEFT);
+                            if (messagingUser.getAvt() != null) {
+                                BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(messagingUser.getAvt());
+                                addChatBox(m, ImageHelper.toRoundImage(bufferedImage, 40), ChatBox.BoxType.LEFT);
+                            } else {
+                                addChatBox(m, defaultAvatar, ChatBox.BoxType.LEFT);
+                            }
                         }
                     });
                 }
@@ -321,11 +329,13 @@ public class ChatArea extends JPanel {
 
     public void addChatBox(Message message, ImageIcon avatar, ChatBox.BoxType type) {
         int values = scrollBody.getVerticalScrollBar().getValue();
+
         if (type == ChatBox.BoxType.LEFT) {
             body.add(new ChatBox(type, avatar, message), "width ::80%");
         } else {
             body.add(new ChatBox(type, avatar, message), "al right,width ::80%");
         }
+
         SwingUtilities.invokeLater(() -> {
             body.revalidate();
             scrollBody.getVerticalScrollBar().setValue(values);
