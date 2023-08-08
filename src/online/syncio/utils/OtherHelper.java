@@ -3,7 +3,7 @@ package online.syncio.utils;
 import java.awt.Component;
 import java.util.prefs.Preferences;
 import javax.swing.SwingUtilities;
-import online.syncio.view.Main;
+import online.syncio.view.user.Main;
 
 /**
  * Utility class providing helper methods for various operations.

@@ -1,9 +1,9 @@
 package online.syncio.controller;
 
+import online.syncio.controller.user.ForgotController;
 import javax.swing.JButton;
 import static org.mockito.Mockito.*;
-import online.syncio.dao.UserDAO;
-import online.syncio.view.Forgot;
+import online.syncio.view.login.Forgot;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import static org.assertj.swing.finder.WindowFinder.findFrame;
@@ -18,8 +18,6 @@ public class ForgotTest {
 
     private FrameFixture window;
     private Forgot forgotView;
-    private ForgotController forgotController;
-    private UserDAO userDAO;
 
     @Before
     public void setUp() {
@@ -27,22 +25,18 @@ public class ForgotTest {
         window = new FrameFixture(forgotView);
         window.show(); // shows the frame to test
 
-        forgotController = new ForgotController(forgotView);
     }
-    
-    
-    
+
     @Test
     public void shouldShowErrorDialogOnEmptyEmail() {
         testErrorDialog("", "Error");
     }
-    
+
     @Test
     public void shouldShowErrorDialogOnInvalidEmail() {
         testErrorDialog("invalidEmail", "Error");
     }
-    
-    
+
     @Test
     public void shouldShowErrorDialogOnIncorrectOTP() {
         String email = "accountToTest@gmail.com";
@@ -62,7 +56,7 @@ public class ForgotTest {
         // Enter OTP and click Verify button
         window.textBox("txtEmail").enterText(email);
         window.button("btnGetOTP").click();
-        
+
         // custom search criteria (the button's text)
         JButtonFixture button = window.button(new GenericTypeMatcher<JButton>(JButton.class) {
             @Override
@@ -73,11 +67,11 @@ public class ForgotTest {
 
         window.textBox("txtOTP").enterText("000000");
         window.button("btnGetOTP").click();
-        
+
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText("Error code");
     }
-    
+
     // Add more test cases for specific scenarios
     private void testErrorDialog(String email, String expectedErrorMessage) {
         window.textBox("txtEmail").enterText(email);
@@ -87,9 +81,7 @@ public class ForgotTest {
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText(expectedErrorMessage);
     }
-    
-    
-    
+
     @Test
     public void shouldChangePasswordOnCorrectOTP() {
         String email = "accountToTest@gmail.com";
@@ -109,7 +101,7 @@ public class ForgotTest {
         // Enter OTP and click Verify button
         window.textBox("txtEmail").enterText(email);
         window.button("btnGetOTP").click();
-        
+
         // custom search criteria (the button's text)
         JButtonFixture button = window.button(new GenericTypeMatcher<JButton>(JButton.class) {
             @Override
@@ -120,7 +112,7 @@ public class ForgotTest {
 
         window.textBox("txtOTP").enterText(forgot.getOtp() + "");
         window.button("btnGetOTP").click();
-        
+
         // custom search criteria (the button's text)
         JButtonFixture buttonReset = window.button(new GenericTypeMatcher<JButton>(JButton.class) {
             @Override
@@ -128,19 +120,17 @@ public class ForgotTest {
                 return "Reset Password".equals(button.getText());
             }
         });
-        
+
         window.textBox("txtPassword").enterText("1");
         window.textBox("txtPasswordConfirm").enterText("1");
         window.button("btnGetOTP").click();
-        
+
         FrameFixture mainFrame = findFrame("Login").using(window.robot());
     }
 
-    
-    
     @After
     public void tearDown() {
         window.cleanUp();
     }
-    
+
 }

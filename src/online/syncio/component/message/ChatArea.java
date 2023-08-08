@@ -34,8 +34,8 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
-import online.syncio.view.Main;
-import online.syncio.view.MessagePanel;
+import online.syncio.view.user.Main;
+import online.syncio.view.user.MessagePanel;
 
 public class ChatArea extends JPanel {
 
