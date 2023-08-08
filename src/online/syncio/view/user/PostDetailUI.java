@@ -23,6 +23,7 @@ import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
+import online.syncio.utils.TextHelper;
 import online.syncio.view.login.Login;
 
 public class PostDetailUI extends javax.swing.JPanel {
@@ -532,6 +533,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         }
         
         String cmt = txtCmt.getText().trim();
+        cmt = TextHelper.censorBadWords(cmt);
         String uID = LoggedInUser.getCurrentUser().getId().toString();
 
         if (postDAO.addComment(cmt, uID, postID)) {

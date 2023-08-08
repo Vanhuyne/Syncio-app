@@ -11,6 +11,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.TextHelper;
 import online.syncio.view.user.CreateNewPost;
 import org.bson.types.Binary;
 
@@ -34,6 +35,8 @@ public class CreateNewPostController {
             if (caption.equalsIgnoreCase("Write a caption...")) {
                 caption = "";
             }
+            
+            caption = TextHelper.censorBadWords(caption);
         } catch (BadLocationException ex) {
             ex.printStackTrace();
         }
