@@ -15,6 +15,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.OtherHelper;
 
 public class Profile extends JPanel {
 
@@ -237,8 +238,14 @@ public class Profile extends JPanel {
 
     private void btnEditProfileMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileMessageActionPerformed
         if (btnEditProfileMessage.getText().equalsIgnoreCase("edit profile")) {
-            CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
-            c.show(this.main.getPnlTabContent(), "editprofile");
+            if(OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
+                CardLayout c = (CardLayout) OtherHelper.getMainAdmin(this).getPnlTabContent().getLayout();
+                c.show(OtherHelper.getMainAdmin(this).getPnlTabContent(), "editprofile");
+            }
+            else {
+                CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
+                c.show(this.main.getPnlTabContent(), "editprofile");
+            }
         }
 
         if (btnEditProfileMessage.getText().equalsIgnoreCase("message")) {

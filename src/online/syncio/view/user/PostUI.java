@@ -6,15 +6,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyDialog;
 import online.syncio.component.MyLabel;
 import online.syncio.component.Options;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.OtherHelper;
 import online.syncio.utils.TextHelper;
+import online.syncio.view.login.Login;
 
 public class PostUI extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
 
@@ -390,6 +394,13 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
+        if (LoggedInUser.getCurrentUser() == null && OtherHelper.getMainFrame(this) != null) {
+            new Login().setVisible(true);
+            OtherHelper.getMainFrame(this).dispose();
+            GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+            return;
+        }
+        
         updateLike();
     }//GEN-LAST:event_lblHeartMousePressed
 
@@ -410,6 +421,13 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
     }//GEN-LAST:event_lblViewAllCmtMousePressed
 
     private void lblReportMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblReportMousePressed
+        if (LoggedInUser.getCurrentUser() == null && OtherHelper.getMainFrame(this) != null) {
+            new Login().setVisible(true);
+            OtherHelper.getMainFrame(this).dispose();
+            GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+            return;
+        }
+        
         Options options = new Options();
         if (lblReport.getText().equals("Reported")) {
             return;

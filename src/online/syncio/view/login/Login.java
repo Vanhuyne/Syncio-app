@@ -299,8 +299,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
 
     private void lblContinueMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblContinueMousePressed
-        dispose();
         new Main().setVisible(true);
+        dispose();
     }//GEN-LAST:event_lblContinueMousePressed
 
     public static void main(String args[]) {

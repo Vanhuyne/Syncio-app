@@ -86,7 +86,7 @@ public class PostDAOImpl implements PostDAO {
 
     @Override
     public List<Post> getAllByUserID(String userID) {
-        Bson filter = eq("userID", userID);
+        Bson filter = and(eq("userID", userID), eq("flag", 0));
         FindIterable<Post> posts = postCollection.find(filter).sort(Sorts.descending("datePosted"));
         return posts.into(new ArrayList<>()); // Convert FindIterable directly to List
     }
@@ -121,7 +121,7 @@ public class PostDAOImpl implements PostDAO {
         followerIds.add(user.getId().toString());
 
         // Create a filter to find posts where the userID matches any of the follower IDs
-        Bson filter = in("userID", followerIds);
+        Bson filter = and(in("userID", followerIds), eq("flag", 0));
 
         // Execute the query and return the result
         return posts.find(filter).sort(Sorts.descending("datePosted"));
@@ -145,18 +145,24 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public FindIterable<Post> getAllPostOther(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
+        Bson filter;
+        
+        if(user != null) {
+            // Get the list of follower IDs from the user object
+            List<String> followerIds = new ArrayList<>();
+            for (UserIDAndDate userIDAndDate : user.getFollowing()) {
+                followerIds.add(userIDAndDate.getUserID());
+            }
 
-        // Get the list of follower IDs from the user object
-        List<String> followerIds = new ArrayList<>();
-        for (UserIDAndDate userIDAndDate : user.getFollowing()) {
-            followerIds.add(userIDAndDate.getUserID());
+            // add itself
+            followerIds.add(user.getId().toString());
+
+            // Create a filter to find posts where the userID matches any of the follower IDs
+            filter = and(nin("userID", followerIds), eq("flag", 0));
         }
-
-        // add itself
-        followerIds.add(user.getId().toString());
-
-        // Create a filter to find posts where the userID matches any of the follower IDs
-        Bson filter = nin("userID", followerIds);
+        else {
+            filter = eq("flag", 0);
+        }
 
         // Execute the query and return the result
         return posts.find(filter).sort(Sorts.descending("datePosted"));
@@ -164,7 +170,7 @@ public class PostDAOImpl implements PostDAO {
 
     @Override
     public FindIterable<Post> getAllByUserIDFindIterable(String userID) {
-        Bson filter = eq("userID", userID);
+        Bson filter = and(eq("userID", userID), eq("flag", 0));
         return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
 
