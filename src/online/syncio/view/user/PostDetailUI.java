@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyDialog;
 import online.syncio.component.MyNotification;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
@@ -20,6 +22,8 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
+import online.syncio.utils.OtherHelper;
+import online.syncio.view.login.Login;
 
 public class PostDetailUI extends javax.swing.JPanel {
 
@@ -520,6 +524,13 @@ public class PostDetailUI extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPrevActionPerformed
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        if (LoggedInUser.getCurrentUser() == null && OtherHelper.getMainFrame(this) != null) {
+            new Login().setVisible(true);
+            OtherHelper.getMainFrame(this).dispose();
+            GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
+            return;
+        }
+        
         String cmt = txtCmt.getText().trim();
         String uID = LoggedInUser.getCurrentUser().getId().toString();
 

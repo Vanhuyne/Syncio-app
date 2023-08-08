@@ -53,7 +53,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         for (MyButton btn : btnMenuList) {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
-                String name1 = btn1.getName().trim();
+                String name1 = btn1.getName().trim().toLowerCase();
                 if (!LoggedInUser.isAdmin()) {
                     dispose();
                     new Login().setVisible(true);
@@ -163,7 +163,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnUser.setMaximumSize(new java.awt.Dimension(200, 50));
         btnUser.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnUser.setName("managementuser"); // NOI18N
+        btnUser.setName("usermanager"); // NOI18N
         btnUser.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnUser);
 
@@ -176,7 +176,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnHiddenPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnHiddenPost.setMaximumSize(new java.awt.Dimension(200, 50));
         btnHiddenPost.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnHiddenPost.setName("managementhiddenpost"); // NOI18N
+        btnHiddenPost.setName("HiddenPost"); // NOI18N
         btnHiddenPost.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnHiddenPost);
 
@@ -189,7 +189,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnReportedPost.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnReportedPost.setMaximumSize(new java.awt.Dimension(200, 50));
         btnReportedPost.setMinimumSize(new java.awt.Dimension(200, 50));
-        btnReportedPost.setName("managementreportedpost"); // NOI18N
+        btnReportedPost.setName("ReportedPost"); // NOI18N
         btnReportedPost.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnReportedPost);
 

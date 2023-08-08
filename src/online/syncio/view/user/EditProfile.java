@@ -12,6 +12,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.OtherHelper;
 import online.syncio.utils.Validator;
+import online.syncio.view.admin.MainAdmin;
 
 public final class EditProfile extends JPanel {
 
@@ -244,14 +245,23 @@ public final class EditProfile extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
-        if (OtherHelper.getMainFrame(this).getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
-            OtherHelper.getMainFrame(this).getPnlNotifications().getController().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
+        if(OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
+            //admin
+            LoggedInUser.logOut();
+            OtherHelper.getMainAdmin(this).dispose();
+            new Login().setVisible(true);
         }
-
-        LoggedInUser.logOut();
-        OtherHelper.deleteSessionValue("LOGGED_IN_USER");
-        Main.getInstance().dispose();
-        new Login().setVisible(true);
+        else if(LoggedInUser.getCurrentUser() != null) {
+            //user
+            if (OtherHelper.getMainFrame(this).getGOLBAL_DATE() != null) {
+                OtherHelper.getMainFrame(this).getPnlNotifications().getController().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
+            }
+            
+            LoggedInUser.logOut();
+            OtherHelper.deleteSessionValue("LOGGED_IN_USER");
+            new Login().setVisible(true);
+            Main.getInstance().dispose();
+        }
     }//GEN-LAST:event_lblLogoutMousePressed
 
     private void lblChangeUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeUsernameMousePressed

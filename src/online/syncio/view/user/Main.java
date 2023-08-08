@@ -100,8 +100,8 @@ public final class Main extends javax.swing.JFrame {
 
                 if ((name1.equals("message") || (name1.equals("notification")) || (name1.equals("profile")) || (name1.equals("create"))) && LoggedInUser.getCurrentUser() == null) {
                     //chua login
-                    dispose();
                     new Login().setVisible(true);
+                    dispose();
                     if (!name1.equals("profile")) {
                         //bntProfile is Login, user click on to login >< show popup
                         GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
