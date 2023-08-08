@@ -1,6 +1,6 @@
 package online.syncio.controller;
 
-import online.syncio.view.Login;
+import online.syncio.view.login.Login;
 import org.assertj.swing.edt.GuiActionRunner;
 import static org.assertj.swing.finder.WindowFinder.findFrame;
 import org.assertj.swing.fixture.FrameFixture;
@@ -15,28 +15,24 @@ public class LoginTest {
 
     @Before
     public void setUp() {
-      Login frame = GuiActionRunner.execute(() -> new Login());
-      window = new FrameFixture(frame);
-      window.show(); // shows the frame to test
+        Login frame = GuiActionRunner.execute(() -> new Login());
+        window = new FrameFixture(frame);
+        window.show(); // shows the frame to test
     }
 
-    
-    
     @Test
     public void shouldOpenMainWhenClickingButton() {
         String username = "accountToTest";
         String password = "1";
-        
+
         window.textBox("txtUser").enterText(username);
         window.textBox("txtPassword").enterText(password);
         window.button("btnLogin").click();
-      
+
         // now the interesting part, we need to wait till the main window is shown.
         FrameFixture mainFrame = findFrame("Main").withTimeout(10000).using(window.robot());
     }
-    
-    
-    
+
     @Test
     public void shouldShowErrorDialogOnIncorrectUsernameAndPassword() {
         testErrorDialog("accountToTest1", "123", "Incorrect Username or Password");
@@ -51,7 +47,7 @@ public class LoginTest {
     public void shouldShowErrorDialogOnEmptyPassword() {
         testErrorDialog("accountToTest", "", "Error");
     }
-    
+
     @Test
     public void shouldShowErrorDialogOnIncorrectUsername() {
         testErrorDialog("accountToTest123", "1", "Incorrect Username or Password");
@@ -67,8 +63,6 @@ public class LoginTest {
         testErrorDialog("", "", "Error");
     }
 
-    
-    
     private void testErrorDialog(String username, String password, String errorTitle) {
         window.textBox("txtUser").enterText(username);
         window.textBox("txtPassword").enterText(password);
@@ -78,12 +72,10 @@ public class LoginTest {
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText(errorTitle);
     }
-    
-    
-    
+
     @After
     public void tearDown() {
-      window.cleanUp();
+        window.cleanUp();
     }
-    
+
 }

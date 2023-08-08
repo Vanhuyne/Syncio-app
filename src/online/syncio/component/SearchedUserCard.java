@@ -11,7 +11,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.view.PostDetailUI;
+import online.syncio.view.user.PostDetailUI;
 import org.bson.types.Binary;
 
 public class SearchedUserCard extends javax.swing.JPanel {

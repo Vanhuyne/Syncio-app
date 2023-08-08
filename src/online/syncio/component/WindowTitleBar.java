@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.model.LoggedInUser;
 import online.syncio.utils.OtherHelper;
-import online.syncio.view.Main;
+import online.syncio.view.user.Main;
 
 /**
  * The WindowTitleBar class represents a custom title bar for a JFrame window.

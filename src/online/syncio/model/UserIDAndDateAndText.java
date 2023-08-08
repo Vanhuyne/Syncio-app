@@ -1,11 +1,9 @@
 package online.syncio.model;
 
 import java.util.Objects;
-import online.syncio.utils.TimeHelper;
 
-public class UserIDAndDateAndText {
-    public String userID;
-    public String date = TimeHelper.getCurrentDateTime();
+public class UserIDAndDateAndText extends UserIDAndDate {
+
     public String text;
 
     public UserIDAndDateAndText() {
@@ -19,23 +17,11 @@ public class UserIDAndDateAndText {
     public UserIDAndDateAndText(String userID) {
         this.userID = userID;
     }
-    
+
     public UserIDAndDateAndText(String userID, String date, String text) {
         this.userID = userID;
         this.date = date;
         this.text = text;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public String getDate() {
-        return date;
     }
 
     public String getText() {
@@ -46,12 +32,6 @@ public class UserIDAndDateAndText {
         this.text = text;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-    
-    
-    
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("UserIDAndDate{");
@@ -60,13 +40,15 @@ public class UserIDAndDateAndText {
         sb.append('}');
         return sb.toString();
     }
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         UserIDAndDateAndText userIDAndDate = (UserIDAndDateAndText) o;
         return Objects.equals(userID, userIDAndDate.userID) && Objects.equals(date, userIDAndDate.date);
     }

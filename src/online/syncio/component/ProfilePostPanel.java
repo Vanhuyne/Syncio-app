@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import online.syncio.model.Post;
 import online.syncio.utils.ImageHelper;
-import online.syncio.view.PostDetailUI;
+import online.syncio.view.user.PostDetailUI;
 import org.bson.types.Binary;
 
 public class ProfilePostPanel extends JPanel {

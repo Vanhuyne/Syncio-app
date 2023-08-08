@@ -1,10 +1,11 @@
 package online.syncio.controller;
 
-import static org.mockito.Mockito.*;
+import online.syncio.controller.user.SignupController;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
 import online.syncio.utils.TextHelper;
-import online.syncio.view.Signup;
+import online.syncio.view.login.Signup;
 import org.assertj.swing.edt.GuiActionRunner;
 import static org.assertj.swing.finder.WindowFinder.findFrame;
 import org.assertj.swing.fixture.FrameFixture;
@@ -12,25 +13,26 @@ import org.assertj.swing.fixture.JLabelFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 public class SignupTest {
 
     private FrameFixture window;
 
+    private UserDAO userDAO = MongoDBConnect.getUserDAO();
+
     @Before
     public void setUp() {
-      Signup frame = GuiActionRunner.execute(() -> new Signup());
-      window = new FrameFixture(frame);
-      window.show(); // shows the frame to test
+        Signup frame = GuiActionRunner.execute(() -> new Signup());
+        window = new FrameFixture(frame);
+        window.show(); // shows the frame to test
     }
 
-    
-    
     @Test
     public void shouldShowErrorDialogOnEmptyEmail() {
         testErrorDialog("", "testuser", "mypassword", "mypassword", "Error");
     }
-    
+
     @Test
     public void shouldShowErrorDialogOnInvalidEmail() {
         testErrorDialog("invalidEmail", "testuser", "mypassword", "mypassword", "Error");
@@ -40,7 +42,7 @@ public class SignupTest {
     public void shouldShowErrorDialogOnInvalidUsername() {
         testErrorDialog("test@example.com", "user123*", "mypassword", "mypassword", "Error");
     }
-    
+
     @Test
     public void shouldShowErrorDialogOnEmptyUsername() {
         testErrorDialog("test@example.com", "", "mypassword", "mypassword", "Error");
@@ -60,7 +62,7 @@ public class SignupTest {
     public void shouldShowErrorDialogOnPasswordMismatch() {
         testErrorDialog("test@example.com", "testuser", "password1", "password2", "Error");
     }
-    
+
     // Add more test cases for specific scenarios
     private void testErrorDialog(String email, String username, String password, String passwordConfirm, String expectedErrorMessage) {
         window.textBox("txtEmail").enterText(email);
@@ -73,9 +75,7 @@ public class SignupTest {
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText(expectedErrorMessage);
     }
-    
-    
-    
+
     @Test
     public void shouldShowErrorDialogOnExistingEmail() {
         String existingEmail = "accountToTest@gmail.com";
@@ -83,6 +83,7 @@ public class SignupTest {
 
         // Set up the userDAO to return existing username and email
         Signup signup = window.targetCastedTo(Signup.class);
+
         SignupController signupController = new SignupController(signup) {
             @Override
             public void signupAuthentication(int type) {
@@ -106,9 +107,7 @@ public class SignupTest {
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText("Email Address Already Taken");
     }
-    
-    
-    
+
     @Test
     public void shouldShowErrorDialogOnIncorrectOTP() {
         String email = "fancyaccountemailtotest@example.com";
@@ -132,11 +131,11 @@ public class SignupTest {
         window.textBox("txtPassword").enterText("mypassword");
         window.textBox("txtPasswordConfirm").enterText("mypassword");
         window.button("btnSignup").click();
-        
+
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText("Email Sent with OTP");
         window.button("btnDismiss").click();
-        
+
         // Enter incorrect OTP and click Verify button
         window.textBox("txtUsername").setText("000000");
         window.button("btnSignup").click();
@@ -145,7 +144,6 @@ public class SignupTest {
         lblTitle.requireText("Wrong OTP Code");
     }
 
-    
     @Test
     public void shouldCreateAccountOnCorrectOTP() {
         String email = "fancyaccountemailtotest@example.com"; //delete in mongodb before run
@@ -176,25 +174,23 @@ public class SignupTest {
         window.textBox("txtPassword").enterText("mypassword");
         window.textBox("txtPasswordConfirm").enterText("mypassword");
         window.button("btnSignup").click();
-        
+
         JLabelFixture lblTitle = window.label("lblTitle");
         lblTitle.requireText("Email Sent with OTP");
         window.button("btnDismiss").click();
-        
+
         // Enter correct OTP and click Verify button
         window.textBox("txtUsername").setText(signup.getOtp() + "");
         window.button("btnSignup").click();
-        
+
         FrameFixture mainFrame = findFrame("Login").using(window.robot());
         lblTitle = mainFrame.label("lblTitle");
         lblTitle.requireText("Account Created");
     }
-    
-    
 
     @After
     public void tearDown() {
         window.cleanUp();
     }
-    
+
 }
