@@ -23,7 +23,7 @@ public final class EditProfile extends JPanel {
     public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
-        loadUserData();
+        if(LoggedInUser.getCurrentUser() != null) loadUserData();
     }
 
     public void loadUserData() {
@@ -105,10 +105,12 @@ public final class EditProfile extends JPanel {
         txtUsername.setBackground(new java.awt.Color(239, 239, 239));
         txtUsername.setText("duong_user");
         txtUsername.setBorderColor(new java.awt.Color(239, 239, 239));
+        txtUsername.setName("txtUsername"); // NOI18N
 
         lblChangeUsername.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeUsername.setText("Change");
         lblChangeUsername.setFontBold(2);
+        lblChangeUsername.setName("lblChangeUsername"); // NOI18N
         lblChangeUsername.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblChangeUsernameMousePressed(evt);
@@ -125,6 +127,7 @@ public final class EditProfile extends JPanel {
         txtEmail.setText("duongcontact@gmail.com");
         txtEmail.setBorderColor(new java.awt.Color(239, 239, 239));
         txtEmail.setEnabled(false);
+        txtEmail.setName("txtEmail"); // NOI18N
 
         lblBio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblBio.setText("Bio");
@@ -132,6 +135,7 @@ public final class EditProfile extends JPanel {
         lblChangeBio.setForeground(new java.awt.Color(0, 149, 246));
         lblChangeBio.setText("Change");
         lblChangeBio.setFontBold(2);
+        lblChangeBio.setName("lblChangeBio"); // NOI18N
         lblChangeBio.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblChangeBioMousePressed(evt);
@@ -145,12 +149,14 @@ public final class EditProfile extends JPanel {
         txtBio.setRows(4);
         txtBio.setText("fancy bio\n");
         txtBio.setBorderColor(new java.awt.Color(239, 239, 239));
+        txtBio.setName("txtBio"); // NOI18N
         jScrollPane1.setViewportView(txtBio);
 
         txtPassword.setEditable(false);
         txtPassword.setText("matKhauSieuCapVjpPr0");
         txtPassword.setBorderColor(new java.awt.Color(239, 239, 239));
         txtPassword.setEnabled(false);
+        txtPassword.setName("txtPassword"); // NOI18N
 
         lblPasswordQuestion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/question_16px.png"))); // NOI18N
         lblPasswordQuestion.setToolTipText("Email cannot be updated");
@@ -274,6 +280,12 @@ public final class EditProfile extends JPanel {
             GlassPanePopup.showPopup(new MyDialog("Error", errors), "dialog");
         } else {
             //update
+            //check username
+            if (userDAO.checkUsername(username)) {
+                GlassPanePopup.showPopup(new MyDialog("Username Already Taken", "The username you've chosen is already taken.\nPlease select a different username."), "dialog");
+                return;
+            }
+            
             int result = userDAO.updateUsernameByEmail(username, txtEmail.getText());
             if (result <= 0) {
                 GlassPanePopup.showPopup(new MyDialog("Error", "An error occurs when updating your Username"), "dialog");
