@@ -33,36 +33,38 @@ public class LoginTest {
         FrameFixture mainFrame = findFrame("Main").withTimeout(10000).using(window.robot());
     }
 
+    
     @Test
     public void shouldShowErrorDialogOnIncorrectUsernameAndPassword() {
         testErrorDialog("accountToTest1", "123", "Incorrect Username or Password");
     }
-
+    
     @Test
-    public void shouldShowErrorDialogOnIncorrectPassword() {
-        testErrorDialog("accountToTest", "123", "Incorrect Username or Password");
-    }
-
-    @Test
-    public void shouldShowErrorDialogOnEmptyPassword() {
-        testErrorDialog("accountToTest", "", "Error");
+    public void shouldShowErrorDialogOnEmptyUsernameAndPassword() {
+        testErrorDialog("", "", "Error");
     }
 
     @Test
     public void shouldShowErrorDialogOnIncorrectUsername() {
         testErrorDialog("accountToTest123", "1", "Incorrect Username or Password");
     }
+    
+    @Test
+    public void shouldShowErrorDialogOnIncorrectPassword() {
+        testErrorDialog("accountToTest", "123", "Incorrect Username or Password");
+    }
 
     @Test
     public void shouldShowErrorDialogOnEmptyUsername() {
         testErrorDialog("", "1", "Error");
     }
-
+    
     @Test
-    public void shouldShowErrorDialogOnEmptyUsernameAndPassword() {
-        testErrorDialog("", "", "Error");
+    public void shouldShowErrorDialogOnEmptyPassword() {
+        testErrorDialog("accountToTest", "", "Error");
     }
 
+    
     private void testErrorDialog(String username, String password, String errorTitle) {
         window.textBox("txtUser").enterText(username);
         window.textBox("txtPassword").enterText(password);

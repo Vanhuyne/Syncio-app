@@ -220,6 +220,7 @@
             <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="txtUsername" noResource="true"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblChangeUsername">
@@ -229,6 +230,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
+            <Property name="name" type="java.lang.String" value="lblChangeUsername" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeUsernameMousePressed"/>
@@ -254,6 +256,7 @@
               <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtEmail" noResource="true"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblBio">
@@ -269,6 +272,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Change"/>
             <Property name="fontBold" type="int" value="2"/>
+            <Property name="name" type="java.lang.String" value="lblChangeBio" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblChangeBioMousePressed"/>
@@ -297,6 +301,7 @@
                 <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ef" green="ef" red="ef" type="rgb"/>
                 </Property>
+                <Property name="name" type="java.lang.String" value="txtBio" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -309,6 +314,7 @@
               <Color blue="ef" green="ef" red="ef" type="rgb"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtPassword" noResource="true"/>
           </Properties>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblPasswordQuestion">

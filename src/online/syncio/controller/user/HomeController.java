@@ -92,9 +92,8 @@ public class HomeController {
                     });
 
                     postsLoaded++;
-
                     if (postsLoaded >= 5) {
-                        // Introduce a 2-second delay after loading 5 posts
+                        // Introduce a 3-second delay after loading 5 posts
                         try {
                             Thread.sleep(3000); // 3000 milliseconds = 2 seconds
                         } catch (InterruptedException e) {
@@ -118,6 +117,7 @@ public class HomeController {
             pnlHome.getFeedPanel().add(new MayULike());
             pnlHome.addLoading();
             postsOther = postDAO.getAllPostOther(currentUser);
+            int postsLoaded = 0;
 
             // Load initial posts from the regular database query
             for (Post post : postsOther) {
@@ -134,6 +134,18 @@ public class HomeController {
                 SwingUtilities.invokeLater(() -> {
                     addPostUI(postUI);
                 });
+                
+                postsLoaded++;
+                if (postsLoaded >= 5) {
+                    // Introduce a 3-second delay after loading 5 posts
+                    try {
+                        Thread.sleep(3000); // 3000 milliseconds = 2 seconds
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    postsLoaded = 0; // Reset the counter
+                }
             }
         });
 

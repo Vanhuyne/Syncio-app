@@ -17,8 +17,8 @@ import static org.mockito.Mockito.*;
 
 public class SignupTest {
 
+    String emailToCreate = "fancyaccountemailtotest@example.com"; //delete in mongodb before run
     private FrameFixture window;
-
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
     @Before
@@ -32,6 +32,16 @@ public class SignupTest {
     public void shouldShowErrorDialogOnEmptyEmail() {
         testErrorDialog("", "testuser", "mypassword", "mypassword", "Error");
     }
+    
+    @Test
+    public void shouldShowErrorDialogOnEmptyUsername() {
+        testErrorDialog("test@example.com", "", "mypassword", "mypassword", "Error");
+    }
+    
+    @Test
+    public void shouldShowErrorDialogOnEmptyEmailAndUsername() {
+        testErrorDialog("", "", "mypassword", "mypassword", "Error");
+    }
 
     @Test
     public void shouldShowErrorDialogOnInvalidEmail() {
@@ -42,10 +52,15 @@ public class SignupTest {
     public void shouldShowErrorDialogOnInvalidUsername() {
         testErrorDialog("test@example.com", "user123*", "mypassword", "mypassword", "Error");
     }
-
+    
     @Test
-    public void shouldShowErrorDialogOnEmptyUsername() {
-        testErrorDialog("test@example.com", "", "mypassword", "mypassword", "Error");
+    public void shouldShowErrorDialogOnInvalidEmailAndUsername() {
+        testErrorDialog("invalidEmail", "user123*", "mypassword", "mypassword", "Error");
+    }
+    
+    @Test
+    public void shouldShowErrorDialogOnEmptyPassword() {
+        testErrorDialog("test@example.com", "user123", "", "", "Error");
     }
 
     @Test
@@ -56,6 +71,11 @@ public class SignupTest {
     @Test
     public void shouldShowErrorDialogOnLongPassword() {
         testErrorDialog("test@example.com", "testuser", "averylongpasswordthatexceedsthirtycharacters", "averylongpasswordthatexceedsthirtycharacters", "Error");
+    }
+    
+    @Test
+    public void shouldShowErrorDialogOnInvalidPassword() {
+        testErrorDialog("test@example.com", "testuser", "!@#", "!@#", "Error");
     }
 
     @Test
@@ -146,8 +166,7 @@ public class SignupTest {
 
     @Test
     public void shouldCreateAccountOnCorrectOTP() {
-        String email = "fancyaccountemailtotest@example.com"; //delete in mongodb before run
-        String username = TextHelper.generateUniqueUsernameFromEmail(email);
+        String username = TextHelper.generateUniqueUsernameFromEmail(emailToCreate);
 
         // Set up the signupController to use a specific OTP
         Signup signup = window.targetCastedTo(Signup.class);
@@ -160,7 +179,7 @@ public class SignupTest {
                         // Hash password and add user
                         String password = "mypassword";
                         String hashedPassword = TextHelper.HashPassword(password);
-                        boolean result = userDAO.add(new User(username, hashedPassword, email, null, 0, 0, null));
+                        boolean result = userDAO.add(new User(username, hashedPassword, emailToCreate, null, 0, 0, null));
                         when(result).thenReturn(true);
                     }
                 }
@@ -169,7 +188,7 @@ public class SignupTest {
         };
 
         // Enter OTP and click Verify button
-        window.textBox("txtEmail").enterText(email);
+        window.textBox("txtEmail").enterText(emailToCreate);
         window.textBox("txtUsername").enterText(username);
         window.textBox("txtPassword").enterText("mypassword");
         window.textBox("txtPasswordConfirm").enterText("mypassword");
