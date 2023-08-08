@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +21,10 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
+import online.syncio.model.User;
 import org.bson.types.Binary;
 
 /**
@@ -30,6 +33,7 @@ import org.bson.types.Binary;
  */
 public class ImageHelper {
 
+    private static UserDAO userDAO = MongoDBConnect.getUserDAO();
     private static final Image defaultImage = new javax.swing.ImageIcon(ImageHelper.class.getResource("/online/syncio/resources/images/icons/avt_128px.png")).getImage();
 
     /**
@@ -131,7 +135,7 @@ public class ImageHelper {
     public static Image resizeImageToWidth(BufferedImage bufferedImage, int width) {
         return bufferedImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
     }
-    
+
     public static Image resizeImageToHeight(BufferedImage bufferedImage, int height) {
         return bufferedImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
     }
@@ -229,34 +233,15 @@ public class ImageHelper {
         return null;
     }
 
-    public static ImageIcon toRoundImage(ImageIcon image, int size) {
-        Image newImg = image.getImage();
-
-        BufferedImage roundImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = roundImage.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // Create a round shape
-        Ellipse2D.Float ellipse = new Ellipse2D.Float(0, 0, size, size);
-        g2d.clip(ellipse);
-
-        // Draw the image within the round shape
-        g2d.drawImage(newImg, 0, 0, size, size, null);
-        g2d.dispose();
-
-        return new ImageIcon(roundImage);
-    }
-
     public static ImageIcon toRoundImage(BufferedImage image, int size) {
-        if(image.getWidth() < image.getHeight()) {
+        if (image.getWidth() < image.getHeight()) {
             image = imageToBufferedImage(resizeImageToWidth(image, size));
-        }
-        else {
+        } else {
             image = imageToBufferedImage(resizeImageToHeight(image, size));
         }
-        
+
         BufferedImage mask = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        
+
         Graphics2D g2d = mask.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -269,7 +254,7 @@ public class ImageHelper {
 
         g2d.fillOval(0, 0, size - 1, size - 1);
         g2d.dispose();
-    
+
         BufferedImage masked = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         g2d = masked.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
@@ -287,6 +272,31 @@ public class ImageHelper {
         g2d.dispose();
 
         return new ImageIcon(masked);
+    }
+
+    public static void setAvatarToLabel(String username, JLabel label, int size) {
+        User user = userDAO.getByUsername(username);
+        setAvatarToLabel(user, label, size);
+    }
+
+    public static void setAvatarToLabel(User user, JLabel label, int size) {
+        ImageIcon avatarImage;
+        Binary avtByteArray = null;
+
+        try {
+            avtByteArray = user.getAvt();
+        } catch (NullPointerException e) {
+            // Handle the case when the user or avatar is not found
+        }
+
+        if (avtByteArray != null) {
+            BufferedImage bufferedImage = readBinaryAsBufferedImage(avtByteArray);
+            avatarImage = toRoundImage(bufferedImage, size);
+        } else {
+            avatarImage = resizing(defaultImage, size, size);
+        }
+
+        label.setIcon(avatarImage);
     }
 
     public static Image getDefaultImage() {

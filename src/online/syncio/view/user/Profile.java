@@ -55,12 +55,7 @@ public class Profile extends JPanel {
             });
         }
 
-        if (user.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
-        } else {
-            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), lblAvatar.getWidth(), lblAvatar.getHeight()));
-        }
+        ImageHelper.setAvatarToLabel(user, lblAvatar, lblAvatar.getWidth());
     }
 
     public void loadOtherUserProfile(User user) {
@@ -91,12 +86,7 @@ public class Profile extends JPanel {
             btnFollow.setText("Follow");
         }
 
-        if (user.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
-        } else {
-            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), lblAvatar.getWidth(), lblAvatar.getHeight()));
-        }
+        ImageHelper.setAvatarToLabel(user, lblAvatar, lblAvatar.getWidth());
     }
 
     public void setProfileInfo(User user) {

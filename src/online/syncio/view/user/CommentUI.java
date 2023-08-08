@@ -2,7 +2,6 @@ package online.syncio.view.user;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
@@ -12,13 +11,7 @@ public class CommentUI extends javax.swing.JPanel {
     public CommentUI(String username, String cmt, String date) {
         initComponents();
 
-        try {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(
-                    MongoDBConnect.getUserDAO().getByUsername(username).getAvt());
-            lblComment.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
-        } catch (NullPointerException e) {
-            lblComment.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
-        }
+        ImageHelper.setAvatarToLabel(username, lblComment, 24);
 
         lblComment.setText("<html><body style=\"font-family:'sans-serif'\"><p style=\"width:190px\"><b>" + username + "</b>   "
                 + cmt + "</p><span font color='gray' style=\"font-size:8px\">"
