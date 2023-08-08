@@ -3,7 +3,6 @@ package online.syncio.view.user;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -82,16 +81,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
 
     private void showInfoPost() {
         loadReport();
-        lblUsername.setText(userDAO.getByID(userID).getUsername());
-        lblUsername2.setText(userDAO.getByID(userID).getUsername());
+        String username = userDAO.getByID(userID).getUsername();
+        lblUsername.setText(username);
+        lblUsername2.setText(username);
         lblDateCreated.setText(post.getDatePosted());
 
-        try {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(userDAO.getByID(userID).getAvt());
-            lblUsername.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
-        } catch (NullPointerException e) {
-            lblUsername.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
-        }
+        ImageHelper.setAvatarToLabel(username, lblUsername, 24);
 
         if (!post.getCaption().equals("")) {
             txtCaption.setText("");

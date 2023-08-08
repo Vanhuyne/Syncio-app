@@ -38,6 +38,7 @@ import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.MessagePanel;
+import org.bson.types.Binary;
 
 public class ChatArea extends JPanel {
 
@@ -184,27 +185,22 @@ public class ChatArea extends JPanel {
                 messagingUser.getUsername());
 
         if (messageList != null) {
+            ImageIcon defaultAvatar = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
             Thread thread = new Thread(() -> {
-                ImageIcon defaultAvatar = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
-
                 for (Message m : messageList) {
-                    SwingUtilities.invokeLater(() -> {
-                        if (m.getRecipient().equalsIgnoreCase(messagingUser.getUsername())) {
-                            if (currentUser.getAvt() != null) {
-                                BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(currentUser.getAvt());
-                                addChatBox(m, ImageHelper.toRoundImage(bufferedImage, 40), ChatBox.BoxType.RIGHT);
-                            } else {
-                                addChatBox(m, defaultAvatar, ChatBox.BoxType.RIGHT);
-                            }
+                    String senderUsername = m.getSender();
+                    boolean isCurrentUser = senderUsername.equalsIgnoreCase(currentUser.getUsername());
+                    Binary avt = isCurrentUser ? currentUser.getAvt() : messagingUser.getAvt();
 
+                    SwingUtilities.invokeLater(() -> {
+                        ImageIcon avatarImage;
+                        if (avt != null) {
+                            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(avt);
+                            avatarImage = ImageHelper.toRoundImage(bufferedImage, 40);
                         } else {
-                            if (messagingUser.getAvt() != null) {
-                                BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(messagingUser.getAvt());
-                                addChatBox(m, ImageHelper.toRoundImage(bufferedImage, 40), ChatBox.BoxType.LEFT);
-                            } else {
-                                addChatBox(m, defaultAvatar, ChatBox.BoxType.LEFT);
-                            }
+                            avatarImage = defaultAvatar;
                         }
+                        addChatBox(m, avatarImage, isCurrentUser ? ChatBox.BoxType.RIGHT : ChatBox.BoxType.LEFT);
                     });
                 }
             });

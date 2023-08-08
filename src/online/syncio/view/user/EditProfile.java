@@ -1,7 +1,6 @@
 package online.syncio.view.user;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import online.syncio.component.GlassPanePopup;
@@ -32,12 +31,7 @@ public final class EditProfile extends JPanel {
         txtPassword.setText(currentUser.getPassword());
         txtEmail.setText(currentUser.getEmail());
 
-        if (currentUser.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(currentUser.getAvt());
-            lblAccount.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
-        } else {
-            lblAccount.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
-        }
+        ImageHelper.setAvatarToLabel(currentUser, lblAccount, 24);
 
         try {
             txtBio.setText(currentUser.getBio());

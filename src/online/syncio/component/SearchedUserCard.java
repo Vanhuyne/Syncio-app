@@ -2,7 +2,6 @@ package online.syncio.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.ImageIcon;
 import online.syncio.dao.MongoDBConnect;
@@ -30,12 +29,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         setMaximumSize(new Dimension(290, 90));
         setMinimumSize(new Dimension(290, 90));
 
-        if (user.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
-        } else {
-            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
-        }
+        ImageHelper.setAvatarToLabel(user, lblAvatar, 60);
 
         lblUsername.setText(user.getUsername());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
@@ -56,12 +50,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         lblAvatar.setBackground(backgroundColor);
 
-        if (user.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
-        } else {
-            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
-        }
+        ImageHelper.setAvatarToLabel(user, lblAvatar, 60);
 
         lblUsername.setText(user.getUsername());
         lblFollowers.setText("");
@@ -88,11 +77,8 @@ public class SearchedUserCard extends javax.swing.JPanel {
         if (!photos.isEmpty()) {
             resizeImg = ImageHelper.resizing(ImageHelper.readBinaryAsBufferedImage(photos.get(0)), 60, 60);
             lblAvatar.setIcon(resizeImg);
-        } else if (user.getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
-            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, 60));
         } else {
-            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 60, 60));
+            ImageHelper.setAvatarToLabel(user, lblAvatar, 60);
         }
 
         lblUsername.setText(notificationText);

@@ -6,7 +6,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -118,16 +117,11 @@ public class PostDetailUI extends javax.swing.JPanel {
     }
 
     private void loadComments() {
-        String userName = userDAO.getByID(post.getUserID()).getUsername();
+        String username = userDAO.getByID(post.getUserID()).getUsername();
         List<UserIDAndDateAndText> listCmt = post.getCommentList();
-        lblAccount.setText(userName);
+        lblAccount.setText(username);
 
-        if (userDAO.getByUsername(userName).getAvt() != null) {
-            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(userDAO.getByUsername(userName).getAvt());
-            lblAccount.setIcon(ImageHelper.toRoundImage(bufferedImage, 24));
-        } else {
-            lblAccount.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), 24, 24));
-        }
+        ImageHelper.setAvatarToLabel(username, lblAccount, 24);
 
         for (UserIDAndDateAndText cmt : listCmt) {
             pnlCmt.add(new CommentUI(userDAO.getByID(cmt.getUserID()).getUsername(), cmt.getText(), cmt.getDate()));
