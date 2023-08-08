@@ -12,7 +12,6 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import online.syncio.model.Post;
@@ -52,6 +51,7 @@ public class UserDAOImpl implements UserDAO {
 
         Bson updates = Updates.combine(
                 Updates.set("username", user.getUsername()),
+                Updates.set("avt", user.getAvt()),
                 Updates.set("bio", user.getBio()),
                 Updates.set("flag", user.getFlag()),
                 Updates.set("role", user.getRole()));
@@ -206,20 +206,16 @@ public class UserDAOImpl implements UserDAO {
         return (int) userCollection.updateOne(userFilter, p).getModifiedCount();  // thanh cong -> (lon hon 0)
     }
 
-
-  
     @Override
     public User getByUsername(String username) {
         return userCollection.find(eq("username", username)).first();
     }
 
-    
-    
     @Override
     public int getFollowerCount(String userId) {
         Document filter = new Document("following.userID", userId);
         long followerCount = userCollection.countDocuments(filter);
         return (int) followerCount;
     }
-    
+
 }

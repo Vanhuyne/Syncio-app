@@ -19,9 +19,6 @@ import online.syncio.resources.fonts.MyFont;
 
 public class ChatBox extends JComponent {
 
-    private ImageIcon defaultImage = new javax.swing.ImageIcon(getClass()
-            .getResource("/online/syncio/resources/images/icons/profile_28px.png"));
-
     private final Font regularFont = new MyFont().getSFProDisplayRegular();
 
     private final BoxType boxType;
@@ -53,11 +50,6 @@ public class ChatBox extends JComponent {
         String rightToLeft = boxType == BoxType.RIGHT ? ",rtl" : "";
         setLayout(new MigLayout("inset 5" + rightToLeft, "[40!]5[]", "[top]"));
 
-        senderAvatar.setImage(defaultImage);
-
-//        if (senderAvatar == null) {
-//            senderAvatar.setImage(defaultImage);
-//        }
         senderAvatar.setBorderSize(1);
         senderAvatar.setBorderSpace(1);
 

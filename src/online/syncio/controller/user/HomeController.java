@@ -41,7 +41,7 @@ public class HomeController {
             loadMorePosts();
             System.out.println("chưa đăng nhập");
         }
-        
+
         // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
         pnlHome.getScrollPane().getVerticalScrollBar().setUnitIncrement(16);
     }
@@ -53,7 +53,7 @@ public class HomeController {
     private void loadMorePosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
-            if(LoggedInUser.getCurrentUser() != null) {
+            if (LoggedInUser.getCurrentUser() != null) {
                 int postsLoaded = 0;
 
                 // Set up MongoDB change stream
@@ -67,7 +67,7 @@ public class HomeController {
                         Post newPost = changeDocument.getFullDocument();
                         if (newPost != null) {
                             SwingUtilities.invokeLater(() -> {
-                                PostUI postUI = new PostUI(newPost.getId().toString(), currentUserID);
+                                PostUI postUI = new PostUI(newPost.getId().toString(), newPost.getUserID());
                                 addPostUI(postUI);
                             });
                         }
@@ -86,10 +86,9 @@ public class HomeController {
                         }
                     }
 
-                    PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
+                    PostUI postUI = new PostUI(post.getId().toString(), post.getUserID());
                     SwingUtilities.invokeLater(() -> {
                         addPostUI(postUI);
-
                     });
 
                     postsLoaded++;
@@ -105,7 +104,7 @@ public class HomeController {
                         postsLoaded = 0; // Reset the counter
                     }
                 }
-                
+
                 // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
                 try {
                     changeStreamThread.join();
@@ -131,7 +130,7 @@ public class HomeController {
                     }
                 }
 
-                PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
+                PostUI postUI = new PostUI(post.getId().toString(), post.getUserID());
                 SwingUtilities.invokeLater(() -> {
                     addPostUI(postUI);
                 });

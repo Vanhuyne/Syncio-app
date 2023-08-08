@@ -1,27 +1,15 @@
 package online.syncio.view.user;
 
-import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import javax.swing.JPanel;
 import online.syncio.component.MyPanel;
 import online.syncio.component.MyScrollPane;
 import online.syncio.controller.user.HomeController;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.PostDAO;
-import online.syncio.model.Post;
-import online.syncio.model.User;
 
 public class Home extends JPanel {
 
     private Main main = Main.getInstance();
-    private User currentUser;
-    private String currentUserID;
-
-    private PostDAO postDAO = MongoDBConnect.getPostDAO();
-
-    FindIterable<Post> posts;
-    FindIterable<Post> postsOther;
 
     private HomeController controller;
 

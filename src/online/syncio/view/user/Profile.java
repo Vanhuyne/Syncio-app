@@ -1,12 +1,17 @@
 package online.syncio.view.user;
 
-import online.syncio.view.user.Main;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Image;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import online.syncio.component.ProfilePostPanel;
 import online.syncio.controller.user.ProfileController;
 import online.syncio.dao.MongoDBConnect;
@@ -18,8 +23,6 @@ import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
 
 public class Profile extends JPanel {
-
-    private Image defaultImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/avt_128px.png")).getImage();
 
     private Main main = Main.getInstance();
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
@@ -41,13 +44,36 @@ public class Profile extends JPanel {
         btnFollow.setVisible(false);
 
         lblAvatar.setSize(128, 128);
-        ImageIcon resizeImg = ImageHelper.resizing(defaultImage, lblAvatar.getWidth(), lblAvatar.getHeight());
-        lblAvatar.setIcon(ImageHelper.toRoundImage(resizeImg, lblAvatar.getWidth()));
+        lblAvatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        if (lblAvatar.getMouseListeners().length == 0) {
+            lblAvatar.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    uploadImage();
+                }
+            });
+        }
+
+        if (user.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
+        } else {
+            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), lblAvatar.getWidth(), lblAvatar.getHeight()));
+        }
     }
 
     public void loadOtherUserProfile(User user) {
         btnEditProfileMessage.setText("Message");
         btnFollow.setVisible(true);
+
+        lblAvatar.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+        MouseListener[] l = lblAvatar.getMouseListeners();
+
+        if (l.length > 0) {
+            lblAvatar.removeMouseListener(l[0]);
+        }
 
         ArrayList<UserIDAndDate> following = LoggedInUser.getCurrentUser().getFollowing();
         boolean followingUser = false;
@@ -63,6 +89,13 @@ public class Profile extends JPanel {
 
         if (!followingUser) {
             btnFollow.setText("Follow");
+        }
+
+        if (user.getAvt() != null) {
+            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(user.getAvt());
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
+        } else {
+            lblAvatar.setIcon(ImageHelper.resizing(ImageHelper.getDefaultImage(), lblAvatar.getWidth(), lblAvatar.getHeight()));
         }
     }
 
@@ -85,6 +118,30 @@ public class Profile extends JPanel {
             btnFollow.setText("Unfollow");
         } else {
             btnFollow.setText("Follow");
+        }
+    }
+
+    public void uploadImage() {
+        JFileChooser fc = new JFileChooser();
+        fc.setMultiSelectionEnabled(true);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.jpeg, *.jpg, *.png", new String[]{"jpeg", "png", "jpg"});
+        fc.addChoosableFileFilter(filter);
+        fc.setFileFilter(filter);
+
+        int result = fc.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+
+            String path = file.getAbsolutePath();
+
+            BufferedImage bufferedImage = ImageHelper.stringToBufferedImage(path);
+
+            lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
+
+            LoggedInUser.getCurrentUser().setAvt(ImageHelper.bufferedImageToBinary(bufferedImage));
+
+            userDAO.updateByID(LoggedInUser.getCurrentUser());
         }
     }
 
@@ -238,11 +295,10 @@ public class Profile extends JPanel {
 
     private void btnEditProfileMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditProfileMessageActionPerformed
         if (btnEditProfileMessage.getText().equalsIgnoreCase("edit profile")) {
-            if(OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
+            if (OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
                 CardLayout c = (CardLayout) OtherHelper.getMainAdmin(this).getPnlTabContent().getLayout();
                 c.show(OtherHelper.getMainAdmin(this).getPnlTabContent(), "editprofile");
-            }
-            else {
+            } else {
                 CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
                 c.show(this.main.getPnlTabContent(), "editprofile");
             }

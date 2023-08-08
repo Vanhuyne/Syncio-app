@@ -42,7 +42,7 @@ public class Post {
     }
 
     public String getUserID() {
-        return userID.trim();
+        return userID;
     }
 
     public void setUserID(String userID) {
@@ -50,7 +50,7 @@ public class Post {
     }
 
     public String getCaption() {
-        return caption.trim();
+        return caption;
     }
 
     public Post setCaption(String caption) {
