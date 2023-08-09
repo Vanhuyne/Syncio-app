@@ -25,7 +25,9 @@ public class MessagePanel extends JPanel {
 
         controller = new MessageController(this);
 
-        if(LoggedInUser.getCurrentUser() != null) controller.addUserToHistoryPanel();
+        if (LoggedInUser.getCurrentUser() != null) {
+            controller.addUserToHistoryPanel();
+        }
     }
 
     public JPanel getChatArea() {
@@ -60,6 +62,7 @@ public class MessagePanel extends JPanel {
 
         pnlUserList.setBackground(new java.awt.Color(255, 255, 255));
         pnlUserList.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
+        pnlUserList.setName("userList"); // NOI18N
         pnlUserList.setPreferredSize(new java.awt.Dimension(270, 726));
         pnlUserList.setLayout(new javax.swing.BoxLayout(pnlUserList, javax.swing.BoxLayout.LINE_AXIS));
         scrollPane.setViewportView(pnlUserList);
@@ -76,6 +79,7 @@ public class MessagePanel extends JPanel {
         );
 
         pnlChatArea.setBackground(new java.awt.Color(255, 255, 255));
+        pnlChatArea.setName("chatArea"); // NOI18N
         pnlChatArea.setLayout(new java.awt.CardLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
