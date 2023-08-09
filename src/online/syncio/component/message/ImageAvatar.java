@@ -1,18 +1,14 @@
 package online.syncio.component.message;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -47,35 +43,15 @@ public class ImageAvatar extends JComponent {
         repaint();
     }
 
-    public Color getGradientColor1() {
-        return gradientColor1;
-    }
-
-    public void setGradientColor1(Color gradientColor1) {
-        this.gradientColor1 = gradientColor1;
-        repaint();
-    }
-
-    public Color getGradientColor2() {
-        return gradientColor2;
-    }
-
-    public void setGradientColor2(Color gradientColor2) {
-        this.gradientColor2 = gradientColor2;
-        repaint();
-    }
-
     private Icon image;
     private int borderSize = 6;
     private int borderSpace = 5;
-    private Color gradientColor1 = new Color(255, 90, 90);
-    private Color gradientColor2 = new Color(42, 199, 80);
 
     @Override
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        createBorder(g2);
+//        createBorder(g2);
         if (image != null) {
             int width = getWidth();
             int height = getHeight();
@@ -99,23 +75,21 @@ public class ImageAvatar extends JComponent {
         super.paintComponent(grphcs);
     }
 
-    private void createBorder(Graphics2D g2) {
-        int width = getWidth();
-        int height = getHeight();
-        int diameter = Math.min(width, height);
-        int x = (width - diameter) / 2;
-        int y = (height - diameter) / 2;
-        if (isOpaque()) {
-            g2.setColor(getBackground());
-            g2.fillOval(x, y, diameter, diameter);
-        }
-        Area area = new Area(new Ellipse2D.Double(x, y, diameter, diameter));
-        int s = diameter -= (borderSize * 2);
-        area.subtract(new Area(new Ellipse2D.Double(x + borderSize, y + borderSize, s, s)));
-        g2.setPaint(new GradientPaint(0, 0, gradientColor1, width, height, gradientColor2));
-        g2.fill(area);
-    }
-
+//    private void createBorder(Graphics2D g2) {
+//        int width = getWidth();
+//        int height = getHeight();
+//        int diameter = Math.min(width, height);
+//        int x = (width - diameter) / 2;
+//        int y = (height - diameter) / 2;
+//        if (isOpaque()) {
+//            g2.setColor(getBackground());
+//            g2.fillOval(x, y, diameter, diameter);
+//        }
+//        Area area = new Area(new Ellipse2D.Double(x, y, diameter, diameter));
+//        int s = diameter -= (borderSize * 2);
+//        area.subtract(new Area(new Ellipse2D.Double(x + borderSize, y + borderSize, s, s)));
+//        g2.fill(area);
+//    }
     private Rectangle getAutoSize(Icon image, int size) {
         int w = size;
         int h = size;

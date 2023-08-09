@@ -56,6 +56,7 @@ public class MessageController {
         User user = userDAO.getByUsername(username);
 
         SearchedUserCard card = new SearchedUserCard(user);
+        card.setName(username.toLowerCase().trim());
 
         card.addMouseListener(new MouseAdapter() {
             @Override
@@ -101,6 +102,7 @@ public class MessageController {
     public void createMessage(User messagingUser) {
         ChatArea ca = new ChatArea();
         ca.setMessagingUser(messagingUser);
+        ca.setName(messagingUser.getUsername().toLowerCase().trim());
 
         pnlMsg.getChatArea().add(ca, ca.getName().toLowerCase());
         cardLayout.show(pnlMsg.getChatArea(), messagingUser.getUsername().toLowerCase());

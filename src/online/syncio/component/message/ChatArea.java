@@ -4,7 +4,6 @@ import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -29,12 +28,9 @@ import net.miginfocom.swing.MigLayout;
 import online.syncio.component.MyLabel;
 import online.syncio.dao.MessageDAO;
 import online.syncio.dao.MongoDBConnect;
-import online.syncio.dao.PostDAO;
-import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
-import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.MessagePanel;
@@ -42,14 +38,10 @@ import org.bson.types.Binary;
 
 public class ChatArea extends JPanel {
 
-    private final Font regularFont = new MyFont().getSFProDisplayRegular();
-
     private AnimationScroll animationScroll;
     private AnimationFloatingButton animationFloatingButton;
     private List<ChatEvent> events = new ArrayList<>();
 
-    private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private PostDAO postDAO = MongoDBConnect.getPostDAO();
     private MessageDAO messageDAO = MongoDBConnect.getMessageDAO();
     private FindIterable<MessagePanel> messageList;
 
@@ -219,6 +211,7 @@ public class ChatArea extends JPanel {
         labelTitle.setFont(labelTitle.getFont().deriveFont(14f));
         labelTitle.setBorder(new EmptyBorder(2, 10, 2, 2));
         labelTitle.setForeground(new Color(0, 0, 0));
+        labelTitle.setName("labelTitle");
         panel.add(labelTitle);
         return panel;
     }
@@ -245,6 +238,7 @@ public class ChatArea extends JPanel {
         cmdSend.setFocusable(false);
         cmdSend.setIcon(iconSend.toIcon());
         textMessage = new TextField();
+        textMessage.setName("textMessage");
         textMessage.setHint("Write a message here ...");
         textMessage.addKeyListener(new KeyAdapter() {
             @Override

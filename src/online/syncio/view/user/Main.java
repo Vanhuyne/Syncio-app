@@ -87,6 +87,8 @@ public final class Main extends javax.swing.JFrame {
                 pnlName = "message";
             }
 
+            pnl.setName(pnlName);
+
             pnlTabContent.add(pnl, pnlName);
         }
 
