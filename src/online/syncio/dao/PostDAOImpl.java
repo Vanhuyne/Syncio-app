@@ -16,6 +16,7 @@ import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 import online.syncio.model.Post;
@@ -146,8 +147,8 @@ public class PostDAOImpl implements PostDAO {
     public FindIterable<Post> getAllPostOther(User user) {
         MongoCollection<Post> posts = database.getCollection("posts", Post.class);
         Bson filter;
-        
-        if(user != null) {
+
+        if (user != null) {
             // Get the list of follower IDs from the user object
             List<String> followerIds = new ArrayList<>();
             for (UserIDAndDate userIDAndDate : user.getFollowing()) {
@@ -159,8 +160,7 @@ public class PostDAOImpl implements PostDAO {
 
             // Create a filter to find posts where the userID matches any of the follower IDs
             filter = and(nin("userID", followerIds), eq("flag", 0));
-        }
-        else {
+        } else {
             filter = eq("flag", 0);
         }
 
@@ -174,8 +174,6 @@ public class PostDAOImpl implements PostDAO {
         return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
 
-    
-    
     @Override
     public boolean addReport(int text, String userID, String postID) {
         Bson cmtFilter = Filters.eq("_id", new ObjectId(postID)); //get document
@@ -220,6 +218,26 @@ public class PostDAOImpl implements PostDAO {
         Bson filter = and(exists("reportList"), not(size("reportList", 0)));
         // Execute the query and return the result
         return postCollection.find(filter);
+    }
+
+    @Override
+    public boolean updateFlagTo1(String postID) {
+        Bson postFilter = Filters.eq("_id", new ObjectId(postID));
+        Bson update = Updates.set("flag", 1);
+
+        UpdateResult result = postCollection.updateOne(postFilter, update);
+
+        return result.getModifiedCount() > 0;
+    }
+
+    @Override
+    public boolean updateFlagTo0(String postID) {
+        Bson postFilter = Filters.eq("_id", new ObjectId(postID));
+        Bson update = Updates.set("flag", 0);
+
+        UpdateResult result = postCollection.updateOne(postFilter, update);
+
+        return result.getModifiedCount() > 0;
     }
 
 }
