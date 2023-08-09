@@ -1,10 +1,13 @@
 package online.syncio.component.message;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
@@ -14,8 +17,12 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
+import online.syncio.dao.MongoDBConnect;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
+import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
+import online.syncio.view.user.Main;
 
 public class ChatBox extends JComponent {
 
@@ -52,6 +59,20 @@ public class ChatBox extends JComponent {
 
         senderAvatar.setBorderSize(1);
         senderAvatar.setBorderSpace(1);
+        senderAvatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        senderAvatar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (message.getSender().trim().equalsIgnoreCase(LoggedInUser.getCurrentUser().getUsername().trim())) {
+                    Main.getInstance().getBtnProfile().doClick();
+                } else {
+                    User user = MongoDBConnect.getUserDAO().getByUsername(message.getSender().trim());
+                    Main.getInstance().profile.getController().loadProfile(user);
+                    Main.getInstance().showTab("profile");
+                }
+            }
+        });
 
         text = new JTextPane();
         text.setFont(regularFont.deriveFont(0, 18f));
@@ -83,6 +104,7 @@ public class ChatBox extends JComponent {
     }
 
     @Override
+
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

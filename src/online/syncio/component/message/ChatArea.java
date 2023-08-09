@@ -32,7 +32,6 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.view.user.Main;
 import online.syncio.view.user.MessagePanel;
 import org.bson.types.Binary;
 
@@ -64,6 +63,8 @@ public class ChatArea extends JPanel {
         layout = new MigLayout("fill, wrap, inset 0", "[fill]", "[fill,40!][fill, 100%][shrink 0,::30%]");
         header = createHeader();
         body = createBody();
+        body.setName("body");
+
         bottom = createBottom();
         layeredPane = createLayeredPane();
         scrollBody = createScroll();
@@ -199,7 +200,7 @@ public class ChatArea extends JPanel {
     public void setMessagingUser(User messagingUser) {
         this.messagingUser = messagingUser;
         setTitle(messagingUser.getUsername());
-        setName(messagingUser.getUsername().toLowerCase());
+        setName(messagingUser.getUsername());
 
         getMessageHistory();
     }
@@ -208,7 +209,7 @@ public class ChatArea extends JPanel {
         FindIterable<Message> messageList = messageDAO.findAllByTwoUsers(currentUser.getUsername(),
                 messagingUser.getUsername());
 
-        if (messageList != null) {
+        if (!messageList.into(new ArrayList<>()).isEmpty()) {
             ImageIcon defaultAvatar = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
             Thread thread = new Thread(() -> {
                 for (Message m : messageList) {
@@ -232,8 +233,6 @@ public class ChatArea extends JPanel {
             });
 
             thread.start();
-        } else {
-            Main.getInstance().getMessagePanel().getController().createCardForHistoryPanel(messagingUser.getUsername());
         }
     }
 
@@ -273,6 +272,7 @@ public class ChatArea extends JPanel {
         cmdSend.setIcon(iconSend.toIcon());
         textMessage = new TextField();
         textMessage.setName("textMessage");
+
         textMessage.setHint("Write a message here ...");
         textMessage.addKeyListener(new KeyAdapter() {
             @Override
