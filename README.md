@@ -62,10 +62,10 @@ To access and download Syncio, visit our domain at [https://syncio.online/](http
 
 Special thanks to the team members who contributed to this project:
 
-- [@user1](https://github.com/56duong)
-- [@user2](https://github.com/Vanhuyne)
-- [@user3](https://github.com/CoanhHeo)
-- [@user4](https://github.com/ThuanNDQ)
+- [@56duong](https://github.com/56duong)
+- [@Vanhuyne](https://github.com/Vanhuyne)
+- [@CoanhHeo](https://github.com/CoanhHeo)
+- [@ThuanNDQ](https://github.com/ThuanNDQ)
 
 ## Contact
 If you have any questions, suggestions, or concerns, feel free to open an issue in this repository.
