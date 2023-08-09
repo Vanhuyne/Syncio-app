@@ -35,4 +35,8 @@ public interface PostDAO extends DAO<Post> {
     public boolean addReport(int text, String userID, String postID);
 
     public boolean isUserIDInListReport(String userID, String postID);
+
+    public boolean updateFlagTo1(String postID);
+
+    public boolean updateFlagTo0(String postID);
 }

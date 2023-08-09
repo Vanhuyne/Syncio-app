@@ -1,6 +1,6 @@
 package online.syncio.view.admin;
 
-import online.syncio.view.user.PostUI;
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import javax.swing.JPanel;
@@ -43,41 +43,79 @@ public class ReportedPost extends JPanel {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
             int postsLoaded = 0;
+
+            // Set up MongoDB change stream
+            ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
+
+            // Listen for change stream events in a separate thread
+            Thread changeStreamThread = new Thread(() -> {
+                changeStream.forEach(changeDocument -> {
+                    // Handle the change event here
+                    // For example, extract the new post data from changeDocument and update your feed UI
+                    Post newPost = changeDocument.getFullDocument();
+                    if (newPost != null) {
+                        if (newPost.getFlag() == 0) {
+                            SwingUtilities.invokeLater(() -> {
+                                PostUIReport postUIReport = new PostUIReport(newPost.getId().toString(), newPost.getUserID());
+                                addPostUI(postUIReport);
+                            });
+                        }
+                    }
+                });
+            });
+            changeStreamThread.start();
+
             // Load initial posts from the regular database query
             for (Post post : postsReport) {
-
-                try {
-                    Thread.sleep(40); // Wait for 100 milliseconds before checking again
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                PostUI postUI = new PostUI(post.getId().toString(), currentUserID);
-                SwingUtilities.invokeLater(() -> {
-                    removeLoading();
-                    feedPanel.add(postUI);
-                    addLoading();
-                    feedPanel.revalidate();
-                    feedPanel.repaint();
-                });
-
-                postsLoaded++;
-
-                if (postsLoaded >= 5) {
-                    // Introduce a 2-second delay after loading 5 posts
+                if (post.getFlag() == 0) {
                     try {
-                        Thread.sleep(3000); // 3000 milliseconds = 2 seconds
+                        Thread.sleep(40); // Wait for 100 milliseconds before checking again
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    postsLoaded = 0; // Reset the counter
+                    PostUIReport postUIReport = new PostUIReport(post.getId().toString(), currentUserID);
+                    SwingUtilities.invokeLater(() -> {
+                        removeLoading();
+                        feedPanel.add(postUIReport);
+                        addLoading();
+                        feedPanel.revalidate();
+                        feedPanel.repaint();
+                    });
+
+                    postsLoaded++;
+
+                    if (postsLoaded >= 5) {
+                        // Introduce a 2-second delay after loading 5 posts
+                        try {
+                            Thread.sleep(3000); // 3000 milliseconds = 2 seconds
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        postsLoaded = 0; // Reset the counter
+                    }
                 }
+
+            }
+            // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
+            try {
+                changeStreamThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
 
         // Start the thread
         thread.start();
+    }
+
+    private void addPostUI(PostUIReport postUIReport) {
+        removeLoading();
+        feedPanel.add(postUIReport);
+        addLoading();
+        feedPanel.revalidate();
+        feedPanel.repaint();
     }
 
     @SuppressWarnings("unchecked")
