@@ -1,5 +1,6 @@
 package online.syncio.controller;
 
+import java.awt.event.KeyEvent;
 import java.util.Set;
 import online.syncio.dao.MessageDAO;
 import online.syncio.dao.MongoDBConnect;
@@ -9,6 +10,7 @@ import static org.assertj.swing.finder.WindowFinder.findFrame;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JPanelFixture;
 import static org.assertj.swing.timing.Pause.pause;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +18,8 @@ public class MessageTest {
 
     JPanelFixture messageView;
     MessageDAO msgDAO = MongoDBConnect.getMessageDAO();
+
+    JPanelFixture messagePanel;
 
     final String username = "thuanID";
     final String password = "1";
@@ -39,25 +43,16 @@ public class MessageTest {
     }
 
     @Test
-    public void showMessagedUsersOnPanelUserList() {
+    public void showMessagedUsersAndHistory() {
         JPanelFixture pnlHistoryUserList = messageView.panel("userList");
 
         Set<String> messagedUserSet = msgDAO.getMessagingUsers(username);
 
-        // If the history is shown on GUI
         for (String name : messagedUserSet) {
-            if (!pnlHistoryUserList.panel(name.toLowerCase().trim()).isEnabled()) {
-                break;
-            }
+            assertTrue(pnlHistoryUserList.panel(name.toLowerCase().trim()).isEnabled());
             messagingUser = name.toLowerCase().trim();
         }
-    }
 
-    @Test
-    public void openChatAreaWhenUserCardClicked() {
-        JPanelFixture pnlHistoryUserList = messageView.panel("userList");
-
-        // Simulate interaction: Click on a user's card
         pnlHistoryUserList.panel(messagingUser).click();
 
         // Pause to allow the panel to update
@@ -66,5 +61,17 @@ public class MessageTest {
         // Verify that the correct chat area is displayed
         messageView.panel("chatArea").requireVisible();
         messageView.panel("chatArea").panel(messagingUser).requireVisible();
+
+        messagePanel = messageView.panel("chatArea").panel(messagingUser);
+
+        String text = "Hello";
+        messagePanel.textBox("textMessage").enterText(text);
+
+    }
+
+    @Test
+    public void showMessagesAfterSending() {
+
+        messagePanel.pressKey(KeyEvent.VK_ENTER);
     }
 }

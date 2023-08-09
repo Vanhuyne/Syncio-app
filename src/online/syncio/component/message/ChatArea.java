@@ -113,7 +113,18 @@ public class ChatArea extends JPanel {
                             getText());
 
                     messageDAO.add(m);
-                    addChatBox(m, ChatBox.BoxType.RIGHT);
+
+                    Binary avt = currentUser.getAvt();
+                    ImageIcon avatarImage;
+
+                    if (avt != null) {
+                        BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(avt);
+                        avatarImage = ImageHelper.toRoundImage(bufferedImage, 40);
+                    } else {
+                        avatarImage = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
+                    }
+
+                    addChatBox(m, avatarImage, ChatBox.BoxType.RIGHT);
                     clearTextAndGrabFocus();
                 }
             }
@@ -137,7 +148,18 @@ public class ChatArea extends JPanel {
                                 getText());
 
                         messageDAO.add(m);
-                        addChatBox(m, ChatBox.BoxType.RIGHT);
+
+                        Binary avt = currentUser.getAvt();
+                        ImageIcon avatarImage;
+
+                        if (avt != null) {
+                            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(avt);
+                            avatarImage = ImageHelper.toRoundImage(bufferedImage, 40);
+                        } else {
+                            avatarImage = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
+                        }
+
+                        addChatBox(m, avatarImage, ChatBox.BoxType.RIGHT);
                         clearTextAndGrabFocus();
                     }
                 }
@@ -155,7 +177,17 @@ public class ChatArea extends JPanel {
                         && (newMessage.getRecipient().equalsIgnoreCase(currentUser.getUsername())
                         && newMessage.getSender().equalsIgnoreCase(messagingUser.getUsername()))) {
                     SwingUtilities.invokeLater(() -> {
-                        addChatBox(newMessage, ChatBox.BoxType.LEFT);
+                        Binary avt = messagingUser.getAvt();
+                        ImageIcon avatarImage;
+
+                        if (avt != null) {
+                            BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(avt);
+                            avatarImage = ImageHelper.toRoundImage(bufferedImage, 40);
+                        } else {
+                            avatarImage = ImageHelper.resizing(ImageHelper.getDefaultImage(), 40, 40);
+                        }
+
+                        addChatBox(newMessage, avatarImage, ChatBox.BoxType.LEFT);
                     });
                 }
             });
@@ -182,10 +214,12 @@ public class ChatArea extends JPanel {
                 for (Message m : messageList) {
                     String senderUsername = m.getSender();
                     boolean isCurrentUser = senderUsername.equalsIgnoreCase(currentUser.getUsername());
+
                     Binary avt = isCurrentUser ? currentUser.getAvt() : messagingUser.getAvt();
 
                     SwingUtilities.invokeLater(() -> {
                         ImageIcon avatarImage;
+
                         if (avt != null) {
                             BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(avt);
                             avatarImage = ImageHelper.toRoundImage(bufferedImage, 40);
@@ -294,27 +328,6 @@ public class ChatArea extends JPanel {
         scroll.setBorder(null);
         scroll.setViewportBorder(null);
         return scroll;
-    }
-
-    public void addChatBox(Message message, ChatBox.BoxType type) {
-        int values = scrollBody.getVerticalScrollBar().getValue();
-
-        if (type == ChatBox.BoxType.LEFT) {
-            body.add(new ChatBox(type, message), "width ::80%");
-        } else {
-            body.add(new ChatBox(type, message), "al right,width ::80%");
-        }
-
-        SwingUtilities.invokeLater(() -> {
-            body.revalidate();
-            scrollBody.getVerticalScrollBar().setValue(values);
-            bottom.revalidate();
-            scrollToBottom();
-        });
-
-        body.repaint();
-        body.revalidate();
-        scrollBody.revalidate();
     }
 
     public void addChatBox(Message message, ImageIcon avatar, ChatBox.BoxType type) {
