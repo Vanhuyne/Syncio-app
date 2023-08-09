@@ -2,7 +2,7 @@
 
 ![Syncio Logo](https://github.com/56duong/Syncio/blob/master/src/online/syncio/resources/images/other/logo_196px.png)
 
-Syncio is a social media platform built with [Java](https://www.java.com/) by a team of 4 developers. We aim to provide users with a seamless and interactive experience for connecting, sharing, and communicating.
+Syncio is a social media platform built with [Java](https://www.java.com/) by a team of 4 developers as part of our "Du an 1" class assignment at FPT College. We aim to provide users with a seamless and interactive experience for connecting, sharing, and communicating.
 
 ## Table of Contents
 
