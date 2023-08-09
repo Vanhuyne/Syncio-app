@@ -23,8 +23,6 @@ Syncio is a social media platform built with [Java](https://www.java.com/) by a 
 
 ## User Interface
 
-## User Interface
-
 ### Sign Up
 
 Syncio's sign-up process is designed to be intuitive and user-friendly. New users can easily create an account by providing essential information and setting up their profile.
