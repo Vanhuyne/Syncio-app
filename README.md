@@ -11,6 +11,7 @@ Syncio is a social media platform built with [Java](https://www.java.com/) by a 
 - [User Interface](#user-interface)
 - [Access and Download](#access-and-download)
 - [Installation](#installation)
+- [Contributors](#contributors)
 - [Contact](#contact)
 
 ## Features
@@ -56,6 +57,15 @@ To access and download Syncio, visit our domain at [https://syncio.online/](http
 1. Clone the repository:
    ```sh
    git clone https://github.com/56duong/Syncio.git
+
+## Contributors
+
+Special thanks to the team members who contributed to this project:
+
+- [@user1](https://github.com/56duong)
+- [@user2](https://github.com/Vanhuyne)
+- [@user3](https://github.com/CoanhHeo)
+- [@user4](https://github.com/ThuanNDQ)
 
 ## Contact
 If you have any questions, suggestions, or concerns, feel free to open an issue in this repository.
