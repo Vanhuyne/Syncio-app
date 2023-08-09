@@ -56,7 +56,7 @@ public class MessageController {
         User user = userDAO.getByUsername(username);
 
         SearchedUserCard card = new SearchedUserCard(user);
-        card.setName(username.toLowerCase().trim());
+        card.setName(username.trim());
 
         card.addMouseListener(new MouseAdapter() {
             @Override
@@ -83,7 +83,7 @@ public class MessageController {
             for (Component c : componentList) {
                 if (c instanceof ChatArea
                         && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
-                    cardLayout.show(pnlMsg.getChatArea(), messagingUser.getUsername().toLowerCase());
+                    cardLayout.show(pnlMsg.getChatArea(), messagingUser.getUsername());
                     found = true;
 
                     break;
@@ -100,11 +100,17 @@ public class MessageController {
     }
 
     public void createMessage(User messagingUser) {
+        String username = messagingUser.getUsername();
+
+        if (!messageUserSet.contains(username)) {
+            createCardForHistoryPanel(username);
+        }
+
         ChatArea ca = new ChatArea();
         ca.setMessagingUser(messagingUser);
-        ca.setName(messagingUser.getUsername().toLowerCase().trim());
+        ca.setName(username.trim());
 
-        pnlMsg.getChatArea().add(ca, ca.getName().toLowerCase());
-        cardLayout.show(pnlMsg.getChatArea(), messagingUser.getUsername().toLowerCase());
+        pnlMsg.getChatArea().add(ca, ca.getName());
+        cardLayout.show(pnlMsg.getChatArea(), username);
     }
 }
