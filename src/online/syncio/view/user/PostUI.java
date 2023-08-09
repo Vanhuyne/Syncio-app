@@ -463,6 +463,12 @@ public class PostUI extends javax.swing.JPanel implements Options.ReasonSelected
         return lblHeart;
     }
 
+    public MyLabel getLblReport() {
+        return lblReport;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;
     private online.syncio.component.MyButton btnPrev;

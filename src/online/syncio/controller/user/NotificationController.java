@@ -1,16 +1,23 @@
 package online.syncio.controller.user;
 
 import com.mongodb.client.FindIterable;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import online.syncio.component.MyLabel;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
@@ -37,18 +44,24 @@ public class NotificationController {
     }
 
     public void readDesiredDateTime(String userID) {
-        Properties properties = new Properties();
+//        Properties properties = new Properties();
+//
+//        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
+//            properties.load(inputStream);
+//            String desiredDateTimeStr = properties.getProperty(userID + "." + DESIRED_DATETIME_KEY);
+//            if (desiredDateTimeStr != null) {
+//                desiredDateTime = dateTimeFormat.parse(desiredDateTimeStr);
+//                System.out.println("Desired date and time for user " + userID + ": " + desiredDateTime);
+//            }
+//        } catch (IOException | ParseException e) {
+//            e.printStackTrace();
+//        }
 
-        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
-            properties.load(inputStream);
-            String desiredDateTimeStr = properties.getProperty(userID + "." + DESIRED_DATETIME_KEY);
-            if (desiredDateTimeStr != null) {
-                desiredDateTime = dateTimeFormat.parse(desiredDateTimeStr);
-                System.out.println("Desired date and time for user " + userID + ": " + desiredDateTime);
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+        Calendar calendar = Calendar.getInstance();
+        // Subtract 3 days from the current date
+        calendar.add(Calendar.DAY_OF_MONTH, -3);
+        Date threeDaysAgo = calendar.getTime();
+        desiredDateTime = threeDaysAgo;
     }
 
     public void writeDesiredDateTime(String userID, Date date) {
@@ -78,6 +91,12 @@ public class NotificationController {
 
         readDesiredDateTime(currentUserID);
 
+        MyLabel lblLast3Days = new MyLabel("Last 3 days");
+        lblLast3Days.setPreferredSize(new Dimension(300, 30));
+        lblLast3Days.setBorder(new EmptyBorder(5, 0, 5, 0));
+        lblLast3Days.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        pnlNoti.getPnlResult().add(lblLast3Days);
         for (Post post : postList) {
             List<UserIDAndDateAndText> comments = post.getCommentList();
             Collections.reverse(comments);

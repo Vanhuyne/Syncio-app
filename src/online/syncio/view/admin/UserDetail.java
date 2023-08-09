@@ -111,6 +111,7 @@ public class UserDetail extends javax.swing.JFrame {
                 PostUI postUI = new PostUI(post.getId().toString(), currentUser.getId().toString());
                 postUI.getLblHeart().setVisible(false);
                 postUI.getLblComment().setVisible(false);
+                postUI.getLblReport().setVisible(false);
                 SwingUtilities.invokeLater(() -> {
                     removeLoading();
                     feedPanel.add(postUI);

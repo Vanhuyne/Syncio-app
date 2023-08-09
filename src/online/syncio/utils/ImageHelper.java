@@ -139,6 +139,47 @@ public class ImageHelper {
     public static Image resizeImageToHeight(BufferedImage bufferedImage, int height) {
         return bufferedImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
     }
+    
+    public static Image resizeImageToFit(BufferedImage bufferedImage, int size) {
+        if (bufferedImage.getWidth() < bufferedImage.getHeight()) {
+            bufferedImage = imageToBufferedImage(resizeImageToWidth(bufferedImage, size));
+        } else {
+            bufferedImage = imageToBufferedImage(resizeImageToHeight(bufferedImage, size));
+        }
+        
+        BufferedImage mask = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = mask.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+        g2d.fillRect(0, 0, size - 1, size - 1);
+        g2d.dispose();
+
+        BufferedImage masked = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        g2d = masked.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+        g2d.drawImage(bufferedImage, 0, 0, null);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
+        g2d.drawImage(mask, 0, 0, null);
+        g2d.dispose();
+        
+        return masked;
+    }
 
     public static Binary resizingAndCompressingWidthToBinary(BufferedImage bufferedImage, int width, float compressionQuality) {
         try {

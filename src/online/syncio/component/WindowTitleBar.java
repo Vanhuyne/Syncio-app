@@ -118,10 +118,10 @@ public class WindowTitleBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        if (main != null && main.getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
-            main.getPnlNotifications().getController().writeDesiredDateTime(
-                    LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
-        }
+//        if (main.isVisible() && main != null && main.getGOLBAL_DATE() != null && LoggedInUser.getCurrentUser() != null) {
+//            main.getPnlNotifications().getController().writeDesiredDateTime(
+//                    LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
+//        }
 
         // Add a shutdown hook to close the MongoDB connection before exiting
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

@@ -18,6 +18,7 @@ import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDate;
+import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.TextHelper;
 import online.syncio.view.user.PostDetailUI;
@@ -135,8 +136,18 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
             pnlImages.setPreferredSize(new Dimension(0, 0));
             pnlImages.setImg("");
         }
+        
+        List<UserIDAndDateAndText> lReport = post.getReportList();
+        String reports = "";
+        for(UserIDAndDateAndText report : lReport) {
+            reports += userDAO.getByID(report.getUserID()).getUsername() + "-" + Options.getReportReasonLabel(Integer.parseInt(report.getText()));
+            reports += "<br>";
+        }
+        btnHide.setToolTipText("<html>" + reports + "</html>");
     }
 
+    
+    
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
@@ -268,6 +279,8 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         btnHide.setForeground(new java.awt.Color(255, 255, 255));
         btnHide.setText("Hide");
         btnHide.setToolTipText("ssss");
+        btnHide.setBorderColor(new java.awt.Color(238, 84, 102));
+        btnHide.setRadius(10);
         btnHide.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnHideMouseClicked(evt);
@@ -279,11 +292,12 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         pnlOwnerLayout.setHorizontalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOwnerLayout.createSequentialGroup()
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDateCreated, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         pnlOwnerLayout.setVerticalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,7 +306,7 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
                 .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -369,15 +383,13 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
             .addComponent(pnlAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblViewAllCmt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlOwner, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnlOwner, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
