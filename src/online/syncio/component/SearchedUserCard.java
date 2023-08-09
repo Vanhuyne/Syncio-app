@@ -75,7 +75,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
         List<Binary> photos = post.getPhotoList();
 
         if (!photos.isEmpty()) {
-            resizeImg = ImageHelper.resizing(ImageHelper.readBinaryAsBufferedImage(photos.get(0)), 60, 60);
+            resizeImg = new ImageIcon(ImageHelper.resizeImageToFit(ImageHelper.readBinaryAsBufferedImage(photos.get(0)), 60));
             lblAvatar.setIcon(resizeImg);
         } else {
             ImageHelper.setAvatarToLabel(user, lblAvatar, 60);

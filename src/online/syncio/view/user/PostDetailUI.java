@@ -19,6 +19,7 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
+import online.syncio.utils.ActionHelper;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
 import online.syncio.utils.TextHelper;
@@ -50,6 +51,8 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         // Start the change stream listener
         startPostChangeStream();
+        
+        ActionHelper.assignEnterKeyListener(btnSend, txtCmt);
     }
 
     private void startPostChangeStream() {

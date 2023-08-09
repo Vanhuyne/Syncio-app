@@ -359,18 +359,18 @@ public final class Main extends javax.swing.JFrame {
         if (pnlNotifications.isVisible()) {
             pnlNotifications.setVisible(false);
         } else {
-            GOLBAL_DATE = new Date();
+//            GOLBAL_DATE = new Date();
             pnlNotifications.setVisible(true);
             pnlSearch.setVisible(false);
         }
     }//GEN-LAST:event_btnNotificationActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        if (GOLBAL_DATE != null && LoggedInUser.getCurrentUser() != null) {
-            System.out.println("da cap nhat");
-            pnlNotifications.getController().writeDesiredDateTime(
-                    LoggedInUser.getCurrentUser().getId().toString(), GOLBAL_DATE);
-        }
+//        if (GOLBAL_DATE != null && LoggedInUser.getCurrentUser() != null) {
+//            System.out.println("da cap nhat");
+//            pnlNotifications.getController().writeDesiredDateTime(
+//                    LoggedInUser.getCurrentUser().getId().toString(), GOLBAL_DATE);
+//        }
     }//GEN-LAST:event_formWindowClosed
 
     public static void main(String args[]) {

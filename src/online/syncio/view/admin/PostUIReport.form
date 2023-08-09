@@ -34,17 +34,14 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="pnlImages" alignment="0" max="32767" attributes="0"/>
+          <Component id="pnlImages" alignment="0" pref="401" max="32767" attributes="0"/>
           <Component id="pnlAction" max="32767" attributes="0"/>
-          <Component id="jScrollPane1" alignment="0" pref="400" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" alignment="0" pref="401" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <Component id="lblViewAllCmt" min="-2" pref="119" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="pnlOwner" min="-2" pref="397" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
+          <Component id="pnlOwner" alignment="0" pref="401" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -193,11 +190,12 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="lblUsername" min="-2" pref="115" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                  <Component id="lblUsername" min="-2" pref="170" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblDateCreated" max="32767" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnHide" min="-2" pref="88" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <Component id="btnHide" min="-2" pref="80" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -208,7 +206,7 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblUsername" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDateCreated" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
-                      <Component id="btnHide" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnHide" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="10" max="32767" attributes="0"/>
               </Group>
@@ -265,6 +263,10 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Hide"/>
             <Property name="toolTipText" type="java.lang.String" value="ssss"/>
+            <Property name="borderColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="66" green="54" red="ee" type="rgb"/>
+            </Property>
+            <Property name="radius" type="int" value="10"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnHideMouseClicked"/>

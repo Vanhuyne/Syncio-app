@@ -32,6 +32,15 @@ public class Options extends javax.swing.JPanel {
         }
     }
     
+    public static String getReportReasonLabel(int value) {
+        for (Options.ReportReason reason : Options.ReportReason.values()) {
+            if (reason.getValue() == value) {
+                return reason.getLabel();
+            }
+        }
+        return null; // No matching value found
+    }
+    
     
 
     public Options() {
