@@ -2,10 +2,15 @@ package online.syncio.utils;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JTextField;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.view.user.Main;
 
 public class ActionHelper {
 
@@ -46,5 +51,32 @@ public class ActionHelper {
             // Perform cleanup tasks here, such as closing the MongoDB connection
             MongoDBConnect.close();
         }));
+    }
+    
+    
+    
+    public static void restartApplication() {
+        // Get the current Java executable path
+        String javaPath = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+
+        // Get the main class name
+        String mainClassName = Main.class.getName();
+
+        // Construct the command to restart the application
+        List<String> command = new ArrayList<>();
+        command.add(javaPath);
+        command.add("-cp");
+        command.add(System.getProperty("java.class.path"));
+        command.add(mainClassName);
+
+        // Start a new process to restart the application
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        try {
+            processBuilder.start();
+            System.exit(0); // Exit the current instance of the application
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle restart errors
+        }
     }
 }
