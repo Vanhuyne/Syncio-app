@@ -1,7 +1,6 @@
 package online.syncio.component;
 
 import java.awt.Color;
-import online.syncio.resources.fonts.MyFont;
 
 public class MyDialog extends javax.swing.JPanel {
 
@@ -31,9 +30,12 @@ public class MyDialog extends javax.swing.JPanel {
     private void initComponents() {
 
         pnlMain = new online.syncio.component.MyPanel();
+        pnlTop = new online.syncio.component.MyPanel();
         btnClose = new online.syncio.component.MyButton();
+        pnlCenter = new online.syncio.component.MyPanel();
         lblTitle = new online.syncio.component.MyLabel();
         lblText = new online.syncio.component.MyLabel();
+        pnlBottom = new online.syncio.component.MyPanel();
         btnDismiss = new online.syncio.component.MyButton();
 
         setLayout(new java.awt.BorderLayout());
@@ -45,6 +47,12 @@ public class MyDialog extends javax.swing.JPanel {
         pnlMain.setRoundBottomRight(10);
         pnlMain.setRoundTopLeft(10);
         pnlMain.setRoundTopRight(10);
+        pnlMain.setLayout(new javax.swing.BoxLayout(pnlMain, javax.swing.BoxLayout.Y_AXIS));
+
+        pnlTop.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTop.setMaximumSize(new java.awt.Dimension(350, 30));
+        pnlTop.setMinimumSize(new java.awt.Dimension(350, 30));
+        pnlTop.setPreferredSize(new java.awt.Dimension(350, 30));
 
         btnClose.setBackground(null);
         btnClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/close_16px.png"))); // NOI18N
@@ -55,17 +63,58 @@ public class MyDialog extends javax.swing.JPanel {
             }
         });
 
+        javax.swing.GroupLayout pnlTopLayout = new javax.swing.GroupLayout(pnlTop);
+        pnlTop.setLayout(pnlTopLayout);
+        pnlTopLayout.setHorizontalGroup(
+            pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTopLayout.createSequentialGroup()
+                .addContainerGap(324, Short.MAX_VALUE)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
+        pnlTopLayout.setVerticalGroup(
+            pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTopLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlMain.add(pnlTop);
+
+        pnlCenter.setBackground(new java.awt.Color(255, 255, 255));
+        pnlCenter.setAlignmentX(0.5F);
+        pnlCenter.setLayout(new javax.swing.BoxLayout(pnlCenter, javax.swing.BoxLayout.Y_AXIS));
+
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitle.setText("Unsaved changes");
         lblTitle.setFont(new java.awt.Font("SF Pro Display Regular", 0, 18)); // NOI18N
+        lblTitle.setMaximumSize(new java.awt.Dimension(350, 30));
+        lblTitle.setMinimumSize(new java.awt.Dimension(350, 30));
         lblTitle.setName("lblTitle"); // NOI18N
+        lblTitle.setPreferredSize(new java.awt.Dimension(350, 30));
+        pnlCenter.add(lblTitle);
 
+        lblText.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         lblText.setForeground(new java.awt.Color(115, 115, 115));
         lblText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblText.setText("<html><p style='text-align: center;'>You have unsaved changes. Are you sure you want to cancel?</p></html>");
         lblText.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lblText.setFont(lblText.getFont().deriveFont(lblText.getFont().getStyle() & ~java.awt.Font.BOLD));
+        lblText.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblText.setMaximumSize(new java.awt.Dimension(350, 23122));
+        lblText.setMinimumSize(new java.awt.Dimension(54, 50));
         lblText.setName("lblText"); // NOI18N
+        pnlCenter.add(lblText);
+
+        pnlMain.add(pnlCenter);
+
+        pnlBottom.setBackground(new java.awt.Color(255, 255, 255));
+        pnlBottom.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        pnlBottom.setMaximumSize(new java.awt.Dimension(350, 50));
+        pnlBottom.setMinimumSize(new java.awt.Dimension(350, 50));
+        pnlBottom.setPreferredSize(new java.awt.Dimension(350, 50));
+        pnlBottom.setLayout(new java.awt.BorderLayout());
 
         btnDismiss.setBackground(null);
         btnDismiss.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(219, 219, 219)));
@@ -80,38 +129,9 @@ public class MyDialog extends javax.swing.JPanel {
                 btnDismissActionPerformed(evt);
             }
         });
+        pnlBottom.add(btnDismiss, java.awt.BorderLayout.CENTER);
 
-        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
-        pnlMain.setLayout(pnlMainLayout);
-        pnlMainLayout.setHorizontalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMainLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblText, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(10, 10, 10))
-            .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(btnDismiss, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(1, 1, 1))
-        );
-        pnlMainLayout.setVerticalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlMainLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblText, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDismiss, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                .addGap(2, 2, 2))
-        );
+        pnlMain.add(pnlBottom);
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -130,6 +150,9 @@ public class MyDialog extends javax.swing.JPanel {
     private online.syncio.component.MyButton btnDismiss;
     private online.syncio.component.MyLabel lblText;
     private online.syncio.component.MyLabel lblTitle;
+    private online.syncio.component.MyPanel pnlBottom;
+    private online.syncio.component.MyPanel pnlCenter;
     private online.syncio.component.MyPanel pnlMain;
+    private online.syncio.component.MyPanel pnlTop;
     // End of variables declaration//GEN-END:variables
 }

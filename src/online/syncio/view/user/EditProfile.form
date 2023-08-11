@@ -36,14 +36,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="lblAccount" min="-2" pref="279" max="-2" attributes="0"/>
-                          <EmptySpace pref="738" max="32767" attributes="0"/>
-                          <Component id="lblLogout" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="lblAccount" min="-2" pref="279" max="-2" attributes="0"/>
                       <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  <EmptySpace pref="803" max="32767" attributes="0"/>
               </Group>
               <Component id="lblSepratorLine1" alignment="1" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
@@ -91,11 +87,7 @@
                           <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="lblSepratorLine" min="-2" pref="1" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="lblLogout" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lblSepratorLine" min="-2" pref="1" max="-2" attributes="0"/>
                               <Component id="lblAccount" min="-2" pref="54" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
@@ -189,21 +181,6 @@
               <Dimension value="[2, 1]"/>
             </Property>
           </Properties>
-        </Component>
-        <Component class="online.syncio.component.MyLabel" name="lblLogout">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="56" green="49" red="ed" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Logout"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Display Bold" size="14" style="0"/>
-            </Property>
-            <Property name="fontBold" type="int" value="2"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lblLogoutMousePressed"/>
-          </Events>
         </Component>
         <Component class="online.syncio.component.MyLabel" name="lblUsername">
           <Properties>

@@ -10,11 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
 import online.syncio.component.MyDialog;
 import online.syncio.component.MyPanel;
+import online.syncio.component.WindowTitleBar;
 import online.syncio.controller.user.MainController;
 import online.syncio.model.LoggedInUser;
 import online.syncio.resources.fonts.MyFont;
@@ -45,24 +47,23 @@ public final class Main extends javax.swing.JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20)); //rounded frame
         setLocationRelativeTo(null);
         GlassPanePopup.install(this);
-
-        pnlNotifications = new NotificationsPanel();
-        pnlNotifications.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
-        pnlNotifications.setAlignmentX(1.0F);
-        pnlNotifications.setMaximumSize(new Dimension(540, 679));
-        pnlNotifications.setMinimumSize(new Dimension(540, 679));
-        pnlNotifications.setPreferredSize(new Dimension(540, 679));
-        pnlContainer.add(pnlNotifications);
-        pnlNotifications.setVisible(false);
-        pnlContainer.setComponentZOrder(pnlNotifications, 0);
-
+        
         pnlSearch.setVisible(false);
+        if(!controller.getIsUpdating()) {
+            pnlNotifications = new NotificationsPanel();
+            pnlNotifications.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 540));
+            pnlNotifications.setAlignmentX(1.0F);
+            pnlNotifications.setMaximumSize(new Dimension(540, 679));
+            pnlNotifications.setMinimumSize(new Dimension(540, 679));
+            pnlNotifications.setPreferredSize(new Dimension(540, 679));
+            pnlContainer.add(pnlNotifications);
+            pnlNotifications.setVisible(false);
+            pnlContainer.setComponentZOrder(pnlNotifications, 0);
 
-        messagePanel = new MessagePanel();
+            messagePanel = new MessagePanel();
 
-        controller.recheckLoggedInUser();
-
-        addComponents();
+            controller.recheckLoggedInUser();
+        }
     }
 
     //rounded frame
@@ -76,7 +77,7 @@ public final class Main extends javax.swing.JFrame {
     }
 
     public void addComponents() {
-        panelList = new JPanel[]{new Home(), messagePanel, profile, new EditProfile()};
+        panelList = new JPanel[]{new Home(), messagePanel, profile, new EditProfile(), new Setting()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -92,7 +93,7 @@ public final class Main extends javax.swing.JFrame {
             pnlTabContent.add(pnl, pnlName);
         }
 
-        btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile};
+        btnMenuList = new MyButton[]{btnHome, btnSearch, btnMessage, btnNotification, btnCreate, btnProfile, btnSetting};
 
         for (MyButton btn : btnMenuList) {
 
@@ -175,6 +176,8 @@ public final class Main extends javax.swing.JFrame {
         btnNotification = new online.syncio.component.MyButton();
         btnCreate = new online.syncio.component.MyButton();
         btnProfile = new online.syncio.component.MyButton();
+        pnlSetting = new online.syncio.component.MyPanel();
+        btnSetting = new online.syncio.component.MyButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("Main"); // NOI18N
@@ -224,7 +227,7 @@ public final class Main extends javax.swing.JFrame {
         pnlMain.add(pnlContainer, java.awt.BorderLayout.CENTER);
 
         pnlLeftMenu.setBackground(new java.awt.Color(255, 255, 255));
-        pnlLeftMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(219, 219, 219)));
+        pnlLeftMenu.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 1, new java.awt.Color(219, 219, 219)));
         pnlLeftMenu.setMaximumSize(new java.awt.Dimension(200, 679));
         pnlLeftMenu.setMinimumSize(new java.awt.Dimension(200, 679));
         pnlLeftMenu.setPreferredSize(new java.awt.Dimension(200, 679));
@@ -324,6 +327,26 @@ public final class Main extends javax.swing.JFrame {
         btnProfile.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnProfile);
 
+        pnlSetting.setBackground(new java.awt.Color(255, 255, 255));
+        pnlSetting.setAlignmentX(0.0F);
+        pnlSetting.setMaximumSize(new java.awt.Dimension(32767, 367));
+        pnlSetting.setLayout(new java.awt.BorderLayout());
+
+        btnSetting.setBackground(null);
+        btnSetting.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 15, 20, 0));
+        btnSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/setting_28px.png"))); // NOI18N
+        btnSetting.setText("Setting");
+        btnSetting.setBorderThickness(0);
+        btnSetting.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnSetting.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnSetting.setMaximumSize(new java.awt.Dimension(200, 50));
+        btnSetting.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnSetting.setName("setting"); // NOI18N
+        btnSetting.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlSetting.add(btnSetting, java.awt.BorderLayout.SOUTH);
+
+        pnlLeftMenu.add(pnlSetting);
+
         pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.WEST);
 
         getContentPane().add(pnlMain, java.awt.BorderLayout.CENTER);
@@ -332,12 +355,24 @@ public final class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        btnHome.doClick();
-        if (LoggedInUser.getCurrentUser() != null) {
-            pnlNotifications.getController().displayNotifications();
-            pnlNotifications.revalidate();
-            pnlNotifications.repaint();
+        if(!controller.getIsUpdating()) {
+            addComponents();
+            btnHome.doClick();
+            if (LoggedInUser.getCurrentUser() != null) {
+                pnlNotifications.getController().displayNotifications();
+                pnlNotifications.revalidate();
+                pnlNotifications.repaint();
+            }
         }
+        else {
+            // update
+            JOptionPane.showMessageDialog(this, "Application is updating.\nIt will automatically restart once the update is complete.\nPlease do not close the app while the update is in progress.");
+//            GlassPanePopup.showPopup(new MyDialog("Updating", "Application is updating.<br>It will automatically restart once the update is complete.<br>Please do not close the app while the update is in progress."), "dialog");
+            getPnlTitleBar().getBtnClose().setVisible(false);
+        }
+        
+        //check update
+        controller.checkForUpdates();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
@@ -462,6 +497,12 @@ public final class Main extends javax.swing.JFrame {
         this.btnProfile = btnProfile;
     }
 
+    public WindowTitleBar getPnlTitleBar() {
+        return pnlTitleBar;
+    }
+    
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnCreate;
     private online.syncio.component.MyButton btnHome;
@@ -469,10 +510,12 @@ public final class Main extends javax.swing.JFrame {
     private online.syncio.component.MyButton btnNotification;
     private online.syncio.component.MyButton btnProfile;
     private online.syncio.component.MyButton btnSearch;
+    private online.syncio.component.MyButton btnSetting;
     private online.syncio.component.MyPanel pnlContainer;
     private online.syncio.component.MyPanel pnlLeftMenu;
     private online.syncio.component.MyPanel pnlMain;
     private online.syncio.view.user.SearchUserPanel pnlSearch;
+    private online.syncio.component.MyPanel pnlSetting;
     private online.syncio.component.MyPanel pnlTabContent;
     private online.syncio.component.WindowTitleBar pnlTitleBar;
     // End of variables declaration//GEN-END:variables

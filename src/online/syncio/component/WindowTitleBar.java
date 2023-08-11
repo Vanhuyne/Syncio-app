@@ -136,6 +136,14 @@ public class WindowTitleBar extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnMinimizeActionPerformed
 
+    
+    
+    public MyButton getBtnClose() {
+        return btnClose;
+    }
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnClose;
     private online.syncio.component.MyButton btnLogo;

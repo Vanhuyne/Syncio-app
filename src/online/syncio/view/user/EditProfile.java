@@ -49,7 +49,6 @@ public final class EditProfile extends JPanel {
         lblAccount = new online.syncio.component.MyLabel();
         lblTitle = new online.syncio.component.MyLabel();
         lblSepratorLine1 = new javax.swing.JLabel();
-        lblLogout = new online.syncio.component.MyLabel();
         lblUsername = new online.syncio.component.MyLabel();
         txtUsername = new online.syncio.component.MyTextField();
         lblChangeUsername = new online.syncio.component.MyLabel();
@@ -82,16 +81,6 @@ public final class EditProfile extends JPanel {
 
         lblSepratorLine1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(228, 228, 228), 2));
         lblSepratorLine1.setPreferredSize(new java.awt.Dimension(2, 1));
-
-        lblLogout.setForeground(new java.awt.Color(237, 73, 86));
-        lblLogout.setText("Logout");
-        lblLogout.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
-        lblLogout.setFontBold(2);
-        lblLogout.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblLogoutMousePressed(evt);
-            }
-        });
 
         lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUsername.setText("Username");
@@ -166,12 +155,9 @@ public final class EditProfile extends JPanel {
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlMainLayout.createSequentialGroup()
-                        .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 738, Short.MAX_VALUE)
-                        .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addContainerGap(803, Short.MAX_VALUE))
             .addComponent(lblSepratorLine1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pnlMainLayout.createSequentialGroup()
                 .addGap(303, 303, 303)
@@ -209,10 +195,7 @@ public final class EditProfile extends JPanel {
                         .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlMainLayout.createSequentialGroup()
-                                .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblSepratorLine, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(1, 1, 1)
                         .addComponent(lblSepratorLine1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -246,25 +229,6 @@ public final class EditProfile extends JPanel {
 
         add(pnlMain, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
-        if (OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
-            //admin
-            LoggedInUser.logOut();
-            OtherHelper.getMainAdmin(this).dispose();
-            new Login().setVisible(true);
-        } else if (LoggedInUser.getCurrentUser() != null) {
-            //user
-            if (OtherHelper.getMainFrame(this).getGOLBAL_DATE() != null) {
-                OtherHelper.getMainFrame(this).getPnlNotifications().getController().writeDesiredDateTime(LoggedInUser.getCurrentUser().getId().toString(), OtherHelper.getMainFrame(this).getGOLBAL_DATE());
-            }
-
-            LoggedInUser.logOut();
-            OtherHelper.deleteSessionValue("LOGGED_IN_USER");
-            new Login().setVisible(true);
-            Main.getInstance().dispose();
-        }
-    }//GEN-LAST:event_lblLogoutMousePressed
 
     private void lblChangeUsernameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblChangeUsernameMousePressed
         //validate
@@ -310,7 +274,6 @@ public final class EditProfile extends JPanel {
     private online.syncio.component.MyLabel lblChangeUsername;
     private online.syncio.component.MyLabel lblEmail;
     private online.syncio.component.MyLabel lblEmailQuestion;
-    private online.syncio.component.MyLabel lblLogout;
     private online.syncio.component.MyLabel lblPassword;
     private online.syncio.component.MyLabel lblPasswordQuestion;
     private javax.swing.JLabel lblSepratorLine;
