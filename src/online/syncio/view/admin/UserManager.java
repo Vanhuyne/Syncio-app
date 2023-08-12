@@ -50,7 +50,7 @@ public class UserManager extends JPanel {
         tblUser.getColumnModel().getColumn(7).setPreferredWidth(10);
 
         //data
-        fillToTable();
+        fillToTable(false);
 
         //Double click on Table
         tblUser.addMouseListener(new MouseAdapter() {
@@ -59,14 +59,11 @@ public class UserManager extends JPanel {
                 if (mouseEvent.getClickCount() == 2 && tblUser.getSelectedRow() != -1) {
                     new UserDetail(managementUser, userDAO.getByID(tblUser.getValueAt(tblUser.getSelectedRow(), 0).toString())).setVisible(true);
                 }
-            }
-        ;
+            };
+        });
     }
 
-    );
-    }
-
-    public FindIterable find() {
+    public FindIterable find(boolean isReload) {
         String searchText = txtSearch.getText().trim();
         if (searchText.equalsIgnoreCase("Search by email or username") || searchText.isEmpty() || searchText == null) {
             searchText = null;
@@ -86,13 +83,13 @@ public class UserManager extends JPanel {
             status = 1;
         }
 
-        return userDAO.getAllByUsernameOrEmailRoleFlag(searchText, role, status);
+        return userDAO.getAllByUsernameOrEmailRoleFlag(isReload, searchText, role, status);
     }
 
-    public void fillToTable() {
+    public void fillToTable(boolean isReload) {
         model.setRowCount(0); //clear rows in the table
-
-        lUser = find();
+        
+        lUser = find(isReload);
 
         //them tung dong vao
         if (lUser != null) {
@@ -273,18 +270,18 @@ public class UserManager extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
-        fillToTable();
+        fillToTable(false);
     }//GEN-LAST:event_txtSearchKeyReleased
 
     private void cboRoleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboRoleItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            fillToTable();
+            fillToTable(false);
         }
     }//GEN-LAST:event_cboRoleItemStateChanged
 
     private void cboStatusItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboStatusItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            fillToTable();
+            fillToTable(false);
         }
     }//GEN-LAST:event_cboStatusItemStateChanged
 
@@ -296,7 +293,7 @@ public class UserManager extends JPanel {
         txtSearch.setText("");
         cboRole.setSelectedItem("All");
         cboStatus.setSelectedItem("All");
-        fillToTable();
+        fillToTable(false);
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed

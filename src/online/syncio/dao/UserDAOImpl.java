@@ -134,7 +134,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public FindIterable<User> getAllByUsernameOrEmailRoleFlag(String usernameOrEmail, Integer role, Integer flag) {
+    public FindIterable<User> getAllByUsernameOrEmailRoleFlag(boolean isReload, String usernameOrEmail, Integer role, Integer flag) {
+        if(isReload) {
+            userCollection = database.getCollection("users", User.class);
+        }
+        
         if (usernameOrEmail == null && role == null && flag == null) {
             return userCollection.find();
         }

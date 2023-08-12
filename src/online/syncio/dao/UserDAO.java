@@ -16,7 +16,7 @@ public interface UserDAO extends DAO<User> {
 
     public MongoCollection<User> getAllByCollection();
 
-    public FindIterable<User> getAllByUsernameOrEmailRoleFlag(String usernameOrEmail, Integer role, Integer flag);
+    public FindIterable<User> getAllByUsernameOrEmailRoleFlag(boolean isReload, String usernameOrEmail, Integer role, Integer flag);
 
     public long countPost(String userID);
 

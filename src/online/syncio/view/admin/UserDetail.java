@@ -491,7 +491,7 @@ public class UserDetail extends javax.swing.JFrame {
             boolean result = userDAO.updateByID(u);
             if (result) {
                 dispose();
-                managementUser.fillToTable();
+                managementUser.fillToTable(true);
             }
         } else {
             //add
@@ -530,7 +530,7 @@ public class UserDetail extends javax.swing.JFrame {
                 boolean result = userDAO.add(new User(username, password, email, null, rdoAdmin.isSelected() ? 1 : 0, btnSetFlag.getText().equalsIgnoreCase("set flag") ? 0 : 1, null));
                 if (result) {
                     dispose();
-                    managementUser.fillToTable();
+                    managementUser.fillToTable(true);
                 }
             }
         }

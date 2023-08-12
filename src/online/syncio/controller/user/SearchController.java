@@ -31,7 +31,7 @@ public class SearchController {
             searchText = null;
         }
 
-        userList = userDAO.getAllByUsernameOrEmailRoleFlag(searchText, 0, 0);
+        userList = userDAO.getAllByUsernameOrEmailRoleFlag(false, searchText, 0, 0);
 
         if (userList != null) {
             loadResult();

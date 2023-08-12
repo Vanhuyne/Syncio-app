@@ -6,17 +6,49 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclEntryFlag;
+import java.nio.file.attribute.AclEntryPermission;
+import java.nio.file.attribute.AclEntryType;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalLookupService;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javax.swing.JOptionPane;
+import online.syncio.component.GlassPanePopup;
+import online.syncio.component.MyDialog;
 
 public class FileHelper {
     
     public static void downloadFileFromWebsite(String link, String outputDirectory, String outputFileName) {
         try {
             URL url = new URL(link);
+            
+            // Check if you have write permission in the output directory
+            if (!Files.isWritable(Paths.get(outputDirectory))) {
+                GlassPanePopup.showPopup(new MyDialog("Permission Error", "We don't have permission to update in " + outputDirectory + "<br>Please run the application with administrative privileges and try again."), "dialog");
+            }
+            
+            // Check if the URL exists
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                GlassPanePopup.showPopup(new MyDialog("URL Error", "The download URL does not exist or is not accessible."), "dialog");
+                return;
+            }
+            
             BufferedInputStream bis = new BufferedInputStream(url.openStream());
             
             File outputDir = new File(outputDirectory);
