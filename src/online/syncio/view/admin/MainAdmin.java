@@ -15,6 +15,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
+import online.syncio.view.user.Setting;
 
 public final class MainAdmin extends javax.swing.JFrame {
 
@@ -39,7 +40,7 @@ public final class MainAdmin extends javax.swing.JFrame {
     }
 
     public void addComponents() {
-        panelList = new JPanel[]{new Dashboard(), new UserManager(), new HiddenPost(), new ReportedPost(), profile, new EditProfile()};
+        panelList = new JPanel[]{new Dashboard(), new UserManager(), new HiddenPost(), new ReportedPost(), profile, new EditProfile(), new Setting()};
 
         pnlTabContent.setLayout(new CardLayout());
 
@@ -48,7 +49,7 @@ public final class MainAdmin extends javax.swing.JFrame {
             pnlTabContent.add(pnl, pnlName);
         }
 
-        btnMenuList = new MyButton[]{btnDashboard, btnUser, btnHiddenPost, btnReportedPost, btnProfile};
+        btnMenuList = new MyButton[]{btnDashboard, btnUser, btnHiddenPost, btnReportedPost, btnProfile, btnSetting};
 
         for (MyButton btn : btnMenuList) {
             btn.addActionListener((ActionEvent e) -> {
@@ -112,6 +113,8 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnHiddenPost = new online.syncio.component.MyButton();
         btnReportedPost = new online.syncio.component.MyButton();
         btnProfile = new online.syncio.component.MyButton();
+        pnlSetting = new online.syncio.component.MyPanel();
+        btnSetting = new online.syncio.component.MyButton();
         pnlTabContent = new online.syncio.component.MyPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -150,7 +153,7 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnDashboard.setMaximumSize(new java.awt.Dimension(200, 60));
         btnDashboard.setMinimumSize(new java.awt.Dimension(200, 60));
-        btnDashboard.setName("managementdashboard"); // NOI18N
+        btnDashboard.setName("dashboard"); // NOI18N
         btnDashboard.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnDashboard);
 
@@ -205,6 +208,26 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnProfile.setName("profile"); // NOI18N
         btnProfile.setPreferredSize(new java.awt.Dimension(200, 50));
         pnlLeftMenu.add(btnProfile);
+
+        pnlSetting.setBackground(new java.awt.Color(255, 255, 255));
+        pnlSetting.setAlignmentX(0.0F);
+        pnlSetting.setMaximumSize(new java.awt.Dimension(32767, 415));
+        pnlSetting.setLayout(new java.awt.BorderLayout());
+
+        btnSetting.setBackground(null);
+        btnSetting.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 15, 20, 0));
+        btnSetting.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/setting_28px.png"))); // NOI18N
+        btnSetting.setText("Setting");
+        btnSetting.setBorderThickness(0);
+        btnSetting.setFont(new java.awt.Font("SF Pro Display Medium", 0, 16)); // NOI18N
+        btnSetting.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnSetting.setMaximumSize(new java.awt.Dimension(200, 50));
+        btnSetting.setMinimumSize(new java.awt.Dimension(200, 50));
+        btnSetting.setName("setting"); // NOI18N
+        btnSetting.setPreferredSize(new java.awt.Dimension(200, 50));
+        pnlSetting.add(btnSetting, java.awt.BorderLayout.SOUTH);
+
+        pnlLeftMenu.add(pnlSetting);
 
         pnlMain.add(pnlLeftMenu, java.awt.BorderLayout.LINE_START);
 
@@ -261,9 +284,11 @@ public final class MainAdmin extends javax.swing.JFrame {
     private online.syncio.component.MyButton btnHiddenPost;
     private online.syncio.component.MyButton btnProfile;
     private online.syncio.component.MyButton btnReportedPost;
+    private online.syncio.component.MyButton btnSetting;
     private online.syncio.component.MyButton btnUser;
     private online.syncio.component.MyPanel pnlLeftMenu;
     private online.syncio.component.MyPanel pnlMain;
+    private online.syncio.component.MyPanel pnlSetting;
     private online.syncio.component.MyPanel pnlTabContent;
     private online.syncio.component.WindowTitleBar pnlTitleBar;
     // End of variables declaration//GEN-END:variables

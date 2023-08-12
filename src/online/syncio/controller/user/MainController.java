@@ -28,7 +28,8 @@ public class MainController {
     public MainController(Main main) {
         this.main = main;
         LATEST_VERSION = getLatestVersion();
-        this.isUpdating = !CURRENT_VERSION.equals(LATEST_VERSION);
+        //prevent beta version
+        this.isUpdating = !CURRENT_VERSION.equals(LATEST_VERSION) && !LATEST_VERSION.contains("beta");
     }
 
     public boolean getIsUpdating() {
@@ -42,8 +43,10 @@ public class MainController {
     
     
     public void checkForUpdates() {
-        if (!CURRENT_VERSION.equals(LATEST_VERSION)) {             
+        if (isUpdating) {
             updateApplication();
+//            JOptionPane.showMessageDialog(this, "Application is updating.\nIt will automatically restart once the update is complete.\nPlease do not close the app while the update is in progress.");
+            GlassPanePopup.showPopup(new MyDialog("Updating", "Application is updating.<br>It will automatically restart once the update is complete.<br>Please do not close the app while the update is in progress."), "dialog");
         }
         else {
             // no
@@ -58,6 +61,7 @@ public class MainController {
         String fileName = LATEST_VERSION + ".zip";
         LINK_TO_UPDATE = Account.GITHUB_REPOSITORIE + "releases/download/" + LATEST_VERSION + "/" + fileName;
         CURRENT_DIRECTORY = System.getProperty("user.dir");
+        System.out.println(LINK_TO_UPDATE);
         FileHelper.downloadFileFromWebsite(LINK_TO_UPDATE, CURRENT_DIRECTORY, fileName);
         
         //unzip
@@ -67,7 +71,7 @@ public class MainController {
         FileHelper.deleteFile(CURRENT_DIRECTORY, fileName);
         
         //restart application
-//        ActionHelper.restartApplication();
+        ActionHelper.restartApplication();
     }
     
     

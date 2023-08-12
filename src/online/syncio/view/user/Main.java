@@ -366,8 +366,6 @@ public final class Main extends javax.swing.JFrame {
         }
         else {
             // update
-            JOptionPane.showMessageDialog(this, "Application is updating.\nIt will automatically restart once the update is complete.\nPlease do not close the app while the update is in progress.");
-//            GlassPanePopup.showPopup(new MyDialog("Updating", "Application is updating.<br>It will automatically restart once the update is complete.<br>Please do not close the app while the update is in progress."), "dialog");
             getPnlTitleBar().getBtnClose().setVisible(false);
         }
         
