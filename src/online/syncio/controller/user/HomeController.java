@@ -56,6 +56,7 @@ public class HomeController {
             if (LoggedInUser.getCurrentUser() != null) {
                 int postsLoaded = 0;
 
+                //CHANGE
                 // Set up MongoDB change stream
                 ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
 
@@ -65,7 +66,7 @@ public class HomeController {
                         // Handle the change event here
                         // For example, extract the new post data from changeDocument and update your feed UI
                         Post newPost = changeDocument.getFullDocument();
-                        if (newPost != null) {
+                        if (newPost != null && postDAO.getByID(newPost.getId().toString()) != null) {
                             SwingUtilities.invokeLater(() -> {
                                 PostUI postUI = new PostUI(newPost.getId().toString(), newPost.getUserID());
                                 addPostUI(postUI);
@@ -75,6 +76,8 @@ public class HomeController {
                 });
                 changeStreamThread.start();
 
+                
+                //REGULAR
                 // Load initial posts from the regular database query
                 for (Post post : posts) {
                     // Check if pnlSearch is visible before adding PostUI components
