@@ -6,22 +6,42 @@ import online.syncio.dao.MongoDBConnect;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
 
+/**
+ * Represents a graphical component for displaying user comments in a panel.
+ * Each CommentUI instance encapsulates a user's avatar, username, comment text,
+ * and timestamp, along with interactivity to navigate to the commenter's profile.
+ */
 public class CommentUI extends javax.swing.JPanel {
 
+    
+     /**
+     * Constructs a CommentUI instance with the provided user comment information.
+     *
+     * @param username The username of the commenter.
+     * @param cmt      The content of the comment.
+     * @param date     The timestamp when the comment was made.
+     */
     public CommentUI(String username, String cmt, String date) {
         initComponents();
 
+        // Set the commenter's avatar in the label.
         ImageHelper.setAvatarToLabel(username, lblComment, 24);
 
         lblComment.setText("<html><body style=\"font-family:'sans-serif'\"><p style=\"width:190px\"><b>" + username + "</b>   "
                 + cmt + "</p><span font color='gray' style=\"font-size:8px\">"
                 + date + "</span></body></html>");
-
+        
+        // Format and set the comment content and timestamp using HTML.
         lblComment.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                // Show the "profile" tab.
                 Main.getInstance().showTab("profile");
+                
+                // Retrieve user information from the database.
                 User user = MongoDBConnect.getUserDAO().getByUsername(username.trim());
+                
+                // Load the commenter's profile using the profile controller.
                 Main.getInstance().profile.getController().loadProfile(user);
             }
         });

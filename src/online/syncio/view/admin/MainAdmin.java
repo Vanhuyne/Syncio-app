@@ -17,6 +17,10 @@ import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
 import online.syncio.view.user.Setting;
 
+/**
+ * The MainAdmin class represents the main frame for the administration panel.
+ * It allows authorized administrators to navigate through different sections of the admin panel.
+ */
 public final class MainAdmin extends javax.swing.JFrame {
 
     private User currentUser;
@@ -27,6 +31,10 @@ public final class MainAdmin extends javax.swing.JFrame {
     public static String prevTab, curTab;
     public MyFont myFont = new MyFont();
 
+    /**
+     * Constructs a new MainAdmin instance.
+     * Initializes the admin panel, its UI components, and sets up initial properties.
+     */
     public MainAdmin() {
         this.profile = new Profile(LoggedInUser.getCurrentUser());
 
@@ -39,18 +47,26 @@ public final class MainAdmin extends javax.swing.JFrame {
         addComponents();
     }
 
+    /**
+     * Adds UI components to the admin panel, such as navigation buttons and content panels.
+     */
     public void addComponents() {
+        
+        // Initialize an array of content panels representing different sections
         panelList = new JPanel[]{new Dashboard(), new UserManager(), new HiddenPost(), new ReportedPost(), profile, new EditProfile(), new Setting()};
 
         pnlTabContent.setLayout(new CardLayout());
 
+        // Add each content panel to the tab content panel
         for (JPanel pnl : panelList) {
             String pnlName = pnl.getClass().getSimpleName().trim().toLowerCase();
             pnlTabContent.add(pnl, pnlName);
         }
 
+        // Initialize an array of navigation buttons
         btnMenuList = new MyButton[]{btnDashboard, btnUser, btnHiddenPost, btnReportedPost, btnProfile, btnSetting};
 
+        // Add action listeners to the navigation buttons
         for (MyButton btn : btnMenuList) {
             btn.addActionListener((ActionEvent e) -> {
                 MyButton btn1 = (MyButton) e.getSource();
@@ -66,6 +82,9 @@ public final class MainAdmin extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Switches the displayed tab within the admin panel based on the provided tab name.
+     */
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -85,6 +104,9 @@ public final class MainAdmin extends javax.swing.JFrame {
         c.show(pnlTabContent, curTab);
     }
 
+    /**
+     * Switches the displayed tab within the admin panel based on the provided tab name and button.
+     */
     public void showTab(String newTab, MyButton btn) {
         btn.setFontBold(2);
         for (MyButton b : btnMenuList) {
@@ -245,6 +267,9 @@ public final class MainAdmin extends javax.swing.JFrame {
         btnDashboard.doClick();
     }//GEN-LAST:event_formWindowOpened
 
+    /**
+     * The entry point for the MainAdmin application.
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -271,10 +296,16 @@ public final class MainAdmin extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Retrieves the content panel for tab navigation.
+     */
     public MyPanel getPnlTabContent() {
         return pnlTabContent;
     }
 
+    /**
+     * Retrieves the current user.
+     */
     public User getCurrentUser() {
         return currentUser;
     }

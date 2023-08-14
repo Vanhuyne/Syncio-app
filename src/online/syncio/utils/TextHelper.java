@@ -34,6 +34,7 @@ import org.json.JSONTokener;
  */
 public class TextHelper {
     
+     // A map containing emojis and their corresponding colors
     private static final Map<String, Color> emojiColorMap = new HashMap<>();
 
     static {
@@ -48,6 +49,12 @@ public class TextHelper {
         // Add more emojis and colors as needed
     }
 
+    /**
+     * Adds colored text, including emojis, to a JTextPane.
+     *
+     * @param textPane The JTextPane to which colored text will be added.
+     * @param text     The text to be displayed, including emojis.
+     */
     public static void addColoredText(JTextPane textPane, String text) {
         Document doc = textPane.getDocument();
         try {
@@ -120,14 +127,15 @@ public class TextHelper {
     
     
     
+    
+    private static Map<JTextField, String> textFieldPlaceholders = new HashMap<>();
+
     /**
      * Adds placeholder text to the specified text field.
      *
      * @param textField       the text field to add placeholder text to
      * @param placeholderText the placeholder text to be displayed
      */
-    private static Map<JTextField, String> textFieldPlaceholders = new HashMap<>();
-
     public static void addPlaceholderText(JTextField textField, String placeholderText) {
         // Save the default foreground color of the text field
         Color defaultColor = textField.getForeground();
@@ -166,6 +174,12 @@ public class TextHelper {
     
     
     private static Map<JTextArea, String> textAreaPlaceholders = new HashMap<>();
+    /**
+     * Adds placeholder text to a JTextArea.
+     *
+     * @param textArea        The JTextArea to add placeholder text to.
+     * @param placeholderText The placeholder text to be displayed.
+     */
     public static void addPlaceholderText(JTextArea textArea, String placeholderText) {
         // Save the default foreground color of the text field
         Color defaultColor = textArea.getForeground();
@@ -246,7 +260,12 @@ public class TextHelper {
     }
     
     
-    
+    /**
+     * Generates a unique username from an email address.
+     *
+     * @param userEmail The user's email address.
+     * @return A unique username generated from the email.
+     */
     public static String generateUniqueUsernameFromEmail(String userEmail) {
         UserDAO userDAO = new UserDAOImpl(MongoDBConnectOld.getDatabase());
         String baseUsername = userEmail.split("@")[0].toLowerCase().replaceAll("[^a-zA-Z0-9_]", "_");
@@ -260,7 +279,12 @@ public class TextHelper {
     }
     
     
-    
+    /**
+     * Censors bad words in a given text.
+     *
+     * @param text The text to be censored.
+     * @return The censored text.
+     */
     public static String censorBadWords(String text) {
         try {
             InputStream inputStream = TextHelper.class.getResourceAsStream("/online/syncio/resources/json/bad_words.json");

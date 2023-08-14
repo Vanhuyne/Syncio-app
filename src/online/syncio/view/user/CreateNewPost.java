@@ -34,6 +34,14 @@ public class CreateNewPost extends javax.swing.JPanel {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
+ /**
+ * Represents a user interface component for creating new posts.
+ * This component allows users to write captions, select images, and
+ * post content on the platform.
+ *
+ * @param main The instance of the application's main class that manages
+ *             overall functionality and navigation.
+ */
     public CreateNewPost(Main main) {
         this.main = main;
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -42,22 +50,37 @@ public class CreateNewPost extends javax.swing.JPanel {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
+        // Configure caption text area properties and appearance.
         txtCaption.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true);
         txtCaption.setFont(new Font("SansSerif", Font.PLAIN, 16));
 
+        // Set the content type and appearance of the caption text area.
         txtCaption.setContentType("text/html");
         showCaptionLength();
 
+        // Set a placeholder for the caption text area.
         txtCaption.setPlaceholder("Write a caption...");
+        
+        // Set focus on the "Select Image" button.
         btnSelectImage.requestFocus();
 
+        // Display the currently logged-in user's username.
         lblAccount.setText(LoggedInUser.getCurrentUser().getUsername());
 
+        // Configure the UI when an image is not selected.
         imageSelected(false);
 
+        // Initialize and link the controller for handling the new post creation.
         this.controller = new CreateNewPostController(this);
     }
 
+     /**
+     * Adds an emoji represented by a JLabel with the specified color to the caption text area.
+     * If the caption length is below 500 characters, the emoji is appended followed by an empty space.
+     *
+     * @param lbl   The JLabel containing the emoji representation.
+     * @param color The color of the emoji.
+     */
     public void addEmoji(JLabel lbl, Color color) {
         int length = txtCaption.getDocument().getLength();
 
@@ -68,11 +91,20 @@ public class CreateNewPost extends javax.swing.JPanel {
         }
     }
 
+    
+    /**
+    * Updates the label displaying the current character count of the caption text.
+    */
     public void showCaptionLength() {
         int length = txtCaption.getDocument().getLength();
         lblCountNumber.setText(length + "/500");
     }
 
+    /**
+    * Adjusts the visibility and layout of UI components based on image selection.
+    *
+    * @param isSelected True if an image is selected, false otherwise.
+    */
     public void imageSelected(boolean isSelected) {
         if (!isSelected) {
             lblImage.setVisible(true);
@@ -101,6 +133,11 @@ public class CreateNewPost extends javax.swing.JPanel {
         pnlLeft.repaint();
     }
 
+    /**
+    * Displays the selected image along with its filter settings in the UI.
+    *
+    * @param i The index of the selected image in the imagePaths list.
+    */
     public void selectImage(int i) {
         if (i >= 0 && i < imagePaths.size()) {
             imageIndex = i;
@@ -122,6 +159,11 @@ public class CreateNewPost extends javax.swing.JPanel {
         }
     }
 
+    /**
+    * Updates the filter setting for the currently displayed image.
+    *
+    * @param i The index of the image in the imagePaths list.
+    */
     public void updateFilter(int i) {
         if (imageIndex == -1) {
             return;

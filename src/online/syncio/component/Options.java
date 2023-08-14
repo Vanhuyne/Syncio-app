@@ -6,9 +6,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
+/**
+ * Panel for displaying report options and capturing user-selected reasons for reporting.
+ */
 public class Options extends javax.swing.JPanel {
     public static int r = -1;
     
+    /**
+     * Enumeration of report reasons.
+     */
     public enum ReportReason {
         SPAM(0, "It's spam"),
         VIOLENCE(1, "Violence or dangerous organizations"),
@@ -32,6 +38,11 @@ public class Options extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Retrieves the label associated with a report reason value.
+     * @param value The report reason value.
+     * @return The label corresponding to the value.
+     */
     public static String getReportReasonLabel(int value) {
         for (Options.ReportReason reason : Options.ReportReason.values()) {
             if (reason.getValue() == value) {
@@ -42,7 +53,9 @@ public class Options extends javax.swing.JPanel {
     }
     
     
-
+    /**
+     * Constructs the Options panel and initializes report reason labels.
+     */
     public Options() {
         initComponents();
 
@@ -69,10 +82,18 @@ public class Options extends javax.swing.JPanel {
     
     private ReasonSelectedCallback callback;
 
+    /**
+     * Sets the callback for capturing the selected report reason.
+     * @param callback The callback to be set.
+     */
     public void setReasonSelectedCallback(ReasonSelectedCallback callback) {
         this.callback = callback;
     }
 
+    /**
+     * Handles the selection of a report reason.
+     * @param reason The selected report reason.
+     */
     private void reportReasonSelected(ReportReason reason) {
         int selectedValue = reason.getValue();
         Options.r = selectedValue;
@@ -82,7 +103,15 @@ public class Options extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Callback interface for reporting reason selection.
+     */
     public interface ReasonSelectedCallback {
+        
+        /**
+         * Invoked when a report reason is selected.
+         * @param reason The selected reason value.
+         */
         void onReasonSelected(int reason);
     }
     

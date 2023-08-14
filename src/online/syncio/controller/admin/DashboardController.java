@@ -22,6 +22,9 @@ import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.view.admin.Dashboard;
 
+/**
+ * Controller class for managing the dashboard.
+ */
 public class DashboardController {
 
     private Dashboard dashboard;
@@ -33,6 +36,9 @@ public class DashboardController {
         this.dashboard = dashboard;
     }
 
+    /**
+     * Processes and displays the new user chart on the dashboard.
+     */
     public void processNewUserChart() {
         ArrayList<String> dateList = generateLastSevenDays();
         ArrayList<Integer> valueList = getNewUserCounts(dateList);
@@ -40,6 +46,11 @@ public class DashboardController {
         formatAndAddNewUserChart(dateList, valueList);
     }
 
+    /**
+     * Generates a list of date strings for the last seven days.
+     *
+     * @return An ArrayList of date strings.
+     */
     private ArrayList<String> generateLastSevenDays() {
         ArrayList<String> dateList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -54,6 +65,12 @@ public class DashboardController {
         return dateList;
     }
 
+    /**
+     * Retrieves the count of new users for each date in the given list.
+     *
+     * @param dateList The list of date strings.
+     * @return An ArrayList of new user counts.
+     */
     private ArrayList<Integer> getNewUserCounts(ArrayList<String> dateList) {
         ArrayList<Integer> valueList = new ArrayList<>();
         MongoCollection<User> collectionUser = userDAO.getAllByCollection();
@@ -71,6 +88,12 @@ public class DashboardController {
         return valueList;
     }
 
+    /**
+     * Formats and adds a new user chart to the dashboard.
+     *
+     * @param dateList The list of date strings.
+     * @param valueList The list of new user counts.
+     */
     private void formatAndAddNewUserChart(ArrayList<String> dateList, ArrayList<Integer> valueList) {
         for (int i = 0; i < dateList.size(); i++) {
             dateList.set(i, dateList.get(i).substring(5, 10)); //remove year
@@ -84,6 +107,9 @@ public class DashboardController {
         dashboard.getPnlNewUsersChart().repaint();
     }
 
+    /**
+     * Displays engagement statistics on the dashboard.
+     */
     public void displayEngagementStats() {
         long numUsers = userDAO.getAllByCollection().countDocuments();
         long numPosts = postDAO.getAllByCollection().countDocuments();
@@ -111,6 +137,12 @@ public class DashboardController {
         displayTopEngagedUsers(engagementCountMap);
     }
 
+    /**
+     * Increments engagement counts for users in the given engagement list.
+     *
+     * @param engagementCountMap The map containing engagement counts.
+     * @param engagementList The list of engagements.
+     */
     private void incrementEngagementCount(Map<String, Integer> engagementCountMap, List<? extends UserIDAndDate> engagementList) {
         for (UserIDAndDate engagement : engagementList) {
             String userID = engagement.getUserID();
@@ -118,6 +150,11 @@ public class DashboardController {
         }
     }
 
+    /**
+     * Displays the top engaged users on the dashboard.
+     *
+     * @param engagementCountMap The map containing engagement counts.
+     */
     private void displayTopEngagedUsers(Map<String, Integer> engagementCountMap) {
         List<Map.Entry<String, Integer>> sortedEngagementList = new ArrayList<>(engagementCountMap.entrySet());
         sortedEngagementList.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));

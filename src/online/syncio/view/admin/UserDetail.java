@@ -22,6 +22,10 @@ import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
 import online.syncio.utils.Validator;
 
+/**
+ * The UserDetail class represents a graphical user interface for displaying and editing user details.
+ * It extends the javax.swing.JFrame class to provide a window for interacting with user information.
+ */
 public class UserDetail extends javax.swing.JFrame {
 
     private LoginController controller;
@@ -94,15 +98,24 @@ public class UserDetail extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Adds loading indicator to the feed panel.
+     */
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
 
+    /**
+     * Removes loading indicator from the feed panel.
+     */
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
+    /**
+     * Loads more posts using a separate thread.
+     */
     private void loadMorePosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -135,6 +148,9 @@ public class UserDetail extends javax.swing.JFrame {
         thread.start();
     }
 
+    /**
+     * Sets components editable status based on flag.
+     */
     public void flag() {
         if (currentUser.getFlag() == 0) {
             txtUsername.setEditable(true);
@@ -150,6 +166,9 @@ public class UserDetail extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Toggles the user's flag status.
+     */
     public void toggleFlag() {
         if (currentUser.getFlag() == 0) {
             currentUser.setFlag(1);

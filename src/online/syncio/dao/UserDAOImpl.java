@@ -22,6 +22,9 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+/**
+ * Implementation of the UserDAO interface for managing User entities.
+ */
 public class UserDAOImpl implements UserDAO {
 
     private MongoDatabase database;

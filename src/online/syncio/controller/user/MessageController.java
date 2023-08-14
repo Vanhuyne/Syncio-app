@@ -16,6 +16,9 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.view.user.MessagePanel;
 
+/**
+ * Controller class for managing user messaging functionality.
+ */
 public class MessageController {
 
     private MessagePanel pnlMsg;
@@ -25,12 +28,20 @@ public class MessageController {
     private MessageDAO messageDAO = MongoDBConnect.getMessageDAO();
     private Set<String> messageUserSet = new HashSet<>();
 
+    /**
+     * Constructs a MessageController with the provided MessagePanel.
+     *
+     * @param pnlMsg The MessagePanel instance.
+     */
     public MessageController(MessagePanel pnlMsg) {
         this.pnlMsg = pnlMsg;
 
         cardLayout = (CardLayout) pnlMsg.getChatArea().getLayout();
     }
 
+    /**
+     * Checks if a user is logged in and adds them to the history panel.
+     */
     public void recheckLoggedInUser() {
         if (LoggedInUser.isUser()) {
             addUserToHistoryPanel();
@@ -39,6 +50,9 @@ public class MessageController {
         }
     }
 
+    /**
+     * Adds messaging users to the history panel.
+     */
     public void addUserToHistoryPanel() {
         pnlMsg.getPnlUserList().removeAll();
 
@@ -52,6 +66,11 @@ public class MessageController {
         pnlMsg.getPnlUserList().repaint();
     }
 
+    /**
+     * Creates a card for the history panel with the given username.
+     *
+     * @param username The username to create the card for.
+     */
     public void createCardForHistoryPanel(String username) {
         User user = userDAO.getByUsername(username);
 
@@ -72,6 +91,11 @@ public class MessageController {
         pnlMsg.getPnlUserList().repaint();
     }
 
+    /**
+     * Opens a message chat with the given messaging username.
+     *
+     * @param messagingUsername The username of the messaging user.
+     */
     public void openMessage(String messagingUsername) {
         Component[] componentList = pnlMsg.getChatArea().getComponents();
 
@@ -99,6 +123,11 @@ public class MessageController {
         }
     }
 
+    /**
+     * Creates a message chat area for the given messaging user.
+     *
+     * @param messagingUser The messaging user.
+     */
     public void createMessage(User messagingUser) {
         String username = messagingUser.getUsername();
 

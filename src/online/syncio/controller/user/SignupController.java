@@ -16,12 +16,20 @@ import online.syncio.utils.Validator;
 import online.syncio.view.login.Login;
 import online.syncio.view.login.Signup;
 
+/**
+ * Controller class for handling user sign-up and email verification.
+ */
 public class SignupController {
 
     private Signup signup;
     private UserDAO userDAO;
     private String us;
 
+    /**
+     * Constructor for initializing the SignupController.
+     *
+     * @param signup The associated Signup view.
+     */
     public SignupController(Signup signup) {
         this.signup = signup;
 
@@ -29,6 +37,11 @@ public class SignupController {
         this.userDAO = MongoDBConnect.getUserDAO();
     }
 
+    /**
+     * Performs sign-up authentication based on the provided type.
+     *
+     * @param type The type of authentication to perform.
+     */
     public void signupAuthentication(int type) {
         if (type == 0) {
             signupAndSendVerificationEmail();
@@ -37,6 +50,9 @@ public class SignupController {
         }
     }
 
+    /**
+     * Handles sign-up and sends a verification email.
+     */
     private void signupAndSendVerificationEmail() {
         MyTextField txtEmail = signup.getTxtEmail();
         MyTextField txtUsername = signup.getTxtUsername();
@@ -81,6 +97,15 @@ public class SignupController {
         }
     }
 
+     /**
+     * Validates the sign-up input fields.
+     *
+     * @param email           The email input.
+     * @param username        The username input.
+     * @param password        The password input.
+     * @param passwordConfirm The password confirmation input.
+     * @return A list of validation errors.
+     */
     private List<String> validateSignupInputs(String email, String username, String password, String passwordConfirm) {
         List<String> errors = new ArrayList<>();
         errors.add(Validator.email(signup.getTxtEmail(), "Email", email, false, "Email"));
@@ -108,6 +133,14 @@ public class SignupController {
         return errors;
     }
 
+     /**
+     * Generates the content of the verification email.
+     *
+     * @param otp           The OTP code.
+     * @param subject       The subject of the email.
+     * @param recipientName The name of the recipient.
+     * @return The email content.
+     */
     private String generateVerificationEmailContent(int otp, String subject, String recipientName) {
         return """
                <tr>
@@ -129,6 +162,9 @@ public class SignupController {
                 + "</tr>\n";
     }
 
+    /**
+     * Shows the verification panel after sending the email.
+     */
     private void showVerificationPanel() {
         TextHelper.addPlaceholderText(signup.getTxtUsername(), "OTP");
         signup.getLblTitle().setText("Email Verification");
@@ -139,6 +175,9 @@ public class SignupController {
         signup.getTxtUsername().requestFocus();
     }
 
+    /**
+     * Verifies the entered OTP and creates the user account.
+     */
     private void verifyOTPAndCreateAccount() {
         String otp = signup.getTxtUsername().getText();
 

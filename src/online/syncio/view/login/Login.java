@@ -28,15 +28,24 @@ import online.syncio.utils.TextHelper;
 import online.syncio.view.admin.MainAdmin;
 import online.syncio.view.user.Main;
 
+/**
+ * Represents the Login JFrame, which allows users to log in using their credentials.
+ */
 public class Login extends javax.swing.JFrame {
 
+    // Constants for Gmail API authentication
     private static final String APPLICATION_NAME = "Syncio";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
 
+    // Controller for handling login logic
     private LoginController controller;
 
+    
+    /**
+     * Creates a new instance of the Login JFrame.
+     */
     public Login() {
         MongoDBConnect.connect();
 
@@ -44,6 +53,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
 
+        // Install GlassPanePopup to handle popups
         GlassPanePopup.install(this);
         setLocationRelativeTo(null);
         TextHelper.addPlaceholderText(txtUser, "Username");
@@ -51,6 +61,7 @@ public class Login extends javax.swing.JFrame {
 
         txtUser.requestFocus();
 
+        // Initialize the LoginController to handle login actions
         this.controller = new LoginController(this);
 
         //press Enter => click btnLogin
@@ -322,14 +333,29 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
+    /**
+    * Returns the MyPasswordField component representing the password input field in the login form.
+    *
+    * @return The MyPasswordField component for password input.
+    */
     public MyPasswordField getTxtPassword() {
         return txtPassword;
     }
 
+    /**
+    * Returns the MyTextField component representing the username input field in the login form.
+    *
+    * @return The MyTextField component for username input.
+    */
     public MyTextField getTxtUser() {
         return txtUser;
     }
-
+    
+    /**
+    * Returns the MyCheckBox component representing the "Remember Me" checkbox in the login form.
+    *
+    * @return The MyCheckBox component for the "Remember Me" checkbox.
+    */
     public MyCheckBox getChkRememberMe() {
         return chkRememberMe;
     }

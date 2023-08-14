@@ -25,6 +25,10 @@ import online.syncio.utils.OtherHelper;
 import online.syncio.utils.TextHelper;
 import online.syncio.view.login.Login;
 
+/**
+ * This class represents the user interface for displaying detailed information
+ * about a post.
+ */
 public class PostDetailUI extends javax.swing.JPanel {
 
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
@@ -36,6 +40,11 @@ public class PostDetailUI extends javax.swing.JPanel {
     private Thread changeStreamThread;
     private Main main = Main.getInstance();
 
+    /**
+     * Constructs a new instance of the PostDetailUI class with a given post ID.
+     *
+     * @param postID The ID of the post to display details for.
+     */
     public PostDetailUI(String postID) {
         this.postID = postID;
         post = postDAO.getByID(postID);
@@ -45,16 +54,21 @@ public class PostDetailUI extends javax.swing.JPanel {
         // tỉ lệ khoảng cách dịch chuyển khi lăn chuột
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
+        // Display post information and start listening for changes
         showInfoPost();
 
+        // Initialize the change stream for post updates
         changeStreamPosts = postDAO.getChangeStream();
 
         // Start the change stream listener
         startPostChangeStream();
-        
+
         ActionHelper.assignEnterKeyListener(btnSend, txtCmt);
     }
 
+    /**
+     * Initializes the change stream listener for monitoring post changes.
+     */
     private void startPostChangeStream() {
         changeStreamThread = new Thread(() -> {
             try {
@@ -109,6 +123,12 @@ public class PostDetailUI extends javax.swing.JPanel {
         changeStreamThread.start();
     }
 
+    /**
+     * Adds an emoji represented by a label to the comment text field.
+     *
+     * @param lbl The label representing the emoji.
+     * @param color The color of the emoji text.
+     */
     public void addEmoji(JLabel lbl, Color color) {
         int length = txtCmt.getDocument().getLength();
 
@@ -119,6 +139,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Loads comments associated with the post and displays them in the UI.
+     */
     private void loadComments() {
         String username = userDAO.getByID(post.getUserID()).getUsername();
         List<UserIDAndDateAndText> listCmt = post.getCommentList();
@@ -133,6 +156,9 @@ public class PostDetailUI extends javax.swing.JPanel {
         pnlCmt.repaint();
     }
 
+    /**
+     * Populates and displays information about the post in the UI.
+     */
     private void showInfoPost() {
         loadComments();
 
@@ -166,6 +192,11 @@ public class PostDetailUI extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Selects and displays an image from the post's photo list.
+     *
+     * @param i The index of the image to select.
+     */
     public void selectImage(int i) {
         if (i >= 0 && i < post.getPhotoList().size()) {
             imageIndex = i;
