@@ -21,6 +21,7 @@ import online.syncio.model.UserIDAndDate;
 import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.TextHelper;
+import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.PostDetailUI;
 
 public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
@@ -51,7 +52,8 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
             liked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-red_24px.png")));
             unliked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png")));
         } catch (IOException ex) {
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         showInfoPost(postID);
@@ -136,18 +138,16 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
             pnlImages.setPreferredSize(new Dimension(0, 0));
             pnlImages.setImg("");
         }
-        
+
         List<UserIDAndDateAndText> lReport = post.getReportList();
         String reports = "";
-        for(UserIDAndDateAndText report : lReport) {
+        for (UserIDAndDateAndText report : lReport) {
             reports += userDAO.getByID(report.getUserID()).getUsername() + "-" + Options.getReportReasonLabel(Integer.parseInt(report.getText()));
             reports += "<br>";
         }
         btnHide.setToolTipText("<html>" + reports + "</html>");
     }
 
-    
-    
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
@@ -374,6 +374,7 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(null);
 
+        txtCaption.setEditable(false);
         txtCaption.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 3, 0));
         txtCaption.setText("Examples of Instagram Captions · Forget the filters; live your life your way!");
         txtCaption.setBorderThickness(0);

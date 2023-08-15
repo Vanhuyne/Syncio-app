@@ -51,7 +51,7 @@ public class PostDetailUI extends javax.swing.JPanel {
 
         // Start the change stream listener
         startPostChangeStream();
-        
+
         ActionHelper.assignEnterKeyListener(btnSend, txtCmt);
     }
 
@@ -103,7 +103,8 @@ public class PostDetailUI extends javax.swing.JPanel {
                 }
             } catch (MongoInterruptedException e) {
                 // Handle any exceptions here
-                e.printStackTrace();
+                String errorInfo = e.getMessage();
+                GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
             }
         });
         changeStreamThread.start();

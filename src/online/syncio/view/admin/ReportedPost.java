@@ -5,11 +5,13 @@ import com.mongodb.client.FindIterable;
 import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
+import online.syncio.view.user.ErrorDetail;
 
 public class ReportedPost extends JPanel {
 
@@ -71,7 +73,8 @@ public class ReportedPost extends JPanel {
                     try {
                         Thread.sleep(40); // Wait for 100 milliseconds before checking again
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        String errorInfo = e.getMessage();
+                        GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                     }
 
                     PostUIReport postUIReport = new PostUIReport(post.getId().toString(), currentUserID);
@@ -90,7 +93,8 @@ public class ReportedPost extends JPanel {
                         try {
                             Thread.sleep(3000); // 3000 milliseconds = 2 seconds
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            String errorInfo = e.getMessage();
+                            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                         }
 
                         postsLoaded = 0; // Reset the counter

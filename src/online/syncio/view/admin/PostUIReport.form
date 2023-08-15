@@ -400,6 +400,7 @@
       <SubComponents>
         <Component class="online.syncio.component.MyTextPane" name="txtCaption">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder bottom="3" left="0" right="0" top="3"/>

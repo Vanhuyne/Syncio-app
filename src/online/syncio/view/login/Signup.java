@@ -1,8 +1,14 @@
 package online.syncio.view.login;
 
-import online.syncio.view.user.Main;
-import online.syncio.view.login.Login;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.BorderFactory;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyButton;
@@ -12,23 +18,18 @@ import online.syncio.component.MyPanel;
 import online.syncio.component.MyPasswordField;
 import online.syncio.component.MyTextField;
 import online.syncio.controller.user.SignupController;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
 import online.syncio.utils.ActionHelper;
+import online.syncio.utils.GoogleOAuthHelper;
 import online.syncio.utils.SendEmail;
 import online.syncio.utils.TextHelper;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.gmail.Gmail;
-import com.google.api.services.gmail.GmailScopes;
-import java.util.Collections;
-import java.util.List;
-import online.syncio.dao.MongoDBConnect;
-import online.syncio.utils.GoogleOAuthHelper;
+import online.syncio.view.user.ErrorDetail;
+import online.syncio.view.user.Main;
 
 public class Signup extends javax.swing.JFrame {
+
     private static String APPLICATION_NAME = "Syncio";
     private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static String TOKENS_DIRECTORY_PATH = "tokens";
@@ -266,57 +267,54 @@ public class Signup extends javax.swing.JFrame {
 
     private void btnContinueWithGoogleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinueWithGoogleActionPerformed
         String userEmail;
-        
+
         try {
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
             Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, GoogleOAuthHelper.getCredentials(HTTP_TRANSPORT, CREDENTIALS_FILE_PATH, JSON_FACTORY, SCOPES))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-            
+
             // Get the user's email address
             String user = "me";
             com.google.api.services.gmail.model.Profile profile = service.users().getProfile(user).execute();
             userEmail = profile.getEmailAddress();
-            
+
             User u = userDAO.getByEmail(userEmail);
-            if(u != null && u.getPassword().equals("")) {
+            if (u != null && u.getPassword().equals("")) {
                 GlassPanePopup.showPopup(new MyDialog("Account Already Exists", "This email is already connected to your Google Account.\nPlease use a different email or sign in with your Google account."), "dialog");
-            }
-            else if(u != null && !u.getPassword().equals("")) {
+            } else if (u != null && !u.getPassword().equals("")) {
                 GlassPanePopup.showPopup(new MyDialog("Account Already Exists", "Please sign in using your original username and password."), "dialog");
-            }
-            else {
+            } else {
                 //sign up
                 String username = TextHelper.generateUniqueUsernameFromEmail(userEmail);
-                
+
                 //gui email
                 String subject = "WELCOME TO SYNCIO";
                 String recipientName = userEmail;
                 String content = "<tr>\n"
-                          + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
-                          + "<h4>" + subject + "</h4>\n"
-                          + "<br>\n"
-                          + "Dear " + recipientName + ",<br>\n"
-                          + "Thank you for creating your personal account with the username <b>" + username + "</b> on SYNCIO.<br>\n"
-                          + "</td>\n"
-                          + "</tr>\n"
-                          + "<tr>\n"
-                          + "<td>\n"
-                          + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
-                          + "</td>\n"
-                          + "</tr>\n";
+                        + "<td class=\"text-center\" style=\"padding: 80px 0 !important;\">\n"
+                        + "<h4>" + subject + "</h4>\n"
+                        + "<br>\n"
+                        + "Dear " + recipientName + ",<br>\n"
+                        + "Thank you for creating your personal account with the username <b>" + username + "</b> on SYNCIO.<br>\n"
+                        + "</td>\n"
+                        + "</tr>\n"
+                        + "<tr>\n"
+                        + "<td>\n"
+                        + "<p class=\"text-center\">If you did not request to create an account, please ignore this email, no changes will be made to your account. Another user may have entered your username by mistake, but we encourage you to view our tips for Protecting Your Account if you have any concerns.</p>\n"
+                        + "</td>\n"
+                        + "</tr>\n";
 
                 boolean sendStatus = SendEmail.sendFormat(userEmail, userEmail, subject, content);
 
                 if (!sendStatus) {
                     GlassPanePopup.showPopup(new MyDialog("Error", "An error occurred while sending the email"), "dialog");
-                }
-                else {
+                } else {
                     // success send email
                     //add
                     boolean added = userDAO.add(new User(username, "", userEmail, null, 0, 0, null));
-                    if(added) {
+                    if (added) {
                         dispose();
                         new Login().setVisible(true);
                         GlassPanePopup.showPopup(new MyDialog("Account Created", "Your account with the username " + username + " has been successfully created."), "dialog");
@@ -324,7 +322,8 @@ public class Signup extends javax.swing.JFrame {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
 
@@ -332,9 +331,7 @@ public class Signup extends javax.swing.JFrame {
         dispose();
         new Main().setVisible(true);
     }//GEN-LAST:event_lblContinueMousePressed
-    
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -358,7 +355,7 @@ public class Signup extends javax.swing.JFrame {
         //</editor-fold>
 
         ActionHelper.registerShutdownHook(); // Register the shutdown hook
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

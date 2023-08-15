@@ -3,12 +3,14 @@ package online.syncio.controller.user;
 import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import javax.swing.SwingUtilities;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.resources.images.other.MayULike;
+import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.Home;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.PostUI;
@@ -76,7 +78,6 @@ public class HomeController {
                 });
                 changeStreamThread.start();
 
-                
                 //REGULAR
                 // Load initial posts from the regular database query
                 for (Post post : posts) {
@@ -85,7 +86,8 @@ public class HomeController {
                         try {
                             Thread.sleep(40); // Wait for 100 milliseconds before checking again
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            String errorInfo = e.getMessage();
+                            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                         }
                     }
 
@@ -100,7 +102,8 @@ public class HomeController {
                         try {
                             Thread.sleep(3000); // 3000 milliseconds = 2 seconds
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            String errorInfo = e.getMessage();
+                            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                         }
 
                         postsLoaded = 0; // Reset the counter
@@ -111,7 +114,8 @@ public class HomeController {
                 try {
                     changeStreamThread.join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    String errorInfo = e.getMessage();
+                    GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                 }
             }
 
@@ -129,7 +133,8 @@ public class HomeController {
                     try {
                         Thread.sleep(50); // Wait for 100 milliseconds before checking again
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        String errorInfo = e.getMessage();
+                        GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                     }
                 }
 
@@ -137,14 +142,15 @@ public class HomeController {
                 SwingUtilities.invokeLater(() -> {
                     addPostUI(postUI);
                 });
-                
+
                 postsLoaded++;
                 if (postsLoaded >= 5) {
                     // Introduce a 3-second delay after loading 5 posts
                     try {
                         Thread.sleep(3000); // 3000 milliseconds = 2 seconds
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        String errorInfo = e.getMessage();
+                        GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                     }
 
                     postsLoaded = 0; // Reset the counter

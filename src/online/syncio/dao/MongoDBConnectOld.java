@@ -5,7 +5,9 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.config.Account;
+import online.syncio.view.user.ErrorDetail;
 import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
@@ -34,18 +36,18 @@ public class MongoDBConnectOld {
                     Document commandResult = database.runCommand(command);
                     System.out.println("Pinged your deployment. You successfully connected to MongoDB!");
                 } catch (MongoException me) {
-                    System.err.println(me);
+                    String errorInfo = me.getMessage();
+                    GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                 }
             } catch (MongoException me) {
-                System.err.println(me);
+                String errorInfo = me.getMessage();
+                GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
             }
         }
 
         return database;
     }
 
-    
-    
     public static MongoDatabase getDatabase() {
         if (database == null) {
             CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -59,18 +61,18 @@ public class MongoDBConnectOld {
                     Document commandResult = database.runCommand(command);
                     return database;
                 } catch (MongoException me) {
-                    System.err.println(me);
+                    String errorInfo = me.getMessage();
+                    GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                 }
             } catch (MongoException me) {
-                System.err.println(me);
+                String errorInfo = me.getMessage();
+                GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
             }
         }
 
         return database;
     }
 
-    
-    
     public static void closeConnection() {
         if (mongoClient != null) {
             mongoClient.close();

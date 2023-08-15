@@ -3,11 +3,13 @@ package online.syncio.controller.user;
 import com.mongodb.client.ChangeStreamIterable;
 import java.util.List;
 import javax.swing.SwingUtilities;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
+import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.Profile;
 
 public class ProfileController {
@@ -69,7 +71,8 @@ public class ProfileController {
             try {
                 changeStreamThread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                String errorInfo = e.getMessage();
+                GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
             }
         });
 

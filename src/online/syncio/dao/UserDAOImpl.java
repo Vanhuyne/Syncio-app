@@ -14,10 +14,12 @@ import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.TextHelper;
+import online.syncio.view.user.ErrorDetail;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -40,7 +42,8 @@ public class UserDAOImpl implements UserDAO {
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            String errorInfo = e.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
         return false;
     }
@@ -62,7 +65,8 @@ public class UserDAOImpl implements UserDAO {
             System.out.println("Upserted id: " + result.getUpsertedId()); // only contains a value when an upsert is performed
             return result.getModifiedCount() > 0;
         } catch (MongoException me) {
-            System.err.println("Unable to update due to an error: " + me);
+            String errorInfo = me.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         return false;
@@ -84,7 +88,8 @@ public class UserDAOImpl implements UserDAO {
         try {
             userCollection.find().into(lUser);
         } catch (Exception e) {
-            e.printStackTrace();
+            String errorInfo = e.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         return lUser;
@@ -135,10 +140,10 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public FindIterable<User> getAllByUsernameOrEmailRoleFlag(boolean isReload, String usernameOrEmail, Integer role, Integer flag) {
-        if(isReload) {
+        if (isReload) {
             userCollection = database.getCollection("users", User.class);
         }
-        
+
         if (usernameOrEmail == null && role == null && flag == null) {
             return userCollection.find();
         }

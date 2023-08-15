@@ -13,7 +13,9 @@ import com.mongodb.client.result.InsertOneResult;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.model.Message;
+import online.syncio.view.user.ErrorDetail;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
@@ -35,8 +37,8 @@ public class MessageDAOImpl implements MessageDAO {
 
             return true;
         } catch (Exception ex) {
-            System.out.println("Failed to insert into MongoDB: " + ex.getMessage());
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         return false;
@@ -78,7 +80,6 @@ public class MessageDAOImpl implements MessageDAO {
         FindIterable<Message> messageList = messageCollection.find(filter).sort(Sorts.ascending("dateSent"));
         return messageList;
     }
-
 
     @Override
     public Set<String> getMessagingUsers(String currentUser) {
