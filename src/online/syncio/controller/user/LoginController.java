@@ -15,10 +15,23 @@ import online.syncio.view.login.Login;
 import online.syncio.view.user.Main;
 import online.syncio.view.admin.MainAdmin;
 
+/**
+ * The `LoginController` class handles user authentication during the login process. It validates user input, authenticates users, and manages the transition to the appropriate user interface based on their role and login status.
+ *
+ * The controller collaborates with UI components to retrieve user input and validate it for both the username and password fields. It utilizes the `UserDAO` to authenticate users and validate their login credentials. Upon successful authentication, it sets the logged-in user's session and determines whether they have administrator privileges or not.
+ *
+ * The class also provides functionality for remembering the user's login session by saving their session value, and it displays appropriate error messages for authentication failures and validation errors.
+ */
 public class LoginController {
 
     private Login login;
     private UserDAO userDAO;
+
+    /**
+     * Constructs a `LoginController` associated with the provided `Login` user interface.
+     *
+     * @param login The `Login` user interface component.
+     */
 
     public LoginController(Login login) {
         this.login = login;
@@ -26,6 +39,9 @@ public class LoginController {
         this.userDAO = MongoDBConnect.getUserDAO();
     }
 
+    /**
+     * Performs user authentication based on the provided username and password.
+     */
     public void loginAuthentication() {
         MyTextField txtUser = login.getTxtUser();
         MyPasswordField txtPassword = login.getTxtPassword();

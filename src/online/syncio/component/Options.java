@@ -6,7 +6,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
+/**
+ * Panel for displaying report options and capturing user-selected reasons for reporting.
+ */
 public class Options extends javax.swing.JPanel {
+
     public enum OptionType {
         MORE_OPTIONS,
         REPORT_REASON
@@ -72,7 +76,12 @@ public class Options extends javax.swing.JPanel {
             return label;
         }
     }
-
+    
+    /**
+     * Retrieves the label associated with a report reason value.
+     * @param value The report reason value.
+     * @return The label corresponding to the value.
+     */
     public static String getReportReasonLabel(int value) {
         for (Options.ReportReason reason : Options.ReportReason.values()) {
             if (reason.getValue() == value) {
@@ -91,8 +100,14 @@ public class Options extends javax.swing.JPanel {
         return null;
     }
 
+  
+  
+    public Options() {
+=======
+
     public Options(OptionType optionType) {
         this.optionType = optionType;
+
         initComponents();
 
         pnlReasonContainer.setLayout(new BoxLayout(pnlReasonContainer, BoxLayout.Y_AXIS));
@@ -143,6 +158,10 @@ public class Options extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Sets the callback for capturing the selected report reason.
+     * @param callback The callback to be set.
+     */
     public void setReasonSelectedCallback(ReasonSelectedCallback callback) {
         this.reasonCallback = callback;
     }

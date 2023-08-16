@@ -1,61 +1,62 @@
-package online.syncio.view.user;
+package online.syncio.view;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import online.syncio.component.GlassPanePopup;
-import online.syncio.component.MyDialog;
 import online.syncio.component.MyLabel;
-import online.syncio.component.MyNotification;
 import online.syncio.component.Options;
-import online.syncio.component.Options.MoreOptions;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
-import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
-import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
-import online.syncio.utils.ActionHelper;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.OtherHelper;
 import online.syncio.utils.TextHelper;
-import online.syncio.view.login.Login;
+import online.syncio.view.user.PostDetailUI;
 
 /**
- * Panel to display a single post's information.
+ * The PostUIReport class represents a user interface panel for displaying
+ * detailed information about a specific post, along with options to interact
+ * with the post such as liking and reporting. It extends the javax.swing.JPanel
+ * class and implements Options.ReasonSelectedCallback to handle the callback
+ * for selecting a reason for reporting the post.
  */
-public class PostUI extends javax.swing.JPanel {
+public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
 
-    private PostDAO postDAO = MongoDBConnect.getPostDAO();
-    private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private String userID; //own post
+    private PostDAO postDAO;
+    private UserDAO userDAO;
+    private String userID;
     private String postID;
     private Post post;
+    private int totalLike;
     private int imageIndex = 0;
+    private List<Post> listPost;
 
     ImageIcon liked = new ImageIcon();
     ImageIcon unliked = new ImageIcon();
 
     /**
-     * Creates a new instance of PostUI.
+     * Constructor for initializing the PostUIReport panel. It sets up UI
+     * components for displaying post details and handling user interactions.
      *
-     * @param postID The ID of the post.
-     * @param userID The ID of the user.
+     * @param postID The ID of the post to be displayed.
+     * @param userID The ID of the user interacting with the post.
      */
-    public PostUI(String postID, String userID) {
+    public PostUIReport(String postID, String userID) {
+        this.userDAO = MongoDBConnect.getUserDAO();
+        this.postDAO = MongoDBConnect.getPostDAO();
+
         this.userID = userID;
         this.postID = postID;
-
         post = postDAO.getByID(postID);
 
         initComponents();
 
+        // Load heart icons for like interactions
         try {
             liked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-red_24px.png")));
             unliked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png")));
@@ -63,59 +64,64 @@ public class PostUI extends javax.swing.JPanel {
             ex.printStackTrace();
         }
 
-        showInfoPost();
+        // Display information about the post
+        showInfoPost(postID);
+
     }
 
     /**
-     * Check if the post is liked by the current user.
+     * Checks if the current user has liked the post.
      *
-     * @return True if the post is liked, false otherwise.
+     * @return True if the user has liked the post, otherwise false.
      */
     public boolean isLiked() {
         // Check if any documents matched the condition
-        return post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()));
+        if (post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Update the like status of the post.
+     * Updates the like status of the post based on user interaction.
      */
     public void updateLike() {
         if (isLiked()) {
             lblHeart.setIcon(unliked);
-            postDAO.removeLike(postID, LoggedInUser.getCurrentUser().getId().toString());
+            postDAO.removeLike(postID, userID);
         } else {
             post.getLikeList().add(new UserIDAndDate(userID));
             lblHeart.setIcon(liked);
-            postDAO.addLike(postID, LoggedInUser.getCurrentUser().getId().toString());
+            postDAO.addLike(postID, userID);
         }
 
         post = postDAO.getByID(postID);
         lblTotalLike.setText(post.getLikeList().size() + " likes");
     }
 
-    public boolean isReported() {
-        post = postDAO.getByID(postID);
-        
-        if (post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()))) {
-            return true;
+    /**
+     * Loads and displays report-related information for the post.
+     */
+    public void loadReport() {
+        if (post.getFlag() == 1) {
+            btnHide.setText("Hidden");
         } else {
-            return false;
+            btnHide.setText("Hide");
         }
     }
-    
-
 
     /**
-     * Display information about the post.
+     * Displays detailed information about the specified post.
+     *
+     * @param postID The ID of the post to be displayed.
      */
-    private void showInfoPost() {
-        String username = userDAO.getByID(userID).getUsername();
-        lblUsername.setText(username);
-        lblUsername2.setText(username);
-
+    private void showInfoPost(String postID) {
+        loadReport();
+        lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
+        lblUsername2.setText(userDAO.getByID(post.getUserID()).getUsername());
+        //btnHide.setToolTipText(post.getReportList());
         lblDateCreated.setText(post.getDatePosted());
-
-        ImageHelper.setAvatarToLabel(username, lblUsername, 24);
 
         if (!post.getCaption().equals("")) {
             txtCaption.setText("");
@@ -126,13 +132,13 @@ public class PostUI extends javax.swing.JPanel {
 
         lblTotalLike.setText(post.getLikeList().size() + " likes");
 
-        if (LoggedInUser.getCurrentUser() != null && isLiked()) {
+        if (isLiked()) {
             lblHeart.setIcon(liked);
         }
 
         //raito
         pnlImages.setSize(400, 400);
-        if (!post.getPhotoList().isEmpty()) {
+        if (post.getPhotoList().size() > 0) {
             if (post.getPhotoList().size() <= 1) {
                 btnNext.setVisible(false);
                 btnPrev.setVisible(false);
@@ -158,9 +164,9 @@ public class PostUI extends javax.swing.JPanel {
     }
 
     /**
-     * Select a specific image from the post's photo list.
+     * Displays the specified image from the post's image list.
      *
-     * @param i The index of the image to be selected.
+     * @param i The index of the image to be displayed.
      */
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
@@ -188,9 +194,9 @@ public class PostUI extends javax.swing.JPanel {
         btnPrev = new online.syncio.component.MyButton();
         lblCountImage = new online.syncio.component.MyLabel();
         pnlOwner = new online.syncio.component.MyPanel();
+        lblUsername = new javax.swing.JLabel();
         lblDateCreated = new javax.swing.JLabel();
-        lblMoreOption = new online.syncio.component.MyLabel();
-        lblUsername = new online.syncio.component.MyLabel();
+        btnHide = new online.syncio.component.MyButton();
         pnlAction = new online.syncio.component.MyPanel();
         lblHeart = new online.syncio.component.MyLabel();
         lblTotalLike = new javax.swing.JLabel();
@@ -264,7 +270,7 @@ public class PostUI extends javax.swing.JPanel {
             .addGroup(pnlImagesLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(lblCountImage, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                .addGap(161, 161, 161)
                 .addGroup(pnlImagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -274,54 +280,50 @@ public class PostUI extends javax.swing.JPanel {
         pnlOwner.setBackground(new java.awt.Color(255, 255, 255));
         pnlOwner.setPreferredSize(new java.awt.Dimension(0, 54));
 
-        lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
-        lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblDateCreated.setText("2022-02-02 02:02:02 ");
-        lblDateCreated.setMaximumSize(new java.awt.Dimension(117, 15));
-        lblDateCreated.setMinimumSize(new java.awt.Dimension(117, 15));
-        lblDateCreated.setPreferredSize(new java.awt.Dimension(117, 15));
-
-        lblMoreOption.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblMoreOption.setText(". . .");
-        lblMoreOption.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        lblMoreOption.setFont(new java.awt.Font("SF Pro Display Bold", 0, 14)); // NOI18N
-        lblMoreOption.setFontBold(2);
-        lblMoreOption.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblMoreOption.setMaximumSize(new java.awt.Dimension(40, 16));
-        lblMoreOption.setMinimumSize(new java.awt.Dimension(40, 16));
-        lblMoreOption.setPreferredSize(new java.awt.Dimension(40, 16));
-        lblMoreOption.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblMoreOptionMousePressed(evt);
-            }
-        });
-
+        lblUsername.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         lblUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/profile_24px.png"))); // NOI18N
         lblUsername.setText(" sanhvc");
+        lblUsername.setToolTipText("");
         lblUsername.setMaximumSize(new java.awt.Dimension(255, 24));
         lblUsername.setMinimumSize(new java.awt.Dimension(255, 24));
         lblUsername.setPreferredSize(new java.awt.Dimension(255, 24));
+
+        lblDateCreated.setFont(new java.awt.Font("SF Pro Display", 0, 12)); // NOI18N
+        lblDateCreated.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDateCreated.setText("2022-02-02 02:02:02");
+        lblDateCreated.setMaximumSize(new java.awt.Dimension(115, 15));
+        lblDateCreated.setMinimumSize(new java.awt.Dimension(115, 15));
+        lblDateCreated.setPreferredSize(new java.awt.Dimension(115, 15));
+
+        btnHide.setBackground(new java.awt.Color(238, 84, 102));
+        btnHide.setForeground(new java.awt.Color(255, 255, 255));
+        btnHide.setText("Hide");
+        btnHide.setToolTipText("ssss");
+        btnHide.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnHideMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlOwnerLayout = new javax.swing.GroupLayout(pnlOwner);
         pnlOwner.setLayout(pnlOwnerLayout);
         pnlOwnerLayout.setHorizontalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOwnerLayout.createSequentialGroup()
-                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
                 .addComponent(lblDateCreated, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(lblMoreOption, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1))
+                .addGap(18, 18, 18)
+                .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnlOwnerLayout.setVerticalGroup(
             pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlOwnerLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(pnlOwnerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDateCreated, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMoreOption, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -360,12 +362,6 @@ public class PostUI extends javax.swing.JPanel {
 
         lblUsername2.setFont(new java.awt.Font("SF Pro Display", 1, 14)); // NOI18N
         lblUsername2.setText("sanhvc");
-        lblUsername2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        lblUsername2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lblUsername2MousePressed(evt);
-            }
-        });
 
         javax.swing.GroupLayout pnlActionLayout = new javax.swing.GroupLayout(pnlAction);
         pnlAction.setLayout(pnlActionLayout);
@@ -395,7 +391,6 @@ public class PostUI extends javax.swing.JPanel {
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(null);
 
-        txtCaption.setEditable(false);
         txtCaption.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 0, 3, 0));
         txtCaption.setText("Examples of Instagram Captions · Forget the filters; live your life your way!");
         txtCaption.setBorderThickness(0);
@@ -407,11 +402,13 @@ public class PostUI extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlImages, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnlAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(lblViewAllCmt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(pnlOwner, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlOwner, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,13 +427,6 @@ public class PostUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblHeartMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHeartMousePressed
-        if (LoggedInUser.getCurrentUser() == null && OtherHelper.getMainFrame(this) != null) {
-            new Login().setVisible(true);
-            OtherHelper.getMainFrame(this).dispose();
-            GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
-            return;
-        }
-
         updateLike();
     }//GEN-LAST:event_lblHeartMousePressed
 
@@ -456,67 +446,40 @@ public class PostUI extends javax.swing.JPanel {
         GlassPanePopup.showPopup(new PostDetailUI(postID), "postdetail");
     }//GEN-LAST:event_lblViewAllCmtMousePressed
 
-    private void lblMoreOptionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMoreOptionMousePressed
-        if (LoggedInUser.getCurrentUser() == null && OtherHelper.getMainFrame(this) != null) {
-            new Login().setVisible(true);
-            OtherHelper.getMainFrame(this).dispose();
-            GlassPanePopup.showPopup(new MyDialog("Login Required", "To access this feature, please log in to your account."), "dialog");
-            return;
+    private void btnHideMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHideMouseClicked
+        if (postDAO.updateFlagTo1(postID)) {
+            btnHide.setText("Hidden");
+            //System.out.println("0");
+        } else {
+            System.out.println("thua");
         }
-
-        // Show the options panel and set the callback
-        Options options = Options.moreOptionsPanel;
-        options.setOptionSelectedCallback(option -> onOptionSelected(option));
-        GlassPanePopup.showPopup(options, "moreoptions");
-    }//GEN-LAST:event_lblMoreOptionMousePressed
-
-    private void lblUsername2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsername2MousePressed
-        GlassPanePopup.closePopup("postdetail");
-        Main.getInstance().showTab("profile");
-        User user = userDAO.getByUsername(lblUsername.getText().trim());
-        Main.getInstance().profile.getController().loadProfile(user);
-    }//GEN-LAST:event_lblUsername2MousePressed
-
-
-  
-    private void onOptionSelected(int option) {
-        if (option == MoreOptions.COPYLINK.getValue()) {
-            ActionHelper.copyToClipboard("#" + postID);
-            new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Copied to clipboard").setVisible(true);
-        } else if (option == MoreOptions.REPORT.getValue()) {
-            showReportOptionsPopup();
-        }
-    }
-    
-    private void showReportOptionsPopup() {
-        Options reportOptions = new Options(Options.OptionType.REPORT_REASON);
-        reportOptions.setReasonSelectedCallback(reason -> {
-            if (reason != -1) {
-                if(isReported()) {
-                    new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "You already reported").setVisible(true);
-                }
-                else if (postDAO.addReport(reason, userID, postID)) {
-                    new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Reported").setVisible(true);
-                }
-            }
-        });
-        GlassPanePopup.showPopup(reportOptions, "report");
-    }
-
-
-    
+    }//GEN-LAST:event_btnHideMouseClicked
 
     /**
-     * Get the label used for commenting on the post.
+     * Called when a reason is selected for reporting the post.
      *
-     * @return The label for comments.
+     * @param reason The reason code for reporting.
+     */
+    @Override
+    public void onReasonSelected(int reason) {
+        if (reason != -1) {
+            if (postDAO.addReport(reason, userID, postID)) {
+                //lblReport.setText("Reported");
+            }
+        }
+    }
+
+    /**
+     * Returns the label for commenting on the post.
+     *
+     * @return The label for commenting.
      */
     public MyLabel getLblComment() {
         return lblComment;
     }
 
     /**
-     * Get the label used for liking the post.
+     * Returns the label for liking the post.
      *
      * @return The label for liking.
      */
@@ -524,18 +487,8 @@ public class PostUI extends javax.swing.JPanel {
         return lblHeart;
     }
 
-    /**
-     * Get the label used for reporting the post.
-     *
-     * @return The label for reporting.
-     */
-    public MyLabel getLblReport() {
-        return lblMoreOption;
-    }
-    
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private online.syncio.component.MyButton btnHide;
     private online.syncio.component.MyButton btnNext;
     private online.syncio.component.MyButton btnPrev;
     private javax.swing.JScrollPane jScrollPane1;
@@ -543,9 +496,8 @@ public class PostUI extends javax.swing.JPanel {
     private online.syncio.component.MyLabel lblCountImage;
     private javax.swing.JLabel lblDateCreated;
     private online.syncio.component.MyLabel lblHeart;
-    private online.syncio.component.MyLabel lblMoreOption;
     private javax.swing.JLabel lblTotalLike;
-    private online.syncio.component.MyLabel lblUsername;
+    private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblUsername2;
     private javax.swing.JLabel lblViewAllCmt;
     private online.syncio.component.MyPanel pnlAction;

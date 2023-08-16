@@ -7,8 +7,15 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.utils.OtherHelper;
 import online.syncio.view.login.Login;
 
+/**
+ * This class represents a settings panel that displays application information, developer details,
+ * and logout functionality.
+ */
 public class Setting extends JPanel {
 
+    /**
+     * Constructs a new Setting panel.
+     */
     public Setting() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -107,6 +114,12 @@ public class Setting extends JPanel {
         add(pnlMain, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Handles the mouse pressed event on the logout label. This method logs out the user,
+     * closes relevant windows, and shows the login window.
+     *
+     * @param evt The mouse event triggering this action.
+     */
     private void lblLogoutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLogoutMousePressed
         if (OtherHelper.getMainAdmin(this) != null && OtherHelper.getMainAdmin(this).isVisible()) {
             //admin

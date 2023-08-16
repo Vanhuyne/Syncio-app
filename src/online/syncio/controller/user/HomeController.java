@@ -13,6 +13,9 @@ import online.syncio.view.user.Home;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.PostUI;
 
+/**
+ * Controller class for managing the home feed.
+ */
 public class HomeController {
 
     public Home pnlHome;
@@ -30,6 +33,9 @@ public class HomeController {
         this.pnlHome = pnlHome;
     }
 
+    /**
+     * Checks the logged-in user's session and loads posts.
+     */
     public void recheckLoggedInUser() {
         if (LoggedInUser.isUser()) {
             currentUser = LoggedInUser.getCurrentUser();
@@ -46,10 +52,18 @@ public class HomeController {
         pnlHome.getScrollPane().getVerticalScrollBar().setUnitIncrement(16);
     }
 
+    /**
+     * Checks if the search panel is visible.
+     *
+     * @return True if the search panel is visible, false otherwise.
+     */
     public boolean isSearchPanelVisible() {
         return main.getPnlSearch().isVisible() || main.getPnlNotifications().isVisible();
     }
 
+    /**
+     * Loads more posts asynchronously.
+     */
     private void loadMorePosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -157,6 +171,11 @@ public class HomeController {
         thread.start();
     }
 
+    /**
+     * Adds a PostUI component to the feed panel.
+     *
+     * @param postUI The PostUI component to add.
+     */
     private void addPostUI(PostUI postUI) {
         pnlHome.removeLoading();
         pnlHome.getFeedPanel().add(postUI);

@@ -15,8 +15,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import online.syncio.view.login.Signup;
 
+/**
+ * Helper class to obtain OAuth 2.0 credentials for accessing Google APIs.
+ */
 public class GoogleOAuthHelper {
     
+    /**
+     * Retrieves OAuth 2.0 credentials using the provided parameters.
+     *
+     * @param HTTP_TRANSPORT The HTTP transport used for communication.
+     * @param CREDENTIALS_FILE_PATH The path to the client secrets file.
+     * @param JSON_FACTORY The JSON factory for processing JSON data.
+     * @param SCOPES The list of authorization scopes.
+     * @return An authorized Credential object or null if an error occurs.
+     */
     public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT, String CREDENTIALS_FILE_PATH, JsonFactory JSON_FACTORY, List<String> SCOPES) {
         try {
             // Load client secrets.

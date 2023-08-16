@@ -14,6 +14,9 @@ import online.syncio.utils.WebsiteHelper;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.Profile;
 
+/**
+ * Controller class for managing main application functionalities.
+ */
 public class MainController {
 
     private Main main;
@@ -25,6 +28,11 @@ public class MainController {
 
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
+    /**
+     * Constructs a MainController with the provided Main instance.
+     *
+     * @param main The Main instance.
+     */
     public MainController(Main main) {
         this.main = main;
         LATEST_VERSION = getLatestVersion();
@@ -32,16 +40,28 @@ public class MainController {
         this.isUpdating = !CURRENT_VERSION.equals(LATEST_VERSION) && !LATEST_VERSION.contains("beta");
     }
 
+    /**
+     * Gets whether the application is updating.
+     *
+     * @return True if the application is updating, false otherwise.
+     */
     public boolean getIsUpdating() {
         return isUpdating;
     }
 
+    /**
+     * Sets the updating status of the application.
+     *
+     * @param isUpdating The updating status to set.
+     */
     public void setIsUpdating(boolean isUpdating) {
         this.isUpdating = isUpdating;
     }
 
     
-    
+    /**
+     * Checks for updates and initiates the update process if needed.
+     */
     public void checkForUpdates() {
         if (isUpdating) {
             updateApplication();
@@ -56,6 +76,9 @@ public class MainController {
     
     
     
+    /**
+     * Updates the application by downloading, unzipping, and restarting.
+     */
     public void updateApplication() {
         //download
         String fileName = LATEST_VERSION + ".zip";
@@ -75,7 +98,11 @@ public class MainController {
     }
     
     
-    
+    /**
+     * Retrieves the latest version of the application from a web source.
+     *
+     * @return The latest version of the application.
+     */
     public String getLatestVersion() {
         String url = "https://github.com/56duong/Syncio/releases";
         String latestVersion = null;
@@ -87,7 +114,9 @@ public class MainController {
     
     
     
-    
+    /**
+     * Checks the logged-in user's session and updates the UI accordingly.
+     */
     public void recheckLoggedInUser() {
         if (OtherHelper.getSessionValue("LOGGED_IN_USER") != null) {
             // da login = remember me

@@ -6,10 +6,16 @@ import javax.swing.JPanel;
 import online.syncio.component.MyTextField;
 import online.syncio.controller.user.SearchController;
 
+/**
+ * Represents a user interface for searching and displaying search results for users.
+ */
 public class SearchUserPanel extends JPanel {
 
     private SearchController controller;
 
+    /**
+     * Initializes a new instance of the SearchUserPanel class.
+     */
     public SearchUserPanel() {
         controller = new SearchController(this);
 
@@ -21,10 +27,20 @@ public class SearchUserPanel extends JPanel {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
     }
 
+    /**
+     * Returns the panel containing the search results for users.
+     *
+     * @return The panel containing the search results.
+     */
     public JPanel getPnlResult() {
         return pnlResult;
     }
 
+    /**
+     * Returns the text field used for searching.
+     *
+     * @return The search text field.
+     */
     public MyTextField getTxtSearch() {
         return txtSearch;
     }

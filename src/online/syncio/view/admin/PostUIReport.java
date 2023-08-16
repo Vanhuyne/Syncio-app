@@ -23,6 +23,10 @@ import online.syncio.utils.ImageHelper;
 import online.syncio.utils.TextHelper;
 import online.syncio.view.user.PostDetailUI;
 
+/**
+ * The PostUIReport class represents a panel displaying a reported post's details and options.
+ * It provides functionality to display post information, handle like interactions, show images, and manage reporting options.
+ */
 public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSelectedCallback {
 
     private PostDAO postDAO;
@@ -37,6 +41,9 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
     ImageIcon liked = new ImageIcon();
     ImageIcon unliked = new ImageIcon();
 
+    /**
+     * Constructs a new PostUIReport instance to display reported post details.
+     */
     public PostUIReport(String postID, String userID) {
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
@@ -58,6 +65,9 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
 
     }
 
+    /**
+     * Checks whether the current user has liked the post.
+     */
     public boolean isLiked() {
         // Check if any documents matched the condition
         if (post.getLikeList().stream().anyMatch(entry -> entry.getUserID().equals(userID))) {
@@ -67,6 +77,9 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         }
     }
 
+    /**
+     * Updates the like status of the post based on the current user.
+     */
     public void updateLike() {
         if (isLiked()) {
             lblHeart.setIcon(unliked);
@@ -81,6 +94,9 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         lblTotalLike.setText(post.getLikeList().size() + " likes");
     }
 
+    /**
+     * Loads the reporting status of the post and updates the "Hide" or "Show" button accordingly.
+     */
     public void loadReport() {
         if (post.getFlag() == 1) {
             btnHide.setText("Show");
@@ -91,6 +107,9 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
         }
     }
 
+    /**
+     * Displays the details of the reported post.
+     */
     private void showInfoPost(String postID) {
         loadReport();
         lblUsername.setText(userDAO.getByID(post.getUserID()).getUsername());
@@ -147,7 +166,10 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
     }
 
     
-    
+    /**
+     * Selects the specified image to display within the panel.
+     * @param i The index of the image to be displayed.
+     */
     public void selectImage(int i) {
 //        Post post = postDAO.getByID(postID);
         if (i >= 0 && i < post.getPhotoList().size()) {
@@ -477,10 +499,18 @@ public class PostUIReport extends javax.swing.JPanel implements Options.ReasonSe
 //        }
     }
 
+    /**
+     * Returns the label that displays the comment icon.
+     * @return The label that displays the comment icon.
+     */
     public MyLabel getLblComment() {
         return lblComment;
     }
 
+    /**
+     * Returns the label that displays the heart (like) icon.
+     * @return The label that displays the heart (like) icon.
+     */
     public MyLabel getLblHeart() {
         return lblHeart;
     }

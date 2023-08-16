@@ -7,12 +7,21 @@ import online.syncio.component.MyPanel;
 import online.syncio.component.MyScrollPane;
 import online.syncio.controller.user.HomeController;
 
+/**
+ * Represents a user interface for the home page of the application.
+ * This class provides functionality for displaying user feeds and managing UI components.
+ */
 public class Home extends JPanel {
 
     private Main main = Main.getInstance();
 
     private HomeController controller;
 
+    
+    /**
+     * Initializes the Home UI components and sets up event listeners.
+     * Also, rechecks the logged-in user and adjusts UI elements accordingly.
+     */
     public Home() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -36,19 +45,35 @@ public class Home extends JPanel {
 
     }
 
+    /**
+     * Adds a loading label to the feed panel.
+     */
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
 
+    /**
+     * Removes the loading label from the feed panel.
+     */
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
+    /**
+     * Returns the feed panel.
+     *
+     * @return The MyPanel instance representing the feed panel.
+     */
     public MyPanel getFeedPanel() {
         return feedPanel;
     }
 
+    /**
+     * Returns the scroll pane used for scrolling through the feed.
+     *
+     * @return The MyScrollPane instance representing the scroll pane.
+     */
     public MyScrollPane getScrollPane() {
         return scrollPane;
     }

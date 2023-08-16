@@ -28,17 +28,46 @@ import java.util.List;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.utils.GoogleOAuthHelper;
 
+/**
+ * A JFrame class representing the user interface for user registration (signup).
+ */
 public class Signup extends javax.swing.JFrame {
+    /**
+    * The name of the application for the signup process.
+    */
     private static String APPLICATION_NAME = "Syncio";
+    
+    /**
+    * The JsonFactory instance for handling JSON data.
+    */
     private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    
+    /**
+    * The path to the directory where tokens are stored.
+    */
     private static String TOKENS_DIRECTORY_PATH = "tokens";
+    
+    /**
+    * The list of scopes required for Gmail access.
+    */
     private static List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
+    
+    /**
+    * The path to the credentials JSON file.
+    */
     private static String CREDENTIALS_FILE_PATH = "/online/syncio/config/credentials.json";
-
+    
+    /**
+    * The controller for handling signup functionality.
+    */
     private SignupController controller;
     private UserDAO userDAO;
     private int otp = -1;
 
+    /**
+    * Constructs a new Signup frame.
+    * Initializes the database connection and sets up the UI components for signup.
+    */
     public Signup() {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -366,47 +395,102 @@ public class Signup extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    /**
+    * Returns the MyLabel component representing the title label in the signup form.
+    *
+    * @return The MyLabel component for the title label.
+    */
     public MyLabel getLblTitle() {
         return lblTitle;
     }
-
+    
+    /**
+    * Returns the MyTextField component representing the email input field in the signup form.
+    *
+    * @return The MyTextField component for email input.
+    */
     public MyTextField getTxtEmail() {
         return txtEmail;
     }
-
+    
+    /**
+    * Returns the MyPasswordField component representing the password input field in the signup form.
+    *
+    * @return The MyPasswordField component for password input.
+    */
     public MyPasswordField getTxtPassword() {
         return txtPassword;
     }
 
+    /**
+    * Returns the MyPasswordField component representing the password confirmation input field in the signup form.
+    *
+    * @return The MyPasswordField component for password confirmation input.
+    */
     public MyPasswordField getTxtPasswordConfirm() {
         return txtPasswordConfirm;
     }
 
+    /**
+    * Returns the MyTextField component representing the username input field in the signup form.
+    *
+    * @return The MyTextField component for username input.
+    */
     public MyTextField getTxtUsername() {
         return txtUsername;
     }
-
+    
+    /**
+    * Returns the MyButton component representing the signup button in the signup form.
+    *
+    * @return The MyButton component for the signup button.
+    */
     public MyButton getBtnSignup() {
         return btnSignup;
     }
 
+    /**
+    * Returns the MyPanel component representing the password panel in the signup form.
+    *
+    * @return The MyPanel component for the password panel.
+    */
     public MyPanel getPnlPassword() {
         return pnlPassword;
     }
 
+    /**
+    * Sets the MyPanel component representing the password panel in the signup form.
+    *
+    * @param pnlPassword The MyPanel component for the password panel.
+    */
     public void setPnlPassword(MyPanel pnlPassword) {
         this.pnlPassword = pnlPassword;
     }
 
+    /**
+    * Returns the UserDAO instance used for database operations.
+    *
+    * @return The UserDAO instance.
+    */
     public UserDAO getUserDAO() {
         return userDAO;
     }
 
+    /**
+    * Returns the OTP value for verification.
+    *
+    * @return The OTP value.
+    */
     public int getOtp() {
         return otp;
     }
-
+    
+    /**
+    * Sets the OTP value for verification.
+    *
+    * @param otp The OTP value.
+    */
     public void setOtp(int otp) {
         this.otp = otp;
     }

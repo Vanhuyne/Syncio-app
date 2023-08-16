@@ -10,6 +10,9 @@ import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.view.user.Profile;
 
+/**
+ * Controller class for managing user profiles and associated posts.
+ */
 public class ProfileController {
 
     private Profile pnlProfile;
@@ -19,10 +22,20 @@ public class ProfileController {
     private List<Post> postList;
     private User user;
 
+    /**
+     * Constructor for initializing the ProfileController.
+     *
+     * @param pnlProfile The associated Profile panel.
+     */
     public ProfileController(Profile pnlProfile) {
         this.pnlProfile = pnlProfile;
     }
 
+    /**
+     * Loads the user profile with the specified user data.
+     *
+     * @param user The user whose profile is being loaded.
+     */
     public void loadProfile(User user) {
         if (user == null) {
             return;
@@ -44,6 +57,9 @@ public class ProfileController {
         setupPostChangeStream();
     }
 
+    /**
+     * Sets up a change stream to monitor post updates in real-time.
+     */
     private void setupPostChangeStream() {
         Thread thread = new Thread(() -> {
             ChangeStreamIterable<Post> changeStream = postDAO.getChangeStream();
@@ -76,10 +92,20 @@ public class ProfileController {
         thread.start();
     }
 
+    /**
+     * Retrieves the current user associated with the profile.
+     *
+     * @return The current user.
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Retrieves the size of the user's post list.
+     *
+     * @return The size of the post list.
+     */ 
     public int getPostListSize() {
         return postList.size();
     }

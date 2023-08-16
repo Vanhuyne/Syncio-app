@@ -15,6 +15,13 @@ import online.syncio.utils.Validator;
 import online.syncio.view.login.Forgot;
 import online.syncio.view.login.Login;
 
+/**
+ * The `ForgotController` class manages the process of password recovery through a series of steps. It interacts with the user interface and communicates with the `UserDAO` to handle password reset requests.
+ *
+ * The controller handles actions such as sending OTP codes, verifying OTP codes, and resetting passwords. It includes logic for requesting OTP codes, sending email notifications, verifying OTP codes' validity, and updating passwords.
+ *
+ * The class uses time-based validation to ensure the OTP code's expiration and enforces password validation rules. It guides users through the password recovery process with appropriate messages and interactions.
+ */
 public class ForgotController {
 
     private long otpRequestedTimeMillis;
@@ -27,11 +34,22 @@ public class ForgotController {
 
     long currentTimeInMillis = 0;
 
+    /**
+     * Constructs a `ForgotController` associated with the given user interface.
+     *
+     * @param forgot The user interface for password recovery.
+     */
     public ForgotController(Forgot forgot) {
         this.forgot = forgot;
         userDAO = this.forgot.getUserDAO();
     }
 
+    
+    /**
+     * Handles the password recovery process based on the specified button type.
+     *
+     * @param btntype The action type initiated by the user.
+     */
     public void forgotAuthentication(String btntype) {
         // btntype -> Acction(String)
 //        forgot.getbtnSumbit().setText("Get OTP");

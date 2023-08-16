@@ -12,6 +12,9 @@ import online.syncio.model.User;
 import online.syncio.view.user.Main;
 import online.syncio.view.user.SearchUserPanel;
 
+/**
+ * Controller class for managing user search functionality.
+ */
 public class SearchController {
 
     private SearchUserPanel pnlSearch;
@@ -20,10 +23,18 @@ public class SearchController {
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private FindIterable<User> userList;
 
+    /**
+     * Constructs a SearchController with the provided SearchUserPanel.
+     *
+     * @param pnlSearch The SearchUserPanel instance.
+     */
     public SearchController(SearchUserPanel pnlSearch) {
         this.pnlSearch = pnlSearch;
     }
 
+    /**
+     * Performs a search based on the entered search text.
+     */
     public void find() {
         String searchText = this.pnlSearch.getTxtSearch().getText().trim();
 
@@ -38,6 +49,9 @@ public class SearchController {
         }
     }
 
+    /**
+     * Loads search results and displays them as cards in the result panel.
+     */
     private void loadResult() {
         this.pnlSearch.getPnlResult().removeAll();
         Box.createVerticalStrut(20);

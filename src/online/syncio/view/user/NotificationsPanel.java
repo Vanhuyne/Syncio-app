@@ -4,10 +4,17 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import online.syncio.controller.user.NotificationController;
 
+/**
+ * Represents a user interface for displaying notifications and managing user interactions.
+ * This class provides functionality for showing a list of notifications.
+ */
 public class NotificationsPanel extends JPanel {
 
     private NotificationController controller;
 
+    /**
+     * Initializes the notifications panel UI components and sets up necessary configurations.
+     */
     public NotificationsPanel() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -18,14 +25,27 @@ public class NotificationsPanel extends JPanel {
         controller = new NotificationController(this);
     }
 
+    /**
+     * Adds the last notification to the notifications panel.
+     */
     public void addLastNotification() {
 
     }
 
+    /**
+     * Returns the controller responsible for managing notification interactions.
+     *
+     * @return The NotificationController instance associated with this notifications panel.
+     */
     public NotificationController getController() {
         return controller;
     }
 
+    /**
+     * Returns the panel used for displaying notification results.
+     *
+     * @return The JPanel instance representing the notification result area.
+     */
     public JPanel getPnlResult() {
         return pnlResult;
     }

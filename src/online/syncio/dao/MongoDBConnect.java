@@ -15,6 +15,9 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+/**
+ * Singleton class for managing the connection to MongoDB and providing access to DAO instances.
+ */
 public class MongoDBConnect {
 
     private static MongoDBConnect instance;
@@ -24,6 +27,11 @@ public class MongoDBConnect {
     private static PostDAO postDAO;
     private static MessageDAO messageDAO;
 
+    /**
+     * Get the instance of MongoDBConnect using a singleton pattern.
+     *
+     * @return The MongoDBConnect instance.
+     */
     public static synchronized MongoDBConnect getInstance() {
         if (instance == null) {
             instance = new MongoDBConnect();
@@ -31,6 +39,9 @@ public class MongoDBConnect {
         return instance;
     }
 
+    /**
+     * Establishes a connection to MongoDB and initializes DAO instances.
+     */
     public static void connect() {
         if (mongoClient == null) {
             CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
@@ -60,6 +71,11 @@ public class MongoDBConnect {
         }
     }
 
+    /**
+     * Get the MongoDB database instance.
+     *
+     * @return The MongoDB database instance.
+     */
     public static MongoDatabase getDatabase() {
         if (mongoClient == null) {
             connect();
@@ -67,6 +83,11 @@ public class MongoDBConnect {
         return database;
     }
 
+    /**
+     * Get the UserDAO instance.
+     *
+     * @return The UserDAO instance.
+     */
     public static UserDAO getUserDAO() {
         if (mongoClient == null) {
             connect();
@@ -74,6 +95,12 @@ public class MongoDBConnect {
         return userDAO;
     }
 
+    
+    /**
+     * Get the PostDAO instance.
+     *
+     * @return The PostDAO instance.
+     */
     public static PostDAO getPostDAO() {
         if (mongoClient == null) {
             connect();
@@ -81,6 +108,11 @@ public class MongoDBConnect {
         return postDAO;
     }
 
+    /**
+     * Get the MessageDAO instance.
+     *
+     * @return The MessageDAO instance.
+     */
     public static MessageDAO getMessageDAO() {
         if (mongoClient == null) {
             connect();
@@ -88,6 +120,9 @@ public class MongoDBConnect {
         return messageDAO;
     }
 
+    /**
+     * Closes the MongoDB client and releases resources.
+     */
     public static void close() {
         if (mongoClient != null) {
             mongoClient.close();

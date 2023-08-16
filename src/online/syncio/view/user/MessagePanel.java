@@ -7,12 +7,20 @@ import javax.swing.JPanel;
 import online.syncio.controller.user.MessageController;
 import online.syncio.model.LoggedInUser;
 
+/**
+ * Represents a user interface for displaying messages and managing user interactions.
+ * This class provides functionality for displaying chat history and user lists.
+ */
 public class MessagePanel extends JPanel {
 
     private CardLayout cardLayout;
 
     private MessageController controller;
 
+    /**
+     * Initializes the message panel UI components and sets up card layouts.
+     * Configures the layout for chat history and user lists.
+     */
     public MessagePanel() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -30,14 +38,29 @@ public class MessagePanel extends JPanel {
         }
     }
 
+    /**
+     * Returns the panel used for displaying chat history.
+     *
+     * @return The JPanel instance representing the chat history area.
+     */
     public JPanel getChatArea() {
         return pnlChatArea;
     }
 
+    /**
+     * Returns the panel used for displaying the list of users.
+     *
+     * @return The JPanel instance representing the user list area.
+     */
     public JPanel getPnlUserList() {
         return pnlUserList;
     }
 
+    /**
+     * Returns the controller responsible for managing message interactions.
+     *
+     * @return The MessageController instance associated with this message panel.
+     */
     public MessageController getController() {
         return controller;
     }

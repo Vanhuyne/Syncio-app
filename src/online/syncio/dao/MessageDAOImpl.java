@@ -17,6 +17,9 @@ import online.syncio.model.Message;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+/**
+ * Implementation of the MessageDAO interface for managing Message entities.
+ */
 public class MessageDAOImpl implements MessageDAO {
 
     private MongoDatabase database;
