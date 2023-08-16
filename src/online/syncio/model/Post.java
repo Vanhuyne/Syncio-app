@@ -224,7 +224,7 @@ public class Post {
      */
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Grade{");
+        final StringBuffer sb = new StringBuffer("Post{");
         sb.append("id=").append(id);
         sb.append(", userID=").append(userID);
         sb.append(", caption=").append(caption);

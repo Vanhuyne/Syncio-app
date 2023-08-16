@@ -21,6 +21,7 @@ import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
+import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.ActionHelper;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
@@ -101,12 +102,7 @@ public class PostUI extends javax.swing.JPanel {
 
     public boolean isReported() {
         post = postDAO.getByID(postID);
-        
-        if (post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()))) {
-            return true;
-        } else {
-            return false;
-        }
+        return post.getReportList().stream().anyMatch(entry -> entry.getUserID().equals(LoggedInUser.getCurrentUser().getId().toString()));
     }
     
 
@@ -501,7 +497,7 @@ public class PostUI extends javax.swing.JPanel {
                 if(isReported()) {
                     new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "You already reported").setVisible(true);
                 }
-                else if (postDAO.addReport(reason, userID, postID)) {
+                else if (postDAO.addReport(reason, LoggedInUser.getCurrentUser().getId().toString(), postID)) {
                     new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Reported").setVisible(true);
                 }
             }
