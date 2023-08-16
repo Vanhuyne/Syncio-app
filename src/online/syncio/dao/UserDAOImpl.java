@@ -1,6 +1,7 @@
 package online.syncio.dao;
 
 import com.mongodb.MongoException;
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -9,6 +10,7 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
@@ -228,6 +230,13 @@ public class UserDAOImpl implements UserDAO {
         Document filter = new Document("following.userID", userId);
         long followerCount = userCollection.countDocuments(filter);
         return (int) followerCount;
+    }
+
+    @Override
+    public ChangeStreamIterable<User> getChangeStream() {
+        ChangeStreamIterable<User> changeStreamUsers = userCollection.watch();
+        changeStreamUsers.fullDocument(FullDocument.UPDATE_LOOKUP);
+        return changeStreamUsers;
     }
 
 }

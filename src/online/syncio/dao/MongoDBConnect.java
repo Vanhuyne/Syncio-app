@@ -16,7 +16,8 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
 /**
- * Singleton class for managing the connection to MongoDB and providing access to DAO instances.
+ * Singleton class for managing the connection to MongoDB and providing access
+ * to DAO instances.
  */
 public class MongoDBConnect {
 
@@ -25,7 +26,7 @@ public class MongoDBConnect {
     private static MongoDatabase database;
     private static UserDAO userDAO;
     private static PostDAO postDAO;
-    private static MessageDAO messageDAO;
+    private static ConversationDAO conversationDAO;
 
     /**
      * Get the instance of MongoDBConnect using a singleton pattern.
@@ -67,7 +68,7 @@ public class MongoDBConnect {
             // Create UserDAO and PostDAO instances
             userDAO = new UserDAOImpl(database);
             postDAO = new PostDAOImpl(database);
-            messageDAO = new MessageDAOImpl(database);
+            conversationDAO = new ConversationDAOImpl(database);
         }
     }
 
@@ -95,7 +96,6 @@ public class MongoDBConnect {
         return userDAO;
     }
 
-    
     /**
      * Get the PostDAO instance.
      *
@@ -109,15 +109,15 @@ public class MongoDBConnect {
     }
 
     /**
-     * Get the MessageDAO instance.
+     * Get the ConversationDAO instance.
      *
-     * @return The MessageDAO instance.
+     * @return The ConversationDAO instance.
      */
-    public static MessageDAO getMessageDAO() {
+    public static ConversationDAO getConversationDAO() {
         if (mongoClient == null) {
             connect();
         }
-        return messageDAO;
+        return conversationDAO;
     }
 
     /**

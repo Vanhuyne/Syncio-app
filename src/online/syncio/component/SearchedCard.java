@@ -2,31 +2,37 @@ package online.syncio.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
+import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
 import online.syncio.view.user.PostDetailUI;
 import org.bson.types.Binary;
 
-/**
- * Panel for displaying information about a searched user, including avatar, username, and follower count.
- */
-public class SearchedUserCard extends javax.swing.JPanel {
+public class SearchedCard extends javax.swing.JPanel {
 
     private User user;
+    private String conversationID;
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
 
-    /**
-     * Creates a SearchedUserCard instance for a specific user.
-     * @param user The user to display information about.
-     */
-    public SearchedUserCard(User user) {
+    public SearchedCard() {
+        initComponents();
+        lblAvatar.setSize(60, 60);
+
+        setPreferredSize(new Dimension(290, 90));
+        setMaximumSize(new Dimension(290, 90));
+        setMinimumSize(new Dimension(290, 90));
+    }
+
+    public SearchedCard(User user) {
         this.user = user;
 
         initComponents();
@@ -40,16 +46,9 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
         lblUsername.setText(user.getUsername());
         lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
-
     }
 
-    /**
-     * Creates a SearchedUserCard instance for a specific user with a custom background color.
-     * @param user The user to display information about.
-     * @param backgroundColor The background color of the card.
-     */
-    public SearchedUserCard(User user, Color backgroundColor) {
-
+    public SearchedCard(User user, Color backgroundColor) {
         this.user = user;
 
         initComponents();
@@ -69,13 +68,7 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }
 
     //notification
-    /**
-     * Creates a SearchedUserCard instance for displaying a notification about a specific post.
-     * @param postID The ID of the post associated with the notification.
-     * @param notificationText The notification text to display.
-     * @param dateTime The date and time of the notification.
-     */
-    public SearchedUserCard(String postID, String notificationText, String dateTime) {
+    public SearchedCard(String postID, String notificationText, String dateTime) {
 
         initComponents();
 
@@ -161,8 +154,37 @@ public class SearchedUserCard extends javax.swing.JPanel {
         return user;
     }
 
-    public void setUser(User user) {
+    public String getConversationID() {
+        return conversationID;
+    }
+
+    public void setConversationID(String conversationID, User user) {
+        this.conversationID = conversationID;
         this.user = user;
+
+        if (user == null) {
+            Image groupChatImage = new javax.swing.ImageIcon(getClass().getResource("/online/syncio/resources/images/icons/group-chat-60px.png")).getImage();
+            ImageIcon icon = ImageHelper.resizing(groupChatImage, 60, 60);
+            lblAvatar.setIcon(icon);
+
+            List<String> participants = MongoDBConnect.getConversationDAO().getByID(conversationID).getParticipants();
+            participants.remove(LoggedInUser.getCurrentUser().getIdAsString());
+
+            lblUsername.setText("Group chat siêu xịn");
+
+            List<String> usernameList = new ArrayList<>();
+
+            for (String id : participants) {
+                usernameList.add(userDAO.getByID(id).getUsername());
+            }
+
+            lblFollowers.setText(usernameList.toString());
+        } else {
+            ImageHelper.setAvatarToLabel(user, lblAvatar, 60);
+
+            lblUsername.setText(user.getUsername());
+            lblFollowers.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

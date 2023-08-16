@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import online.syncio.component.MyChart;
 import online.syncio.component.MyLabel;
 import online.syncio.component.MyPanel;
-import online.syncio.component.SearchedUserCard;
+import online.syncio.component.SearchedCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
@@ -142,7 +142,7 @@ public class Dashboard extends JPanel {
             String userID = entry.getKey();
             int engagementCount = entry.getValue();
 
-            pnlResult.add(new SearchedUserCard(userDAO.getByID(userID), new Color(245, 245, 245)));
+            pnlResult.add(new SearchedCard(userDAO.getByID(userID), new Color(245, 245, 245)));
             Box.createVerticalStrut(20);
 
             pnlResult.revalidate();

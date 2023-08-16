@@ -31,12 +31,12 @@ public class User {
     /**
      * Constructs a User object with specified properties.
      *
-     * @param username  the username of the user
-     * @param password  the password of the user
-     * @param email     the email address of the user
-     * @param bio       the biography or description of the user
-     * @param role      the role of the user
-     * @param flag      a flag associated with the user
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param email the email address of the user
+     * @param bio the biography or description of the user
+     * @param role the role of the user
+     * @param flag a flag associated with the user
      * @param following a list of users that this user is following
      */
     public User(String username, String password, String email, String bio, int role, int flag, ArrayList<UserIDAndDate> following) {
@@ -49,7 +49,6 @@ public class User {
         this.following = following;
     }
 
-    
     public User(ObjectId id, String username, String password, String email, String bio, int role, int flag) {
         this.id = id;
         this.username = username;
@@ -79,7 +78,15 @@ public class User {
         return id;
     }
 
-    
+    /**
+     * Returns the unique identifier of the user as string.
+     *
+     * @return The unique identifier of the user as string.
+     */
+    public String getIdAsString() {
+        return id.toString();
+    }
+
     /**
      * Sets the unique identifier of the user.
      *
@@ -107,7 +114,7 @@ public class User {
         this.username = username;
     }
 
-     /**
+    /**
      * Returns the password of the user.
      *
      * @return The password of the user.
@@ -134,7 +141,7 @@ public class User {
         return email;
     }
 
-     /**
+    /**
      * Sets the email of the user.
      *
      * @param email The new email for the user.
@@ -233,7 +240,6 @@ public class User {
         this.flag = flag;
     }
 
-    
     /**
      * Returns the list of users followed by this user.
      *
@@ -252,7 +258,6 @@ public class User {
         this.following = following;
     }
 
-    
     /**
      * Checks if the given object is equal to this User object.
      *

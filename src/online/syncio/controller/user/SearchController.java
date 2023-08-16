@@ -5,7 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.Box;
-import online.syncio.component.SearchedUserCard;
+import online.syncio.component.SearchedCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
@@ -58,7 +58,7 @@ public class SearchController {
 
         MouseListener mouseEvent = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                SearchedUserCard card = (SearchedUserCard) e.getSource();
+                SearchedCard card = (SearchedCard) e.getSource();
 
                 main.profile.getController().loadProfile(card.getUser());
                 main.showTab("profile");
@@ -67,7 +67,7 @@ public class SearchController {
         };
 
         for (User user : userList) {
-            SearchedUserCard card = new SearchedUserCard(user);
+            SearchedCard card = new SearchedCard(user);
             card.addMouseListener(mouseEvent);
 
             this.pnlSearch.getPnlResult().add(card);

@@ -3,14 +3,13 @@ package online.syncio.model;
 import online.syncio.utils.TimeHelper;
 
 /**
- * Represents a message with sender, recipient, date sent, and message content.
+ * Represents a message with sender, date sent, and message content.
  */
 public class Message {
 
-    private String sender;
-    private String recipient;
+    private String senderID;
+    private String text;
     private String dateSent = TimeHelper.getCurrentDateTime();
-    private String messageContent;
 
     /**
      * Default constructor for the Message class.
@@ -19,67 +18,65 @@ public class Message {
     }
 
     /**
-     * Constructs a Message object with the provided sender, recipient, and message content.
+     * Constructs a Message object with the provided sender, recipient, date
+     * sent, and message content.
      *
-     * @param sender      the sender of the message
-     * @param recipient   the recipient of the message
-     * @param message     the content of the message
+     * @param senderID the sender of the message
+     * @param dateSent the date and time when the message was sent
+     * @param text the content of the message
      */
-    public Message(String sender, String recipient, String message) {
-        this.sender = sender.trim();
-        this.recipient = recipient.trim();
-        this.messageContent = message.trim();
-    }
-
-    /**
-     * Constructs a Message object with the provided sender, recipient, date sent, and message content.
-     *
-     * @param sender      the sender of the message
-     * @param recipient   the recipient of the message
-     * @param dateSent    the date and time when the message was sent
-     * @param message     the content of the message
-     */
-    public Message(String sender, String recipient, String dateSent, String message) {
-        this.sender = sender.trim();
-        this.recipient = recipient.trim();
+    public Message(String dateSent, String text, String senderID) {
         this.dateSent = dateSent;
-        this.messageContent = message.trim();
+        this.text = text;
+        this.senderID = senderID;
     }
 
     /**
-     * Gets the sender of the message.
+     * Constructs a Message object with the provided sender, recipient, and
+     * message content.
      *
-     * @return the sender of the message
+     * @param senderID the sender of the message
+     * @param text the content of the message
      */
-    public String getSender() {
-        return sender.trim();
+    public Message(String senderID, String text) {
+        this.senderID = senderID;
+        this.text = text;
     }
 
     /**
-     * Sets the sender of the message.
+     * Gets the senderID of the message.
      *
-     * @param sender the sender to set
+     * @return the senderID of the message
      */
-    public void setSender(String sender) {
-        this.sender = sender.trim();
+    public String getSenderID() {
+        return senderID;
     }
 
     /**
-     * Gets the recipient of the message.
+     * Sets the senderID of the message.
      *
-     * @return the recipient of the message
+     * @param senderID the senderID to set
      */
-    public String getRecipient() {
-        return recipient.trim();
+    public void setSenderID(String senderID) {
+        this.senderID = senderID;
     }
 
     /**
-     * Sets the recipient of the message.
+     * Gets the content of the message.
      *
-     * @param recipient the recipient to set
+     * @return the content of the message
      */
-    public void setRecipient(String recipient) {
-        this.recipient = recipient.trim();
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Sets the content of the message.
+     *
+     * @param text the content of the message to set
+     */
+    public void setText(String text) {
+        this.text = text;
     }
 
     /**
@@ -91,7 +88,7 @@ public class Message {
         return dateSent;
     }
 
-     /**
+    /**
      * Sets the date and time when the message was sent.
      *
      * @param dateSent the date and time to set
@@ -101,35 +98,15 @@ public class Message {
     }
 
     /**
-     * Gets the content of the message.
-     *
-     * @return the content of the message
-     */
-    public String getMessage() {
-        return messageContent.trim();
-    }
-
-    /**
-     * Sets the content of the message.
-     *
-     * @param message the content of the message to set
-     */
-    public void setMessage(String message) {
-        this.messageContent = message.trim();
-    }
-
-    /**
      * Generates a string representation of the Message object.
      *
      * @return a string representation of the Message object
      */
     @Override
     public String toString() {
-        return "Message{"
-                + ", sender=" + sender
-                + ", recipient=" + recipient
-                + ", dateSent=" + dateSent
-                + ", message=" + messageContent
-                + '}';
+        return """
+               \tMessage{
+               \t\tsenderID=""" + senderID + "\n\t\t, text=" + text + "\n\t\t, dateSent=" + dateSent + "}\n\n";
     }
+
 }
