@@ -215,9 +215,6 @@ public class Forgot extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lblNoteMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

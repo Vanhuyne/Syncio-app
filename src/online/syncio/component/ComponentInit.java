@@ -82,19 +82,30 @@ public class ComponentInit {
     }
 
     /**
-     * Applies common properties to a JComboBox<?> component.
-     * @param comboBox The JTextArea to apply properties to.
-     */
+    * Applies custom properties to a JComboBox component.
+    *
+    * @param comboBox The JComboBox component to which properties will be applied.
+    */
     public static void applyProperties(JComboBox<?> comboBox) {
 
     }
 
+    /**
+     * Applies common properties to a JRadioButton component.
+     *
+     * @param radioButton The JRadioButton to apply properties to.
+     */
     public static void applyProperties(JRadioButton radioButton) {
         radioButton.setFocusPainted(false);
         radioButton.setBorderPainted(false);
         radioButton.setForeground(Color.BLACK);
     }
     
+    /**
+     * Applies common properties to a JCheckBox component.
+     *
+     * @param checkBox The JCheckBox to apply properties to.
+     */
     public static void applyProperties(JCheckBox checkBox) {
         checkBox.setFocusPainted(false);
         checkBox.setBorderPainted(false);
@@ -119,7 +130,11 @@ public class ComponentInit {
 
     }
 
-    
+    /**
+     * Applies common properties to a MyTable component.
+     *
+     * @param table The MyTable to apply properties to.
+     */
     public static void applyProperties(MyTable table) {
         table.setFontHeaderBold(2);
     }

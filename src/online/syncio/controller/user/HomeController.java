@@ -31,6 +31,11 @@ public class HomeController {
     FindIterable<Post> posts;
     FindIterable<Post> postsOther;
 
+    /**
+    * Constructs a new instance of the HomeController class with the provided Home panel.
+    *
+    * @param pnlHome The Home panel associated with this controller.
+    */
     public HomeController(Home pnlHome) {
         this.pnlHome = pnlHome;
     }

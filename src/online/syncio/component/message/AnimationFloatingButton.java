@@ -5,11 +5,21 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+/**
+ * Provides an animation effect for a floating button using the Animator framework.
+ * This class allows the button to smoothly show, hide, and stop animations.
+ */
 public class AnimationFloatingButton {
 
     private final Animator animator;
     private boolean show;
 
+    /**
+     * Initializes the AnimationFloatingButton with the specified layout and component.
+     *
+     * @param layout The layout where the component is placed.
+     * @param com The component to be animated.
+     */
     public AnimationFloatingButton(MigLayout layout, Component com) {
         this.animator = new Animator(300, new TimingTargetAdapter() {
             @Override
@@ -29,6 +39,9 @@ public class AnimationFloatingButton {
         this.animator.setDeceleration(.5f);
     }
 
+    /**
+     * Shows the floating button with a smooth animation effect.
+     */
     public void show() {
         if (!show) {
             stop();
@@ -37,6 +50,9 @@ public class AnimationFloatingButton {
         }
     }
 
+    /**
+     * Hides the floating button with a smooth animation effect.
+     */
     public void hide() {
         if (show) {
             stop();
@@ -45,6 +61,9 @@ public class AnimationFloatingButton {
         }
     }
 
+    /**
+     * Stops the ongoing animation.
+     */
     public void stop() {
         if (animator.isRunning()) {
             float f = animator.getTimingFraction();
@@ -55,6 +74,11 @@ public class AnimationFloatingButton {
         }
     }
 
+    /**
+     * Checks if the animation is currently running.
+     *
+     * @return true if the animation is running, false otherwise.
+     */
     public boolean isRunning() {
         return animator.isRunning();
     }

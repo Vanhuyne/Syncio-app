@@ -105,6 +105,11 @@ public class ActionHelper {
     
     
     
+    /**
+    * Copies the provided text to the system clipboard.
+    *
+    * @param text The text to be copied to the clipboard.
+    */
     public static void copyToClipboard(String text) {
         StringSelection selection = new StringSelection(text);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

@@ -14,30 +14,57 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
+/**
+ * Custom Swing component for displaying circular avatar images with optional border.
+ */
 public class ImageAvatar extends JComponent {
 
+    /**
+     * Get the currently set avatar image.
+     * @return The avatar image icon.
+     */
     public Icon getImage() {
         return image;
     }
 
+    /**
+     * Set the avatar image icon to be displayed.
+     * @param image The avatar image icon.
+     */
     public void setImage(Icon image) {
         this.image = image;
         repaint();
     }
 
+    /**
+     * Get the size of the border around the circular avatar.
+     * @return The border size in pixels.
+     */
     public int getBorderSize() {
         return borderSize;
     }
 
+    /**
+     * Set the size of the border around the circular avatar.
+     * @param borderSize The border size in pixels.
+     */
     public void setBorderSize(int borderSize) {
         this.borderSize = borderSize;
         repaint();
     }
 
+    /**
+     * Get the space between the avatar image and the border.
+     * @return The border space in pixels.
+     */
     public int getBorderSpace() {
         return borderSpace;
     }
 
+    /**
+     * Set the space between the avatar image and the border.
+     * @param borderSpace The border space in pixels.
+     */
     public void setBorderSpace(int borderSpace) {
         this.borderSpace = borderSpace;
         repaint();

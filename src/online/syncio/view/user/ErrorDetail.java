@@ -1,17 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package online.syncio.view.user;
 
 /**
- *
- * @author conro
+ * Panel for displaying detailed error information to the user.
  */
 public class ErrorDetail extends javax.swing.JPanel {
 
     /**
-     * Creates new form ErrorDetail
+     * Creates a new instance of the ErrorDetail panel with the provided error information.
+     *
+     * @param errorInfo The detailed error information to be displayed.
      */
     public ErrorDetail(String errorInfo) {
         initComponents();

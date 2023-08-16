@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package online.syncio.resources.images.other;
 
-/**
- *
- * @author conro
- */
 public class MayULike extends javax.swing.JPanel {
 
     /**
