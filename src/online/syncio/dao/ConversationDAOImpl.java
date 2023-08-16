@@ -39,23 +39,7 @@ public class ConversationDAOImpl implements ConversationDAO {
     }
 
     @Override
-    public List<String> getAllMessageHistory(String currentUser) {
-        Bson filter = Filters.in("participants", currentUser);
-
-        List<String> history = new ArrayList<>();
-
-        try (MongoCursor<Conversation> cursor = conversationCollection.find(filter).iterator()) {
-            while (cursor.hasNext()) {
-                Conversation con = cursor.next();
-                history.add(con.getIdAsString());
-            }
-        }
-
-        return history;
-    }
-
-    @Override
-    public List<String> getMessagedUser(String currentUserID) {
+    public List<String> getAllMessageHistory(String currentUserID) {
         Bson filter = Filters.in("participants", currentUserID);
 
         List<String> history = new ArrayList<>();
@@ -63,12 +47,7 @@ public class ConversationDAOImpl implements ConversationDAO {
         try (MongoCursor<Conversation> cursor = conversationCollection.find(filter).iterator()) {
             while (cursor.hasNext()) {
                 Conversation con = cursor.next();
-                List<String> username = con.getParticipants();
-                username.remove(currentUserID);
-
-                if (username.size() == 1) {
-                    history.add(username.get(0));
-                }
+                history.add(con.getIdAsString());
             }
         }
 
