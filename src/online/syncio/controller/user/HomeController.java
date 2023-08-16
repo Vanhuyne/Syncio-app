@@ -66,7 +66,8 @@ public class HomeController {
                         // Handle the change event here
                         // For example, extract the new post data from changeDocument and update your feed UI
                         Post newPost = changeDocument.getFullDocument();
-                        if (newPost != null && postDAO.getByID(newPost.getId().toString()) != null) {
+                        //catch on add
+                        if (newPost != null && postDAO.getByID(newPost.getId().toString()) == null) {
                             SwingUtilities.invokeLater(() -> {
                                 PostUI postUI = new PostUI(newPost.getId().toString(), newPost.getUserID());
                                 addPostUI(postUI);

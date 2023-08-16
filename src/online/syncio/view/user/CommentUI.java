@@ -1,13 +1,20 @@
 package online.syncio.view.user;
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.PostDAO;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
 
 public class CommentUI extends javax.swing.JPanel {
 
+    private static PostDAO postDAO = MongoDBConnect.getPostDAO();
+     
     public CommentUI(String username, String cmt, String date) {
         initComponents();
 
@@ -20,11 +27,25 @@ public class CommentUI extends javax.swing.JPanel {
         lblComment.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                String objectId = extractObjectId(lblComment.getText().trim());
+
+                if (objectId != null && postDAO.getByID(objectId) != null) {
+                    GlassPanePopup.showPopup(new PostDetailUI(objectId), "postdetail");
+                }
                 Main.getInstance().showTab("profile");
                 User user = MongoDBConnect.getUserDAO().getByUsername(username.trim());
                 Main.getInstance().profile.getController().loadProfile(user);
             }
         });
+    }
+    
+    private String extractObjectId(String text) {
+        Pattern pattern = Pattern.compile("#([0-9a-fA-F]{24})"); // Matches strings like "#507f1f77bcf86cd799439011"
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 
     /**
