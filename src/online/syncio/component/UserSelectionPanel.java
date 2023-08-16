@@ -19,7 +19,7 @@ public class UserSelectionPanel extends javax.swing.JPanel {
 
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private List<User> userList = new ArrayList<>();
-    private List<String> selectedUsernameList = new ArrayList<>();
+    private List<String> selectedUserList = new ArrayList<>();
 
     private int selectedUsers = 0;
 
@@ -42,7 +42,7 @@ public class UserSelectionPanel extends javax.swing.JPanel {
         btnCreate.setEnabled(false);
         btnCreate.setBackground(new Color(219, 219, 219));
 
-        selectedUsernameList.remove(LoggedInUser.getCurrentUser().getIdAsString());
+        selectedUserList.add(LoggedInUser.getCurrentUser().getIdAsString());
 
         loadAllUser();
     }
@@ -59,11 +59,11 @@ public class UserSelectionPanel extends javax.swing.JPanel {
                 if (background.equals(new Color(219, 219, 219))) {
                     card.setBackground(new Color(255, 255, 255));
                     selectedUsers--;
-                    selectedUsernameList.remove(userID);
+                    selectedUserList.remove(userID);
                 } else {
                     card.setBackground(new Color(219, 219, 219));
                     selectedUsers++;
-                    selectedUsernameList.add(userID);
+                    selectedUserList.add(userID);
                 }
 
                 if (selectedUsers >= 2) {
@@ -89,7 +89,7 @@ public class UserSelectionPanel extends javax.swing.JPanel {
     }
 
     public void createGroupChat() {
-        Conversation con = new Conversation(selectedUsernameList, new ArrayList<>());
+        Conversation con = new Conversation(selectedUserList, new ArrayList<>());
         MongoDBConnect.getConversationDAO().add(con);
         GlassPanePopup.closePopup("userSelector");
     }
