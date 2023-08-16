@@ -1,5 +1,8 @@
 package online.syncio.config;
 
+/**
+ * Provides account-related constants for the application.
+ */
 public class Account {
     public static final String CONNECTION_STRING = "mongodb+srv://SyncioApp:HCzZXCzshY5fv1au@cluster0.r5fkiwd.mongodb.net/";
     

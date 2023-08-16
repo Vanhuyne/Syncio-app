@@ -1,30 +1,70 @@
 package online.syncio.view.user;
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.PostDAO;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
 
+/**
+ * Represents a graphical component for displaying user comments in a panel.
+ * Each CommentUI instance encapsulates a user's avatar, username, comment text,
+ * and timestamp, along with interactivity to navigate to the commenter's profile.
+ */
 public class CommentUI extends javax.swing.JPanel {
 
+    private static PostDAO postDAO = MongoDBConnect.getPostDAO();
+
+    /**
+     * Constructs a CommentUI instance with the provided user comment information.
+     *
+     * @param username The username of the commenter.
+     * @param cmt      The content of the comment.
+     * @param date     The timestamp when the comment was made.
+     */
     public CommentUI(String username, String cmt, String date) {
         initComponents();
 
+        // Set the commenter's avatar in the label.
         ImageHelper.setAvatarToLabel(username, lblComment, 24);
 
         lblComment.setText("<html><body style=\"font-family:'sans-serif'\"><p style=\"width:190px\"><b>" + username + "</b>   "
                 + cmt + "</p><span font color='gray' style=\"font-size:8px\">"
                 + date + "</span></body></html>");
-
+        
+        // Format and set the comment content and timestamp using HTML.
         lblComment.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                String objectId = extractObjectId(lblComment.getText().trim());
+
+                if (objectId != null && postDAO.getByID(objectId) != null) {
+                    GlassPanePopup.showPopup(new PostDetailUI(objectId), "postdetail");
+                }
+
                 Main.getInstance().showTab("profile");
+                
+                // Retrieve user information from the database.
                 User user = MongoDBConnect.getUserDAO().getByUsername(username.trim());
+                
+                // Load the commenter's profile using the profile controller.
                 Main.getInstance().profile.getController().loadProfile(user);
             }
         });
+    }
+    
+    private String extractObjectId(String text) {
+        Pattern pattern = Pattern.compile("#([0-9a-fA-F]{24})"); // Matches strings like "#507f1f77bcf86cd799439011"
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 
     /**

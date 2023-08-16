@@ -20,6 +20,10 @@ public class HiddenPost extends JPanel {
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
     FindIterable<Post> postsReport;
 
+    
+    /**
+    * Initializes the HiddenPost panel and sets up the UI components.
+    */
     public HiddenPost() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -33,15 +37,25 @@ public class HiddenPost extends JPanel {
         loadReportedPosts();
     }
 
+    /**
+    * Adds a loading label to the feed panel to indicate ongoing loading.
+    */
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
 
+    /**
+    * Removes the loading label from the feed panel when loading is complete.
+    */
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
+    /**
+    * Loads and displays reported posts using a separate thread and MongoDB change streams.
+    * Also handles initial loading of posts from the regular database query.
+    */
     private void loadReportedPosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -116,6 +130,11 @@ public class HiddenPost extends JPanel {
         thread.start();
     }
 
+    /**
+    * Adds a PostUIReport component to the feed panel, updating the UI.
+    *
+    * @param postUIReport The PostUIReport component to be added to the feed panel.
+    */
     private void addPostUI(PostUIReport postUIReport) {
         removeLoading();
         feedPanel.add(postUIReport);

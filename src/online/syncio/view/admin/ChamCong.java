@@ -23,22 +23,28 @@ import online.syncio.dao.MongoDBConnectOld;
 import online.syncio.utils.TimeHelper;
 import org.bson.Document;
 
+/**
+ * The class representing the "ChamCong" JFrame for task management.
+ */
 public class ChamCong extends javax.swing.JFrame {
-    
+
     private static final String SESSION_MEMBER_KEY = "user";
     String member;
-    
+
     DefaultTableModel model;
     MyTable myTable;
     private MongoDatabase database = MongoDBConnectOld.getDatabase();
 
+    /**
+     * Creates a new instance of the ChamCong JFrame.
+     */
     public ChamCong() {
         setUndecorated(true);
         initComponents();
         GlassPanePopup.install(this);
         setBackground(new Color(0f, 0f, 0f, 0f));
         setLocationRelativeTo(null);
-        
+
         //member
         cboMember.addItem("Duong");
         cboMember.addItem("Huy");
@@ -47,8 +53,7 @@ public class ChamCong extends javax.swing.JFrame {
 
         member = getSessionValue();
         cboMember.setSelectedItem(member);
-        
-        
+
         //table
         //tao model
         myTable = tblTask.getTable();
@@ -56,12 +61,12 @@ public class ChamCong extends javax.swing.JFrame {
 
         // Set the table model to the tblAlbum table
         myTable.setModel(model);
-        
+
         //disable table editing
-        myTable.setDefaultEditor(Object.class, null); 
-        
+        myTable.setDefaultEditor(Object.class, null);
+
         //table header
-        String [] colNames = {"DateTime", "Type", "Member", "Description"};
+        String[] colNames = {"DateTime", "Type", "Member", "Description"};
         model.setColumnIdentifiers(colNames);
 
         //column width
@@ -69,12 +74,11 @@ public class ChamCong extends javax.swing.JFrame {
         myTable.getColumnModel().getColumn(1).setPreferredWidth(10);
         myTable.getColumnModel().getColumn(2).setPreferredWidth(20);
         myTable.getColumnModel().getColumn(3).setPreferredWidth(800);
-        
+
         //data
         fillToTable();
         txtTask.requestFocus();
-        
-        
+
         // When the Enter key is pressed, click on the btnLogin.
         KeyListener enterKeyListener = new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -84,40 +88,47 @@ public class ChamCong extends javax.swing.JFrame {
             }
         };
         txtTask.addKeyListener(enterKeyListener);
-        
-        
+
         //Double click on Table
         myTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
                 int row = myTable.getSelectedRow();
                 if (mouseEvent.getClickCount() == 2 && myTable.getSelectedRow() != -1) {
                     String task = "";
-                    for(int i = 0; i < myTable.getColumnCount(); i++) {
+                    for (int i = 0; i < myTable.getColumnCount(); i++) {
                         task += myTable.getValueAt(row, i) + "\n";
                     }
 
                     JOptionPane.showMessageDialog(null, "<html><body width='400'><p>" + task);
                 }
-            };
-        });
+            }
+        ;
+    }
+
+    );
     }
     
     
-    
+    /**
+     * Fill data into the table from the database.
+     */
     public void fillToTable() {
         model.setRowCount(0); //clear rows in the table
         MongoCollection<Document> tasks = database.getCollection("task", Document.class);
-        
+
         //them tung dong vao
-        if(tasks != null) {
-            for(Document task : tasks.find().sort(descending("dateTime"))) {
-                model.addRow(new Object[] {task.get("dateTime"), task.get("type"), task.get("member"), task.get("task")});
+        if (tasks != null) {
+            for (Document task : tasks.find().sort(descending("dateTime"))) {
+                model.addRow(new Object[]{task.get("dateTime"), task.get("type"), task.get("member"), task.get("task")});
             }
         }
     }
-    
-    
-    
+
+    /**
+     * Add a task to the database.
+     *
+     * @return True if the task was added successfully, false otherwise.
+     */
     public boolean addTask() {
         MongoCollection<Document> tasks = database.getCollection("task", Document.class);
 
@@ -126,34 +137,46 @@ public class ChamCong extends javax.swing.JFrame {
         member = cboMember.getSelectedItem().toString();
 
         String task = txtTask.getText();
-        
+
         try {
             Document t = new Document("dateTime", TimeHelper.getCurrentDateTime()).append("type", type).append("member", member).append("task", task);
             InsertOneResult result = tasks.insertOne(t);
             System.out.println("Inserted a Task with the following id: " + result.getInsertedId().asObjectId().getValue());
 
             return true;
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             System.out.println("Failed to insert into MongoDB: " + ex.getMessage());
             ex.printStackTrace();
         }
         return false;
     }
-    
-    
-    
+
+    /**
+     * Saves the selected member session value using the Preferences API.
+     *
+     * @param value The member value to be saved in the session.
+     */
     private static void saveSessionValue(String value) {
+        // Retrieve the preferences node specific to the ChamCong class
         Preferences preferences = Preferences.userNodeForPackage(ChamCong.class);
+
+        // Store the member value in the preferences using the session key
         preferences.put(SESSION_MEMBER_KEY, value);
     }
 
+    /**
+     * Retrieves the stored member session value from the Preferences API.
+     *
+     * @return The stored member value retrieved from the session, or null if
+     * not found.
+     */
     private static String getSessionValue() {
+        // Retrieve the preferences node specific to the ChamCong class
         Preferences preferences = Preferences.userNodeForPackage(ChamCong.class);
+
+        // Retrieve the stored member value using the session key
         return preferences.get(SESSION_MEMBER_KEY, null);
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -247,17 +270,19 @@ public class ChamCong extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         //validate
-        if(txtTask.getText().trim().isEmpty()) return;
-        
+        if (txtTask.getText().trim().isEmpty()) {
+            return;
+        }
+
         //add
-        if(addTask()) {
+        if (addTask()) {
             txtTask.setText("");
             fillToTable();
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void cboMemberItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboMemberItemStateChanged
-        if(this.isVisible()) {
+        if (this.isVisible()) {
             saveSessionValue(cboMember.getSelectedItem().toString());
         }
     }//GEN-LAST:event_cboMemberItemStateChanged

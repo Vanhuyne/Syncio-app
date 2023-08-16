@@ -23,6 +23,10 @@ import online.syncio.resources.fonts.MyFont;
 import online.syncio.utils.ActionHelper;
 import online.syncio.view.login.Login;
 
+
+/**
+ * The main user interface class representing the application's main window.
+ */
 public final class Main extends javax.swing.JFrame {
 
     private static Main instance;
@@ -38,6 +42,9 @@ public final class Main extends javax.swing.JFrame {
 
     private MainController controller;
 
+    /**
+     * Constructs the main user interface window.
+     */
     public Main() {
         instance = this;
         controller = new MainController(this);
@@ -76,6 +83,9 @@ public final class Main extends javax.swing.JFrame {
         super.paint(g);
     }
 
+    /**
+     * Adds components such as panels and buttons to the main window.
+     */
     public void addComponents() {
         panelList = new JPanel[]{new Home(), messagePanel, profile, new EditProfile(), new Setting()};
 
@@ -121,6 +131,11 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Displays a specific tab within the application.
+     *
+     * @param newTab The name of the tab to display.
+     */
     public void showTab(String newTab) {
         for (MyButton b : btnMenuList) {
             if (b.getName().trim().equalsIgnoreCase(curTab)) {
@@ -142,6 +157,12 @@ public final class Main extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Displays a specific tab within the application using a specified button.
+     *
+     * @param newTab The name of the tab to display.
+     * @param btn    The button associated with the tab.
+     */
     public void showTab(String newTab, MyButton btn) {
         btn.setFontBold(2);
         for (MyButton b : btnMenuList) {
@@ -431,70 +452,155 @@ public final class Main extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Returns the single instance of the Main class.
+     *
+     * @return The instance of the Main class.
+     */
     public static Main getInstance() {
         return instance;
     }
 
+    /**
+     * Returns the panel containing the tab content.
+     *
+     * @return The panel containing the tab content.
+     */
     public MyPanel getPnlTabContent() {
         return pnlTabContent;
     }
 
+    /**
+     * Returns the panel used for user search.
+     *
+     * @return The panel used for user search.
+     */
     public SearchUserPanel getPnlSearch() {
         return pnlSearch;
     }
 
+    /**
+     * Sets the panel used for user search.
+     *
+     * @param pnlSearch The panel used for user search.
+     */
     public void setPnlSearch(SearchUserPanel pnlSearch) {
         this.pnlSearch = pnlSearch;
     }
 
+    /**
+     * Returns the panel used for notifications.
+     *
+     * @return The panel used for notifications.
+     */
     public NotificationsPanel getPnlNotifications() {
         return pnlNotifications;
     }
 
+    /**
+     * Sets the panel used for notifications.
+     *
+     * @param pnlNotifications The panel used for notifications.
+     */
     public void setPnlNotifications(NotificationsPanel pnlNotifications) {
         this.pnlNotifications = pnlNotifications;
     }
 
+    /**
+     * Returns the main container panel.
+     *
+     * @return The main container panel.
+     */
     public MyPanel getMyPanel1() {
         return pnlContainer;
     }
 
+    /**
+     * Sets the main container panel.
+     *
+     * @param myPanel1 The main container panel.
+     */
     public void setMyPanel1(MyPanel myPanel1) {
         this.pnlContainer = myPanel1;
     }
 
+    /**
+     * Returns the search button.
+     *
+     * @return The search button.
+     */
     public MyButton getBtnSearch() {
         return btnSearch;
     }
 
+    /**
+     * Sets the search button.
+     *
+     * @param btnSearch The search button.
+     */
     public void setBtnSearch(MyButton btnSearch) {
         this.btnSearch = btnSearch;
     }
 
+    /**
+     * Returns the message panel.
+     *
+     * @return The message panel.
+     */
     public MessagePanel getMessagePanel() {
         return messagePanel;
     }
 
+    /**
+     * Returns the global date value.
+     *
+     * @return The global date value.
+     */
     public Date getGOLBAL_DATE() {
         return GOLBAL_DATE;
     }
 
+    /**
+     * Returns the profile button.
+     *
+     * @return The profile button.
+     */
     public MyButton getBtnProfile() {
         return btnProfile;
     }
 
+    /**
+     * Returns the user profile panel.
+     *
+     * @return The user profile panel.
+     */
     public Profile getProfile() {
         return profile;
     }
 
+    /**
+     * Sets the user profile panel.
+     *
+     * @param profile The user profile panel.
+     */
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
+    /**
+     * Sets the profile button.
+     *
+     * @param btnProfile The profile button.
+     */
     public void setBtnProfile(MyButton btnProfile) {
         this.btnProfile = btnProfile;
     }
 
+    /**
+     * Returns the title bar panel.
+     *
+     * @return The title bar panel.
+     */
     public WindowTitleBar getPnlTitleBar() {
         return pnlTitleBar;
     }

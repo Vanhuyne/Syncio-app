@@ -12,6 +12,10 @@ import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import org.bson.types.ObjectId;
 
+
+/**
+ * PerformanceTest class for comparing the execution time of accessing and loading posts using different MongoDB connection approaches.
+ */
 public class PerformanceTest {
 
     public static void main(String[] args) {

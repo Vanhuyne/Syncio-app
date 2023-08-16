@@ -12,6 +12,10 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.User;
 import online.syncio.utils.Export;
 
+/**
+ * The UserManager class represents a panel responsible for managing and displaying user data.
+ * It extends the JPanel class to provide a visual interface for user management.
+ */
 public class UserManager extends JPanel {
 
     DefaultTableModel model;
@@ -19,6 +23,11 @@ public class UserManager extends JPanel {
     private FindIterable<User> lUser;
     UserManager managementUser;
 
+    /**
+     * Constructor for initializing the UserManager panel.
+     * It sets up UI components for displaying user data, handles user interactions,
+     * and facilitates user management tasks.
+     */
     public UserManager() {
         this.userDAO = MongoDBConnect.getUserDAO();
 
@@ -63,7 +72,14 @@ public class UserManager extends JPanel {
         });
     }
 
+     /**
+     * Retrieve user data based on search parameters.
+     * 
+     * @param isReload Indicates if data should be reloaded from the database.
+     * @return A FindIterable containing user data based on search criteria.
+     */
     public FindIterable find(boolean isReload) {
+        // Extract search parameters from UI components
         String searchText = txtSearch.getText().trim();
         if (searchText.equalsIgnoreCase("Search by email or username") || searchText.isEmpty() || searchText == null) {
             searchText = null;
@@ -83,12 +99,21 @@ public class UserManager extends JPanel {
             status = 1;
         }
 
+        // Fetch and return user data based on search criteria
         return userDAO.getAllByUsernameOrEmailRoleFlag(isReload, searchText, role, status);
+    
     }
 
+     /**
+     * Populate the table with user data based on the search criteria.
+     * 
+     * @param isReload Indicates if data should be reloaded from the database.
+     */
     public void fillToTable(boolean isReload) {
+        // Clear existing rows in the table
         model.setRowCount(0); //clear rows in the table
         
+        // Fetch user data based on search criteria
         lUser = find(isReload);
 
         //them tung dong vao

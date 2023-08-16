@@ -29,6 +29,9 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+/**
+ * Implementation of the PostDAO interface for managing Post entities.
+ */
 public class PostDAOImpl implements PostDAO {
 
     private MongoDatabase database;

@@ -13,12 +13,19 @@ import online.syncio.utils.ImageHelper;
 import online.syncio.view.user.PostDetailUI;
 import org.bson.types.Binary;
 
+/**
+ * Panel for displaying information about a searched user, including avatar, username, and follower count.
+ */
 public class SearchedUserCard extends javax.swing.JPanel {
 
     private User user;
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
 
+    /**
+     * Creates a SearchedUserCard instance for a specific user.
+     * @param user The user to display information about.
+     */
     public SearchedUserCard(User user) {
         this.user = user;
 
@@ -36,6 +43,11 @@ public class SearchedUserCard extends javax.swing.JPanel {
 
     }
 
+    /**
+     * Creates a SearchedUserCard instance for a specific user with a custom background color.
+     * @param user The user to display information about.
+     * @param backgroundColor The background color of the card.
+     */
     public SearchedUserCard(User user, Color backgroundColor) {
 
         this.user = user;
@@ -57,6 +69,12 @@ public class SearchedUserCard extends javax.swing.JPanel {
     }
 
     //notification
+    /**
+     * Creates a SearchedUserCard instance for displaying a notification about a specific post.
+     * @param postID The ID of the post associated with the notification.
+     * @param notificationText The notification text to display.
+     * @param dateTime The date and time of the notification.
+     */
     public SearchedUserCard(String postID, String notificationText, String dateTime) {
 
         initComponents();

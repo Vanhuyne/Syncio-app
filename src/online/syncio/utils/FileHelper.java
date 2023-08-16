@@ -30,8 +30,18 @@ import javax.swing.JOptionPane;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 
+/**
+ * Helper class for various file-related operations.
+ */
 public class FileHelper {
     
+     /**
+     * Downloads a file from a given URL and saves it to the specified output directory with the given filename.
+     *
+     * @param link The URL of the file to be downloaded.
+     * @param outputDirectory The directory where the file will be saved.
+     * @param outputFileName The name of the file to be saved.
+     */
     public static void downloadFileFromWebsite(String link, String outputDirectory, String outputFileName) {
         try {
             URL url = new URL(link);
@@ -72,8 +82,12 @@ public class FileHelper {
         }
     }
     
-    
-    
+     /**
+     * Unzips a given ZIP file into the specified directory.
+     *
+     * @param directory The directory where the ZIP file is located.
+     * @param fileName The name of the ZIP file.
+     */
     public static void unzip(String directory, String fileName) {
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(directory + "/" + fileName))) {
             byte[] buffer = new byte[1024];
@@ -104,7 +118,12 @@ public class FileHelper {
     }
     
     
-    
+    /**
+     * Deletes a file with the given filename from the specified directory.
+     *
+     * @param directory The directory where the file is located.
+     * @param fileName The name of the file to be deleted.
+     */
     public static void deleteFile(String directory, String fileName) {
         try {
             Files.deleteIfExists(Paths.get(directory, fileName));

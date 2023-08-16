@@ -13,12 +13,18 @@ import online.syncio.dao.UserDAO;
 import online.syncio.utils.ActionHelper;
 import online.syncio.utils.TextHelper;
 
+/**
+ * Represents the Forgot JFrame, which allows users to reset their password using email and OTP.
+ */
 public class Forgot extends javax.swing.JFrame {
 
     private ForgotController controller;
     private UserDAO userDAO;
     private int otp = -1;
 
+    /**
+     * Creates a new instance of the Forgot JFrame.
+     */
     public Forgot() {
         MongoDBConnect.connect();
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -200,19 +206,7 @@ public class Forgot extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGetOTPActionPerformed
 
     private void lblLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblLoginMouseClicked
-//        dispose();
-//
-//        boolean check = false; // true if open form HOME
-//        Window[] windows = Window.getWindows();
-//        for (Window window : windows) {
-//            if (window instanceof Main mainWindow && window.isVisible()) {
-//                check = true;
-//            }
-//        }
-//
-//        if (!check) {
-//            new Main().setVisible(true);
-//        }
+
         new Login().setVisible(true);
         dispose();
     }//GEN-LAST:event_lblLoginMouseClicked
@@ -253,48 +247,83 @@ public class Forgot extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Gets the label displaying the title of the Forgot frame.
+     * @return The label for the title.
+     */
     public MyLabel getLblTitle() {
         return lblTitle;
     }
 
+    /**
+     * Gets the label displaying the note or instruction for the password reset process.
+     * @return The label for the note.
+     */
     public MyLabel getLblNote() {
         return lblNote;
     }
 
+    /**
+     * Gets the text field where the user enters their email.
+     * @return The text field for email input.
+     */
     public MyTextField getTxtEmail() {
         return txtEmail;
     }
 
+    /**
+     * Gets the password field where the user enters the new password.
+     * @return The password field for password input.
+     */
     public MyPasswordField getTxtPassword() {
         return txtPassword;
     }
 
+    /**
+     * Gets the password field where the user confirms the new password.
+     * @return The password field for password confirmation input.
+     */
     public MyPasswordField getTxtPasswordConfirm() {
         return txtPasswordConfirm;
     }
 
+    /**
+     * Gets the text field where the user enters the received OTP.
+     * @return The text field for OTP input.
+     */
     public MyTextField getTxtOTP() {
         return txtOTP;
     }
 
+    /**
+     * Gets the button used to submit the OTP and reset password.
+     * @return The submit button for OTP and password reset.
+     */
     public MyButton getbtnSumbit() {
         return btnGetOTP;
     }
 
-//    public MyPanel getPnlPassword() {
-//        return pnlPassword;
-//    }
-//    public void setPnlPassword(MyPanel pnlPassword) {
-//        this.pnlPassword = pnlPassword;
-//    }
+
+    /**
+     * Gets the UserDAO instance used to interact with user data.
+     * @return The UserDAO instance.
+     */
     public UserDAO getUserDAO() {
         return userDAO;
     }
 
+    /**
+     * Gets the current OTP value.
+     * @return The current OTP.
+     */
     public int getOtp() {
         return otp;
     }
 
+    /**
+     * Sets the OTP value.
+     * @param otp The OTP to set.
+     */
     public void setOtp(int otp) {
         this.otp = otp;
     }

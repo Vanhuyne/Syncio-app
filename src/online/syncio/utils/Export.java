@@ -86,7 +86,12 @@ public class Export {
     }
     
     
-    
+    /**
+     * Writes the data from a JTable to an Excel file with the specified sheet name.
+     *
+     * @param table The JTable containing the data to be written.
+     * @param sheetName The name of the sheet in the Excel file.
+     */
     public static void writeToExcell(JTable table, String sheetName)  {
         try{
             JFileChooser jFileChooser = new JFileChooser();
@@ -140,6 +145,11 @@ public class Export {
         }
     }
     
+     /**
+     * Opens a file using the default system application associated with the file type.
+     *
+     * @param file The path of the file to be opened.
+     */
     public static void openFile(String file){
         try{
             File path = new File(file);

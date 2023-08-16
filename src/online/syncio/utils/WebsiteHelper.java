@@ -10,6 +10,12 @@ import org.jsoup.nodes.Element;
 
 public class WebsiteHelper {
     
+    /**
+     * Checks if a URL exists by sending a HEAD request and checking the status code.
+     *
+     * @param url The URL to check for existence.
+     * @return true if the URL exists and returns a 200 status code, false otherwise.
+     */
     public static boolean isUrlExists(String url) {
         try {
             Connection.Response response = Jsoup.connect(url).method(Connection.Method.HEAD).execute();
@@ -22,7 +28,13 @@ public class WebsiteHelper {
     }
     
     
-    
+    /**
+     * Retrieves the text content from a web page based on the given URL and CSS selector.
+     *
+     * @param url         The URL of the web page to retrieve text from.
+     * @param cssSelector The CSS selector to locate the desired element.
+     * @return The text content of the selected element, or null if not found or an error occurred.
+     */
     public static String getTextFromWeb(String url, String cssSelector) {
         String text = null;
         int statusCode = -1;

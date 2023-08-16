@@ -10,27 +10,37 @@ import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.utils.ImageHelper;
-import online.syncio.utils.OtherHelper;
 import online.syncio.utils.Validator;
 import online.syncio.view.login.Login;
 
+/**
+ * A JPanel class representing the user interface for editing the user profile.
+ */
 public final class EditProfile extends JPanel {
 
     private User currentUser = LoggedInUser.getCurrentUser();
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
+    /**
+     * Constructs an `EditProfile` panel. Initializes components and loads user data if a user is logged in.
+     */
     public EditProfile() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
         if(LoggedInUser.getCurrentUser() != null) loadUserData();
     }
 
+    /**
+     * Loads the user data into the corresponding UI components.
+     */
     public void loadUserData() {
+        // Set the account label and user-related text fields
         lblAccount.setText(currentUser.getUsername());
         txtUsername.setText(currentUser.getUsername());
         txtPassword.setText(currentUser.getPassword());
         txtEmail.setText(currentUser.getEmail());
 
+        // Set the user's avatar to the account label
         ImageHelper.setAvatarToLabel(currentUser, lblAccount, 24);
 
         try {

@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyLabel;
@@ -26,6 +28,9 @@ import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.NotificationsPanel;
 
+/**
+ * Controller class for managing user notifications.
+ */
 public class NotificationController {
 
     private NotificationsPanel pnlNoti;
@@ -39,23 +44,22 @@ public class NotificationController {
     private FindIterable<Post> postList;
     private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Format of your date-time string
 
+    /**
+     * Constructs a NotificationController with the provided NotificationsPanel.
+     *
+     * @param pnlNoti The NotificationsPanel instance.
+     */
     public NotificationController(NotificationsPanel pnlNoti) {
         this.pnlNoti = pnlNoti;
     }
 
+    /**
+     * Reads the desiredDateTime value from the configuration.
+     *
+     * @param userID The user ID.
+     */
     public void readDesiredDateTime(String userID) {
-//        Properties properties = new Properties();
-//
-//        try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
-//            properties.load(inputStream);
-//            String desiredDateTimeStr = properties.getProperty(userID + "." + DESIRED_DATETIME_KEY);
-//            if (desiredDateTimeStr != null) {
-//                desiredDateTime = dateTimeFormat.parse(desiredDateTimeStr);
-//                System.out.println("Desired date and time for user " + userID + ": " + desiredDateTime);
-//            }
-//        } catch (IOException | ParseException e) {
-//            e.printStackTrace();
-//        }
+
 
         Calendar calendar = Calendar.getInstance();
         // Subtract 3 days from the current date
@@ -64,6 +68,12 @@ public class NotificationController {
         desiredDateTime = threeDaysAgo;
     }
 
+    /**
+     * Writes the desiredDateTime value to the configuration.
+     *
+     * @param userID The user ID.
+     * @param date   The date to write.
+     */
     public void writeDesiredDateTime(String userID, Date date) {
         Properties properties = new Properties();
 
@@ -85,35 +95,49 @@ public class NotificationController {
     }
 
     // Method to display notifications based on the desiredDateTime
+    /**
+     * Displays notifications based on the desiredDateTime.
+     */
     public void displayNotifications() {
-        pnlNoti.getPnlResult().removeAll();
+        SwingUtilities.invokeLater(() -> {
+            pnlNoti.getPnlResult().removeAll();
+            pnlNoti.getPnlResult().revalidate();
+            pnlNoti.getPnlResult().repaint();
 
-        String currentUserID = LoggedInUser.getCurrentUser().getId().toString();
-        postList = postDAO.getAllByUserIDFindIterable(currentUserID);
+            String currentUserID = LoggedInUser.getCurrentUser().getId().toString();
+            postList = postDAO.getAllByUserIDFindIterable(currentUserID);
 
-        readDesiredDateTime(currentUserID);
+            readDesiredDateTime(currentUserID);
 
-        MyLabel lblLast3Days = new MyLabel("Last 3 days");
-        lblLast3Days.setPreferredSize(new Dimension(300, 30));
-        lblLast3Days.setBorder(new EmptyBorder(5, 0, 5, 0));
-        lblLast3Days.setAlignmentX(Component.CENTER_ALIGNMENT);
+            MyLabel lblLast3Days = new MyLabel("Last 3 days");
+            lblLast3Days.setPreferredSize(new Dimension(300, 30));
+            lblLast3Days.setBorder(new EmptyBorder(5, 0, 5, 0));
+            lblLast3Days.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        pnlNoti.getPnlResult().add(lblLast3Days);
-        for (Post post : postList) {
-            List<UserIDAndDateAndText> comments = post.getCommentList();
-            Collections.reverse(comments);
+            pnlNoti.getPnlResult().add(lblLast3Days);
+            for (Post post : postList) {
+                List<UserIDAndDateAndText> comments = post.getCommentList();
+                Collections.reverse(comments);
 
-            int nums = countNewComments(comments);
+                int nums = countNewComments(comments);
 
-            if (nums > 0) {
-                pnlNoti.getPnlResult().add(createNotificationCard(post, nums));
+                if (nums > 0) {
+                    pnlNoti.getPnlResult().add(createNotificationCard(post, nums));
+                }
             }
-        }
 
-        pnlNoti.getPnlResult().revalidate();
-        pnlNoti.getPnlResult().repaint();
+            // Revalidate and repaint after adding new notifications
+            pnlNoti.getPnlResult().revalidate();
+            pnlNoti.getPnlResult().repaint();
+        });
     }
 
+    /**
+     * Counts the number of new comments after the desiredDateTime.
+     *
+     * @param comments The list of comments.
+     * @return The count of new comments.
+     */
     private int countNewComments(List<UserIDAndDateAndText> comments) {
         int nums = 0;
 
@@ -139,6 +163,13 @@ public class NotificationController {
         return nums;
     }
 
+    /**
+     * Creates a notification card.
+     *
+     * @param post              The post to create a notification for.
+     * @param newCommentsCount The count of new comments.
+     * @return The created SearchedUserCard instance.
+     */
     private SearchedUserCard createNotificationCard(Post post, int newCommentsCount) {
         String notificationText = newCommentsCount + " new comments on your post";
         String notificationDate = post.getCommentList().get(0).getDate();

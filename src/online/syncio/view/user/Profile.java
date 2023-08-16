@@ -22,6 +22,9 @@ import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
 
+/**
+ * Represents a user interface for displaying a user's profile.
+ */
 public class Profile extends JPanel {
 
     private Main main = Main.getInstance();
@@ -29,6 +32,11 @@ public class Profile extends JPanel {
 
     private ProfileController controller;
 
+    /**
+     * Initializes a new instance of the Profile class with the specified user's profile.
+     *
+     * @param user The user whose profile is being displayed.
+     */
     public Profile(User user) {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -39,6 +47,11 @@ public class Profile extends JPanel {
         controller.loadProfile(user);
     }
 
+    /**
+     * Loads the profile information of the user's own profile.
+     *
+     * @param user The user whose profile is being loaded.
+     */
     public void loadOwnProfile(User user) {
         btnEditProfileMessage.setText("Edit profile");
         btnFollow.setVisible(false);
@@ -58,6 +71,11 @@ public class Profile extends JPanel {
         ImageHelper.setAvatarToLabel(user, lblAvatar, lblAvatar.getWidth());
     }
 
+    /**
+     * Loads the profile information of another user's profile.
+     *
+     * @param user The user whose profile is being loaded.
+     */
     public void loadOtherUserProfile(User user) {
         btnEditProfileMessage.setText("Message");
         btnFollow.setVisible(true);
@@ -89,6 +107,11 @@ public class Profile extends JPanel {
         ImageHelper.setAvatarToLabel(user, lblAvatar, lblAvatar.getWidth());
     }
 
+    /**
+     * Sets the profile information on the UI based on the provided user's information.
+     *
+     * @param user The user whose information is being displayed on the profile.
+     */
     public void setProfileInfo(User user) {
         String username = user.getUsername();
         String bio = user.getBio();
@@ -103,6 +126,9 @@ public class Profile extends JPanel {
         lblFollowerNum.setText(userDAO.getFollowerCount(user.getId().toString()) + " followers");
     }
 
+    /**
+     * Toggles the follow button text between "Follow" and "Unfollow".
+     */
     public void toggleFollow() {
         if (btnFollow.getText().equalsIgnoreCase("follow")) {
             btnFollow.setText("Unfollow");
@@ -111,6 +137,9 @@ public class Profile extends JPanel {
         }
     }
 
+    /**
+     * Initiates the process to upload a new profile image.
+     */
     public void uploadImage() {
         JFileChooser fc = new JFileChooser();
         fc.setMultiSelectionEnabled(true);
@@ -135,10 +164,21 @@ public class Profile extends JPanel {
         }
     }
 
+    
+    /**
+     * Returns the panel that displays the user's profile posts.
+     *
+     * @return The panel displaying the user's profile posts.
+     */
     public ProfilePostPanel getPnlProfilePost() {
         return pnlProfilePost;
     }
 
+    /**
+     * Returns the controller responsible for managing the profile functionality.
+     *
+     * @return The profile controller instance.
+     */
     public ProfileController getController() {
         return controller;
     }

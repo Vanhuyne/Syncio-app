@@ -6,10 +6,55 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
+/**
+ * Panel for displaying report options and capturing user-selected reasons for reporting.
+ */
 public class Options extends javax.swing.JPanel {
-    public static int r = -1;
-    
-    public enum ReportReason {
+
+    public enum OptionType {
+        MORE_OPTIONS,
+        REPORT_REASON
+    }
+
+    public interface ReasonSelectedCallback {
+        void onReasonSelected(int reason);
+    }
+
+    public interface OptionSelectedCallback {
+        void onOptionSelected(int option);
+    }
+
+    private ReasonSelectedCallback reasonCallback;
+    private OptionSelectedCallback optionCallback;
+
+    private OptionType optionType;
+    private int selectedValue = -1;
+
+    public static final Options moreOptionsPanel = new Options(OptionType.MORE_OPTIONS);
+    public static final Options reportReasonPanel = new Options(OptionType.REPORT_REASON);
+
+    public static enum MoreOptions {
+        COPYLINK(0, "Copy link"),
+        REPORT(1, "Report");
+
+        private final int value;
+        private final String label;
+
+        MoreOptions(int value, String label) {
+            this.value = value;
+            this.label = label;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+    }
+
+    public static enum ReportReason {
         SPAM(0, "It's spam"),
         VIOLENCE(1, "Violence or dangerous organizations"),
         FALSE_INFORMATION(2, "False information"),
@@ -32,58 +77,110 @@ public class Options extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * Retrieves the label associated with a report reason value.
+     * @param value The report reason value.
+     * @return The label corresponding to the value.
+     */
     public static String getReportReasonLabel(int value) {
         for (Options.ReportReason reason : Options.ReportReason.values()) {
             if (reason.getValue() == value) {
                 return reason.getLabel();
             }
         }
-        return null; // No matching value found
+        return null;
     }
-    
-    
 
-    public Options() {
+    public static String getMoreOptionsLabel(int value) {
+        for (Options.MoreOptions moreOption : Options.MoreOptions.values()) {
+            if (moreOption.getValue() == value) {
+                return moreOption.getLabel();
+            }
+        }
+        return null;
+    }
+
+
+
+    public Options(OptionType optionType) {
+        this.optionType = optionType;
+
         initComponents();
 
-        pnlReasonContainer.setLayout(new BoxLayout(pnlReasonContainer, BoxLayout.Y_AXIS)); 
+        pnlReasonContainer.setLayout(new BoxLayout(pnlReasonContainer, BoxLayout.Y_AXIS));
 
-        for (ReportReason reason : ReportReason.values()) {
-            MyLabel reasonLabel = new MyLabel(reason.getLabel());
-            reasonLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(239, 239, 239)), BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-            reasonLabel.setMaximumSize(new java.awt.Dimension(400, 40));
-            reasonLabel.setMinimumSize(new java.awt.Dimension(400, 40));
-            
-            reasonLabel.addMouseListener(new MouseAdapter() {
+        Enum<?>[] options;
+        if (optionType == OptionType.MORE_OPTIONS) {
+            options = MoreOptions.values();
+            lblTitle.setText("Options");
+            lblAsk.setText("Please select one");
+        } else if (optionType == OptionType.REPORT_REASON) {
+            options = ReportReason.values();
+            lblTitle.setText("Report");
+            lblAsk.setText("Why are you reporting this post?");
+        } else {
+            options = new Enum<?>[0];
+        }
+
+        for (Enum<?> option : options) {
+            MyLabel optionLabel = new MyLabel();
+            if (option instanceof MoreOptions) {
+                MoreOptions moreOption = (MoreOptions) option;
+                optionLabel.setText(moreOption.getLabel());
+            } else if (option instanceof ReportReason) {
+                ReportReason reportReason = (ReportReason) option;
+                optionLabel.setText(reportReason.getLabel());
+            }
+             
+            optionLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(239, 239, 239)),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            ));
+            optionLabel.setMaximumSize(new java.awt.Dimension(400, 40));
+            optionLabel.setMinimumSize(new java.awt.Dimension(400, 40));
+
+            optionLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    reportReasonSelected(reason);
-                    GlassPanePopup.closePopup("report");
+                    if (optionType == OptionType.MORE_OPTIONS) {
+                        optionSelected(option);
+                        GlassPanePopup.closePopup("moreoptions");
+                    } else if (optionType == OptionType.REPORT_REASON) {
+                        reportReasonSelected((ReportReason) option);
+                        GlassPanePopup.closePopup("report");
+                    }
                 }
             });
-            pnlReasonContainer.add(reasonLabel);
+            pnlReasonContainer.add(optionLabel);
         }
     }
-    
 
-    
-    private ReasonSelectedCallback callback;
-
+    /**
+     * Sets the callback for capturing the selected report reason.
+     * @param callback The callback to be set.
+     */
     public void setReasonSelectedCallback(ReasonSelectedCallback callback) {
-        this.callback = callback;
+        this.reasonCallback = callback;
+    }
+
+    public void setOptionSelectedCallback(OptionSelectedCallback callback) {
+        this.optionCallback = callback;
+    }
+
+    private void optionSelected(Enum<?> option) {
+        selectedValue = option.ordinal();
+
+        if (optionCallback != null) {
+            optionCallback.onOptionSelected(selectedValue);
+        }
     }
 
     private void reportReasonSelected(ReportReason reason) {
-        int selectedValue = reason.getValue();
-        Options.r = selectedValue;
+        int selectedValue = ((ReportReason) reason).getValue();
 
-        if (callback != null) {
-            callback.onReasonSelected(selectedValue);
+        if (reasonCallback != null) {
+            reasonCallback.onReasonSelected(selectedValue);
         }
-    }
-
-    public interface ReasonSelectedCallback {
-        void onReasonSelected(int reason);
     }
     
     

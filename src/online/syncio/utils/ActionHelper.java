@@ -1,5 +1,8 @@
 package online.syncio.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -12,8 +15,17 @@ import javax.swing.JTextField;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.view.user.Main;
 
+/**
+ * Helper class for performing various actions and event listeners.
+ */
 public class ActionHelper {
 
+    /**
+     * Assigns an Enter key listener to the provided button and text fields to trigger button click on Enter key press.
+     *
+     * @param button The button to be clicked on Enter key press.
+     * @param textFields The text fields that trigger the button click on Enter key press.
+     */
     public static void assignEnterKeyListener(JButton button, JTextField... textFields) {
         KeyAdapter enterKeyListener = new KeyAdapter() {
             @Override
@@ -29,6 +41,12 @@ public class ActionHelper {
         }
     }
     
+    /**
+     * Assigns an Enter key listener to the provided button and text panes to trigger button click on Enter key press.
+     *
+     * @param button The button to be clicked on Enter key press.
+     * @param textPanes The text panes that trigger the button click on Enter key press.
+     */
     public static void assignEnterKeyListener(JButton button, JEditorPane... textPanes) {
         KeyAdapter enterKeyListener = new KeyAdapter() {
             @Override
@@ -45,7 +63,10 @@ public class ActionHelper {
     }
     
     
-    
+    /**
+     * Registers a shutdown hook to perform cleanup tasks when the application is shutting down.
+     * For example, it can be used to close database connections.
+     */
     public static void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // Perform cleanup tasks here, such as closing the MongoDB connection
@@ -54,7 +75,9 @@ public class ActionHelper {
     }
     
     
-    
+    /**
+     * Restarts the current application by launching a new instance of the main class in a new process.
+     */
     public static void restartApplication() {
         // Get the current Java executable path
         String javaPath = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -78,5 +101,13 @@ public class ActionHelper {
             e.printStackTrace();
             // Handle restart errors
         }
+    }
+    
+    
+    
+    public static void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
     }
 }

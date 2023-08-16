@@ -87,6 +87,12 @@ public class ImageHelper {
         return bimage;
     }
 
+    /**
+     * Converts a BufferedImage to Binary data.
+     *
+     * @param image the BufferedImage to be converted
+     * @return the Binary data representation of the image
+     */
     public static Binary bufferedImageToBinary(BufferedImage image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -126,20 +132,50 @@ public class ImageHelper {
         return new ImageIcon(scaledImage);
     }
 
+    /**
+     * Resizes a BufferedImage to the specified dimensions.
+     *
+     * @param bufferedImage the BufferedImage to be resized
+     * @param width the desired width of the resized image
+     * @param height the desired height of the resized image
+     * @return the resized ImageIcon
+     */
     public static ImageIcon resizing(BufferedImage bufferedImage, int width, int height) {
         Image image = new ImageIcon(bufferedImage).getImage();
         Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
         return new ImageIcon(scaledImage);
     }
 
+    /**
+     * Resizes a BufferedImage to the specified width while maintaining aspect ratio.
+     *
+     * @param bufferedImage the BufferedImage to be resized
+     * @param width the desired width of the resized image
+     * @return the resized Image
+     */
     public static Image resizeImageToWidth(BufferedImage bufferedImage, int width) {
         return bufferedImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
     }
 
+    /**
+ * Resizes a BufferedImage to the specified height while maintaining aspect ratio.
+ *
+ * @param bufferedImage the BufferedImage to be resized
+ * @param height the desired height of the resized image
+ * @return the resized Image
+ */
     public static Image resizeImageToHeight(BufferedImage bufferedImage, int height) {
         return bufferedImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
     }
     
+    /**
+ * Resizes a BufferedImage to fit within a square of the specified size.
+ * Adds a circular mask to the image.
+ *
+ * @param bufferedImage the BufferedImage to be resized and masked
+ * @param size the desired size of the square image
+ * @return the masked BufferedImage
+ */
     public static Image resizeImageToFit(BufferedImage bufferedImage, int size) {
         if (bufferedImage.getWidth() < bufferedImage.getHeight()) {
             bufferedImage = imageToBufferedImage(resizeImageToWidth(bufferedImage, size));
@@ -181,6 +217,14 @@ public class ImageHelper {
         return masked;
     }
 
+    /**
+ * Resizes and compresses a BufferedImage to the specified width and converts it to Binary data.
+ *
+ * @param bufferedImage the BufferedImage to be resized and compressed
+ * @param width the desired width of the resized image
+ * @param compressionQuality the quality of compression (0.0 to 1.0)
+ * @return the compressed Binary data representation of the image
+ */
     public static Binary resizingAndCompressingWidthToBinary(BufferedImage bufferedImage, int width, float compressionQuality) {
         try {
             //resize image
@@ -220,6 +264,13 @@ public class ImageHelper {
         return null;
     }
 
+    /**
+ * Reads the contents of a file as a byte array.
+ *
+ * @param path the path of the file to read
+ * @return the byte array containing the file's contents
+ * @throws RuntimeException if an I/O error occurs
+ */
     public static byte[] readAsByte(String path) {
         try {
             FileInputStream fis = new FileInputStream(path);
@@ -235,6 +286,12 @@ public class ImageHelper {
         }
     }
 
+    /**
+ * Converts an Image to a byte array in PNG format.
+ *
+ * @param image the Image to convert
+ * @return the byte array representing the Image in PNG format
+ */
     public static byte[] readAsByte(Image image) {
         byte[] imageBytes = null;
 
@@ -274,6 +331,11 @@ public class ImageHelper {
         return null;
     }
 
+    /**
+ * Sets rendering hints for Graphics2D object.
+ *
+ * @param g2d the Graphics2D object to set rendering hints for
+ */
     public static ImageIcon toRoundImage(BufferedImage image, int size) {
         if (image.getWidth() < image.getHeight()) {
             image = imageToBufferedImage(resizeImageToWidth(image, size));
@@ -320,6 +382,7 @@ public class ImageHelper {
         setAvatarToLabel(user, label, size);
     }
 
+    
     public static void setAvatarToLabel(User user, JLabel label, int size) {
         ImageIcon avatarImage;
         Binary avtByteArray = null;
@@ -340,6 +403,11 @@ public class ImageHelper {
         label.setIcon(avatarImage);
     }
 
+    /**
+     * Retrieves the default image.
+     *
+     * @return the default Image
+     */
     public static Image getDefaultImage() {
         return defaultImage;
     }

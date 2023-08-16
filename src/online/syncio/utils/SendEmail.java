@@ -8,7 +8,20 @@ import java.time.Year;
 import java.util.Base64;
 import online.syncio.config.Account;
 
+/**
+ * The SendEmail class provides methods to send emails using the Elastic Email API.
+ */
 public class SendEmail {
+    
+    /**
+     * Sends an email using the Elastic Email API.
+     *
+     * @param toRecipient   The recipient's email address.
+     * @param recipientName The recipient's name.
+     * @param subject       The subject of the email.
+     * @param body          The HTML body of the email.
+     * @return true if the email was sent successfully, false otherwise.
+     */
     public static boolean send(String toRecipient, String recipientName, String subject, String body) {
         String url = "https://api.elasticemail.com/v2/email/send";
         String apiKey = Account.API_KEY_SENDEMAIL;
@@ -52,7 +65,15 @@ public class SendEmail {
     }
     
     
-    
+    /**
+     * Sends an order status email using the Elastic Email API.
+     *
+     * @param toRecipient   The recipient's email address.
+     * @param recipientName The recipient's name.
+     * @param subject       The subject of the email.
+     * @param content       The content of the email.
+     * @return true if the email was sent successfully, false otherwise.
+     */
     public static boolean sendOrderStatusEmail(String toRecipient, String recipientName, String subject, String content) {
         String url = "https://api.elasticemail.com/v2/email/send";
         String apiKey = Account.API_KEY_SENDEMAIL;
@@ -206,7 +227,15 @@ public class SendEmail {
     }
     
     
-    
+    /**
+     * Sends a formatted email using the Elastic Email API.
+     *
+     * @param toRecipient   The recipient's email address.
+     * @param recipientName The recipient's name.
+     * @param subject       The subject of the email.
+     * @param content       The content of the email.
+     * @return true if the email was sent successfully, false otherwise.
+     */
     public static boolean sendFormat(String toRecipient, String recipientName, String subject, String content) {
         String url = "https://api.elasticemail.com/v2/email/send";
         String apiKey = Account.API_KEY_SENDEMAIL;

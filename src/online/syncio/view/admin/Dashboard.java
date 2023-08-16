@@ -28,11 +28,17 @@ import online.syncio.model.UserIDAndDateAndText;
 import online.syncio.utils.Export;
 import org.bson.BsonDocument;
 
+/**
+ * Represents a dashboard panel that displays various statistics and information.
+ */
 public class Dashboard extends JPanel {
 
     private UserDAO userDAO;
     private PostDAO postDAO;
 
+    /**
+     * Initializes the Dashboard panel, fetching data and populating charts and statistics.
+     */
     public Dashboard() {
         this.userDAO = MongoDBConnect.getUserDAO();
         this.postDAO = MongoDBConnect.getPostDAO();
@@ -476,22 +482,47 @@ public class Dashboard extends JPanel {
         add(pnlContainer, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+    * Returns the MyLabel component representing the label displaying the average engagement rate.
+    *
+    * @return The MyLabel component for displaying the average engagement rate.
+    */
     public MyLabel getLblAverageEngagementRate() {
         return lblAverageEngagementRate;
     }
 
+    /**
+    * Returns the MyLabel component representing the label displaying the total number of posts.
+    *
+    * @return The MyLabel component for displaying the total number of posts.
+    */
     public MyLabel getLblPostsTotal() {
         return lblPostsTotal;
     }
 
+    /**
+    * Returns the MyLabel component representing the label displaying the total number of users.
+    *
+    * @return The MyLabel component for displaying the total number of users.
+    */
     public MyLabel getLblUsersTotal() {
         return lblUsersTotal;
     }
 
+    /**
+    * Returns the MyPanel component representing the panel displaying the new users chart.
+    *
+    * @return The MyPanel component for displaying the new users chart.
+    */
     public MyPanel getPnlNewUsersChart() {
         return pnlNewUsersChart;
     }
 
+    /**
+    * Returns the MyPanel component representing the panel containing the result of top users with the most engagement.
+    *
+    * @return The MyPanel component for displaying the top users with the most engagement.
+    */
     public MyPanel getPnlResult() {
         return pnlResult;
     }

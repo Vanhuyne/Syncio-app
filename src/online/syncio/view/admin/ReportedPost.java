@@ -13,6 +13,9 @@ import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.view.user.ErrorDetail;
 
+/**
+ * Represents a panel for displaying reported posts in a social media application.
+ */
 public class ReportedPost extends JPanel {
 
     private User currentUser;
@@ -20,6 +23,9 @@ public class ReportedPost extends JPanel {
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
     FindIterable<Post> postsReport;
 
+    /**
+     * Initializes the ReportedPost panel with required components and data.
+     */
     public ReportedPost() {
         initComponents();
         setBackground(new Color(0f, 0f, 0f, 0f));
@@ -32,15 +38,24 @@ public class ReportedPost extends JPanel {
         loadReportedPosts();
     }
 
+    /**
+     * Adds loading indicator to the feed panel.
+     */
     public void addLoading() {
         feedPanel.add(lblLoading);
     }
 
+     /**
+     * Removes the loading indicator from the feed panel.
+     */
     public void removeLoading() {
         lblLoading.setText("");
         feedPanel.remove(lblLoading);
     }
 
+    /**
+     * Loads reported posts and displays them in the feed panel.
+     */
     private void loadReportedPosts() {
         // Create a thread for loading and displaying posts
         Thread thread = new Thread(() -> {
@@ -114,6 +129,11 @@ public class ReportedPost extends JPanel {
         thread.start();
     }
 
+    /**
+     * Adds a PostUIReport component to the feed panel.
+     *
+     * @param postUIReport The PostUIReport component to add.
+     */
     private void addPostUI(PostUIReport postUIReport) {
         removeLoading();
         feedPanel.add(postUIReport);

@@ -5,7 +5,10 @@ import javax.swing.text.BadLocationException;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyDialog;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
+import online.syncio.dao.PostDAO;
+import online.syncio.dao.UserDAO;
 import online.syncio.dao.UserDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
@@ -16,17 +19,33 @@ import online.syncio.view.user.CreateNewPost;
 import online.syncio.view.user.ErrorDetail;
 import org.bson.types.Binary;
 
+/**
+ * The `CreateNewPostController` class manages the creation and uploading of new posts. It handles the user interface interactions and communicates with the `PostDAO` and `UserDAO` to add a new post to the database.
+ *
+ * The controller obtains the necessary data from the user interface, including the user's ID, caption, and images for the post. It performs validation on the input data, such as checking for the number of selected images and the presence of a caption. Additionally, the controller applies image filters to the selected images if specified.
+ *
+ * The `uploadPost()` method is responsible for creating a new `Post` object with the provided data and using the `PostDAO` to add it to the database. It also triggers a notification in the user interface upon a successful post upload.
+ */
 public class CreateNewPostController {
 
     private CreateNewPost popup;
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
 
+    /**
+     * Constructs a `CreateNewPostController` with the associated popup user interface.
+     *
+     * @param popup The popup user interface for creating new posts.
+     */
     public CreateNewPostController(CreateNewPost popup) {
         this.popup = popup;
 
     }
 
+    
+    /**
+     * Uploads a new post to the database based on user input.
+     */
     public void uploadPost() {
         String userID = LoggedInUser.getCurrentUser().getId().toString();
         String caption = "";
