@@ -67,9 +67,9 @@ public final class Main extends javax.swing.JFrame {
             pnlNotifications.setVisible(false);
             pnlContainer.setComponentZOrder(pnlNotifications, 0);
 
-            messagePanel = new MessagePanel();
-
             controller.recheckLoggedInUser();
+
+            messagePanel = new MessagePanel();
         }
     }
 
