@@ -169,13 +169,18 @@ public class MessageController {
 
                 List<String> participants = conversation.getParticipants();
 
+                System.out.println(participants.contains(LoggedInUser.getCurrentUser().getIdAsString()));
+
                 if (participants.contains(LoggedInUser.getCurrentUser().getIdAsString())) {
-                    createChatArea(conversation.getIdAsString());
+                    if (!historyList.contains(conversation.getIdAsString())) {
+                        createChatArea(conversation.getIdAsString());
+                    }
                 }
 
                 pnlMsg.getPnlUserList().revalidate();
                 pnlMsg.getPnlUserList().repaint();
-            });
+            }
+            );
         });
 
         changeStreamThread.start();

@@ -344,7 +344,9 @@ public class Profile extends JPanel {
             CardLayout c = (CardLayout) this.main.getPnlTabContent().getLayout();
             c.show(this.main.getPnlTabContent(), "message");
 
-            this.main.getMessagePanel().getController().openMessage(lblUsername.getText().trim());
+            User user = userDAO.getByUsername(lblUsername.getText().trim());
+
+            this.main.getMessagePanel().getController().openMessageFromProfie(user.getIdAsString());
         }
     }//GEN-LAST:event_btnEditProfileMessageActionPerformed
 
