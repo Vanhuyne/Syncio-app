@@ -21,6 +21,7 @@ import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.OtherHelper;
+import org.bson.types.Binary;
 
 /**
  * Represents a user interface for displaying a user's profile.
@@ -33,7 +34,8 @@ public class Profile extends JPanel {
     private ProfileController controller;
 
     /**
-     * Initializes a new instance of the Profile class with the specified user's profile.
+     * Initializes a new instance of the Profile class with the specified user's
+     * profile.
      *
      * @param user The user whose profile is being displayed.
      */
@@ -108,7 +110,8 @@ public class Profile extends JPanel {
     }
 
     /**
-     * Sets the profile information on the UI based on the provided user's information.
+     * Sets the profile information on the UI based on the provided user's
+     * information.
      *
      * @param user The user whose information is being displayed on the profile.
      */
@@ -158,13 +161,14 @@ public class Profile extends JPanel {
 
             lblAvatar.setIcon(ImageHelper.toRoundImage(bufferedImage, lblAvatar.getWidth()));
 
-            LoggedInUser.getCurrentUser().setAvt(ImageHelper.bufferedImageToBinary(bufferedImage));
+            Binary avtBinary = new Binary(ImageHelper.readAsByte(bufferedImage));
+
+            LoggedInUser.getCurrentUser().setAvt(avtBinary);
 
             userDAO.updateByID(LoggedInUser.getCurrentUser());
         }
     }
 
-    
     /**
      * Returns the panel that displays the user's profile posts.
      *
@@ -175,7 +179,8 @@ public class Profile extends JPanel {
     }
 
     /**
-     * Returns the controller responsible for managing the profile functionality.
+     * Returns the controller responsible for managing the profile
+     * functionality.
      *
      * @return The profile controller instance.
      */
