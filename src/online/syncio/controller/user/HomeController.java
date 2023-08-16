@@ -129,6 +129,45 @@ public class HomeController {
                         postsLoaded = 0; // Reset the counter
                     }
                 }
+                
+                
+                //may you like
+                pnlHome.removeLoading();
+                pnlHome.getFeedPanel().add(new MayULike());
+                pnlHome.addLoading();
+                postsOther = postDAO.getAllPostOther(currentUser);
+
+                // Load initial posts from the regular database query
+                for (Post post : postsOther) {
+                    // Check if pnlSearch is visible before adding PostUI components
+                    while (isSearchPanelVisible()) {
+                        try {
+                            Thread.sleep(50); // Wait for 100 milliseconds before checking again
+                        } catch (InterruptedException e) {
+                            String errorInfo = e.getMessage();
+                            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
+                        }
+                    }
+
+                    PostUI postUI = new PostUI(post.getId().toString(), post.getUserID());
+                    SwingUtilities.invokeLater(() -> {
+                        addPostUI(postUI);
+                    });
+
+                    postsLoaded++;
+                    if (postsLoaded >= 5) {
+                        // Introduce a 3-second delay after loading 5 posts
+                        try {
+                            Thread.sleep(3000); // 3000 milliseconds = 2 seconds
+                        } catch (InterruptedException e) {
+                            String errorInfo = e.getMessage();
+                            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
+                        }
+
+                        postsLoaded = 0; // Reset the counter
+                    }
+                }
+
 
                 // Wait for the change stream thread to finish (you can use other synchronization mechanisms if needed)
                 try {
