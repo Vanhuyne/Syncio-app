@@ -32,6 +32,11 @@ public class DashboardController {
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
     private PostDAO postDAO = MongoDBConnect.getPostDAO();
 
+    /**
+     * Creates a new instance of DashboardController with the specified dashboard.
+     *
+     * @param dashboard The Dashboard instance associated with this controller.
+     */
     public DashboardController(Dashboard dashboard) {
         this.dashboard = dashboard;
     }

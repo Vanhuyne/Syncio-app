@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyNotification;
 import online.syncio.component.MyTextPane;
@@ -23,6 +25,9 @@ import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
 import static online.syncio.view.user.Main.prevTab;
 
+/**
+ * This class represents a user interface component for creating new posts.
+ */
 public class CreateNewPost extends javax.swing.JPanel {
 
     private ArrayList<String> imagePaths = new ArrayList<>();
@@ -34,14 +39,14 @@ public class CreateNewPost extends javax.swing.JPanel {
     private PostDAO postDAO;
     private UserDAO userDAO;
 
- /**
- * Represents a user interface component for creating new posts.
- * This component allows users to write captions, select images, and
- * post content on the platform.
- *
- * @param main The instance of the application's main class that manages
- *             overall functionality and navigation.
- */
+    /**
+    * Represents a user interface component for creating new posts.
+    * This component allows users to write captions, select images, and
+    * post content on the platform.
+    *
+    * @param main The instance of the application's main class that manages
+    *             overall functionality and navigation.
+    */
     public CreateNewPost(Main main) {
         this.main = main;
         this.userDAO = MongoDBConnect.getUserDAO();
@@ -82,12 +87,23 @@ public class CreateNewPost extends javax.swing.JPanel {
      * @param color The color of the emoji.
      */
     public void addEmoji(JLabel lbl, Color color) {
-        int length = txtCaption.getDocument().getLength();
-
-        if (length < 500) {
-            txtCaption.append(lbl.getText(), color);
-            txtCaption.append("", Color.BLACK);
-            txtCaption.requestFocus();
+        try {
+            Document doc = txtCaption.getDocument();
+            int length = doc.getLength();
+ 
+            if (doc.getText(0, doc.getLength()).trim().equals(txtCaption.getPlaceholder())) {
+                txtCaption.setText("");
+            }
+            
+            if (length < 500) {
+                txtCaption.append(lbl.getText(), color);
+                txtCaption.append("", Color.BLACK);
+                txtCaption.requestFocus();
+            }
+            
+            showCaptionLength();
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -687,6 +703,12 @@ public class CreateNewPost extends javax.swing.JPanel {
         selectImage(imageIndex);
     }//GEN-LAST:event_rdoNormalActionPerformed
 
+    /**
+     * Opens a file chooser dialog for uploading images.
+     * Allows the user to select image files (JPEG, PNG, JPG) and stores their paths.
+     * The selected images will be added to the list of image paths and their filters set to 0.
+     * After successful selection, the first image will be displayed and image selection will be enabled.
+     */
     public void uploadImage() {
         JFileChooser fc = new JFileChooser();
         fc.setMultiSelectionEnabled(true);
@@ -711,28 +733,56 @@ public class CreateNewPost extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Closes the "createnewpost" popup, shows the previous tab, and shows a notification.
+     */
     public void uploadNotification() {
         GlassPanePopup.closePopup("createnewpost");
         this.main.showTab(prevTab);
         new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Post shared").setVisible(true);
     }
 
+    /**
+     * Retrieves the text pane component for caption input.
+     *
+     * @return The MyTextPane instance used for caption input.
+     */
     public MyTextPane getTxtCaption() {
         return txtCaption;
     }
 
+    /**
+     * Retrieves the list of image paths for the uploaded images.
+     *
+     * @return An ArrayList containing the paths of uploaded images.
+     */
     public ArrayList<String> getImagePaths() {
         return imagePaths;
     }
 
+    /**
+     * Retrieves the list of image filters for the uploaded images.
+     *
+     * @return An ArrayList containing the image filters associated with uploaded images.
+     */
     public ArrayList<Integer> getImageFilter() {
         return imageFilter;
     }
 
+    /**
+     * Retrieves the PostDAO instance associated with this class.
+     *
+     * @return The PostDAO instance used for interacting with post-related data.
+     */
     public PostDAO getPostDAO() {
         return postDAO;
     }
 
+    /**
+     * Retrieves the UserDAO instance associated with this class.
+     *
+     * @return The UserDAO instance used for interacting with user-related data.
+     */
     public UserDAO getUserDAO() {
         return userDAO;
     }

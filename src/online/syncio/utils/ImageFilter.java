@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import org.bson.types.Binary;
 
+/**
+ * Utility class for applying various image filters and transformations to BufferedImage and Binary images.
+ */
 public class ImageFilter {
 
     public static void main(String[] args) {
@@ -59,12 +62,11 @@ public class ImageFilter {
 
     // convert image to grayscale
     /**
-     * Brightens the color image by a specified percentage.
-     *
-     * @param img the image to be brightened
-     * @param percentage the percentage by which to brighten the image
-     * @return the brightened image
-     */
+    * Converts a given BufferedImage to grayscale.
+    *
+    * @param img The original BufferedImage to be converted.
+    * @return A new BufferedImage representing the grayscale version of the input image.
+    */
     public static BufferedImage toGrayScale(BufferedImage img) {
         System.out.println("  Converting to GrayScale.");
         BufferedImage grayImage = new BufferedImage(
@@ -119,6 +121,13 @@ public class ImageFilter {
         return grayImage;
     }
 
+    /**
+    * Converts the given binary image to grayscale using a simple averaging method.
+    * Each pixel's color channels (red, green, blue) are averaged to produce the grayscale value.
+    *
+    * @param img The binary image to be converted to grayscale.
+    * @return A new binary image representing the grayscale version of the input image.
+    */
     public static Binary toGrayScale2(Binary img) {
         System.out.println("  Converting to GrayScale2.");
         BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(img);
@@ -361,6 +370,14 @@ public class ImageFilter {
     }
 
     // brighten color image by a percentage
+    /**
+    * Brightens the given binary image by increasing the intensity of each pixel's color channels (red, green, blue).
+    *
+    * @param img        The binary image to be brightened.
+    * @param percentage The percentage by which to brighten the image. A value of 0 will not change the image, while a value
+    *                   of 100 will increase the intensity of each color channel to its maximum value (255).
+    * @return A new binary image representing the brightened version of the input image.
+    */
     public static Binary brighten(Binary img, int percentage) {
         BufferedImage bufferedImage = ImageHelper.readBinaryAsBufferedImage(img);
 

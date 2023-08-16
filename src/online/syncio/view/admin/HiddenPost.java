@@ -13,6 +13,9 @@ import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.view.user.ErrorDetail;
 
+/**
+ * Panel for displaying reported posts and managing their visibility in the admin view.
+ */
 public class HiddenPost extends JPanel {
 
     private User currentUser;

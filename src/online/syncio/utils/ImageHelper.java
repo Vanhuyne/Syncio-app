@@ -74,6 +74,12 @@ public class ImageHelper {
         return bimage;
     }
 
+    /**
+    * Converts an image file specified by the given file path to a BufferedImage.
+    *
+    * @param imagePath The path to the image file to be converted.
+    * @return A BufferedImage representation of the image file.
+    */
     public static BufferedImage stringToBufferedImage(String imagePath) {
         File file = new File(imagePath);
         BufferedImage bimage = null;
@@ -287,11 +293,11 @@ public class ImageHelper {
     }
 
     /**
- * Converts an Image to a byte array in PNG format.
- *
- * @param image the Image to convert
- * @return the byte array representing the Image in PNG format
- */
+    * Converts an Image to a byte array in PNG format.
+    *
+    * @param image the Image to convert
+    * @return the byte array representing the Image in PNG format
+    */
     public static byte[] readAsByte(Image image) {
         byte[] imageBytes = null;
 
@@ -309,6 +315,13 @@ public class ImageHelper {
         return imageBytes;
     }
 
+    /**
+    * Writes the provided byte array data to a file at the specified path.
+    *
+    * @param path The path where the file will be created.
+    * @param data The byte array data to be written to the file.
+    * @throws RuntimeException If an IOException occurs during the file write operation.
+    */
     public static void write(String path, byte[] data) {
         try {
             FileOutputStream fos = new FileOutputStream(path);
@@ -320,6 +333,12 @@ public class ImageHelper {
         }
     }
 
+    /**
+    * Reads binary data from a Binary object and converts it into a BufferedImage.
+    *
+    * @param binary The Binary object containing the binary data.
+    * @return A BufferedImage created from the binary data, or null if reading fails.
+    */
     public static BufferedImage readBinaryAsBufferedImage(Binary binary) {
         byte[] byteArray = binary.getData();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
@@ -332,10 +351,13 @@ public class ImageHelper {
     }
 
     /**
- * Sets rendering hints for Graphics2D object.
- *
- * @param g2d the Graphics2D object to set rendering hints for
- */
+    * Converts a given BufferedImage to a round image with a specified size.
+    * The image is masked with a circular shape.
+    *
+    * @param image The BufferedImage to be converted.
+    * @param size The size of the resulting round image.
+    * @return An ImageIcon containing the round image.
+    */
     public static ImageIcon toRoundImage(BufferedImage image, int size) {
         if (image.getWidth() < image.getHeight()) {
             image = imageToBufferedImage(resizeImageToWidth(image, size));
@@ -377,12 +399,27 @@ public class ImageHelper {
         return new ImageIcon(masked);
     }
 
+    /**
+    * Sets the avatar image for a JLabel using the username and specified size.
+    * The avatar image is retrieved from the user's data and resized to fit the given size.
+    *
+    * @param username The username of the user whose avatar is to be displayed.
+    * @param label The JLabel where the avatar image will be set.
+    * @param size The size of the avatar image.
+    */
     public static void setAvatarToLabel(String username, JLabel label, int size) {
         User user = userDAO.getByUsername(username);
         setAvatarToLabel(user, label, size);
     }
 
-    
+    /**
+    * Sets the avatar image for a JLabel using the User object and specified size.
+    * The avatar image is retrieved from the user's data and resized to fit the given size.
+    *
+    * @param user The User object containing avatar information.
+    * @param label The JLabel where the avatar image will be set.
+    * @param size The size of the avatar image.
+    */
     public static void setAvatarToLabel(User user, JLabel label, int size) {
         ImageIcon avatarImage;
         Binary avtByteArray = null;

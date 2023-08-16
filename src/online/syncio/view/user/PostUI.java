@@ -481,6 +481,11 @@ public class PostUI extends javax.swing.JPanel {
 
 
   
+    /**
+    * Handles the selection of a more option.
+    *
+    * @param option The selected more option as an integer value.
+    */
     private void onOptionSelected(int option) {
         if (option == MoreOptions.COPYLINK.getValue()) {
             ActionHelper.copyToClipboard("#" + postID);
@@ -490,6 +495,10 @@ public class PostUI extends javax.swing.JPanel {
         }
     }
     
+    
+    /**
+    * Displays a popup for selecting and submitting report reasons.
+    */
     private void showReportOptionsPopup() {
         Options reportOptions = new Options(Options.OptionType.REPORT_REASON);
         reportOptions.setReasonSelectedCallback(reason -> {

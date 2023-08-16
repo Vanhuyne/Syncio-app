@@ -11,16 +11,35 @@ import javax.swing.BoxLayout;
  */
 public class Options extends javax.swing.JPanel {
 
+    /**
+     * Enumeration of different types of options that can be displayed in the panel.
+     */
     public enum OptionType {
         MORE_OPTIONS,
         REPORT_REASON
     }
 
+    /**
+     * Callback interface for notifying when a report reason is selected.
+     */
     public interface ReasonSelectedCallback {
+        /**
+         * Called when a report reason is selected.
+         *
+         * @param reason The selected report reason as an integer value.
+         */
         void onReasonSelected(int reason);
     }
 
+    /**
+     * Callback interface for notifying when a more option is selected.
+     */
     public interface OptionSelectedCallback {
+        /**
+         * Called when a more option is selected.
+         *
+         * @param option The selected more option as an integer value.
+         */
         void onOptionSelected(int option);
     }
 
@@ -78,10 +97,11 @@ public class Options extends javax.swing.JPanel {
     }
     
     /**
-     * Retrieves the label associated with a report reason value.
-     * @param value The report reason value.
-     * @return The label corresponding to the value.
-     */
+    * Retrieves the label associated with a report reason value.
+    * 
+    * @param value The report reason value.
+    * @return The label corresponding to the value, or null if not found.
+    */
     public static String getReportReasonLabel(int value) {
         for (Options.ReportReason reason : Options.ReportReason.values()) {
             if (reason.getValue() == value) {
@@ -91,6 +111,12 @@ public class Options extends javax.swing.JPanel {
         return null;
     }
 
+    /**
+    * Retrieves the label associated with a more options value.
+    * 
+    * @param value The more options value.
+    * @return The label corresponding to the value, or null if not found.
+    */
     public static String getMoreOptionsLabel(int value) {
         for (Options.MoreOptions moreOption : Options.MoreOptions.values()) {
             if (moreOption.getValue() == value) {
@@ -102,6 +128,11 @@ public class Options extends javax.swing.JPanel {
 
 
 
+    /**
+    * Creates a new instance of the Options panel with the specified option type.
+    * 
+    * @param optionType The type of options to display.
+    */
     public Options(OptionType optionType) {
         this.optionType = optionType;
 
@@ -156,17 +187,28 @@ public class Options extends javax.swing.JPanel {
     }
 
     /**
-     * Sets the callback for capturing the selected report reason.
-     * @param callback The callback to be set.
-     */
+    * Sets the callback for capturing the selected report reason.
+    * 
+    * @param callback The callback to be set.
+    */
     public void setReasonSelectedCallback(ReasonSelectedCallback callback) {
         this.reasonCallback = callback;
     }
 
+    /**
+    * Sets the callback for capturing the selected option.
+    * 
+    * @param callback The callback to be set.
+    */
     public void setOptionSelectedCallback(OptionSelectedCallback callback) {
         this.optionCallback = callback;
     }
 
+    /**
+     * Handles the selection of a more option.
+     *
+     * @param option The selected more option.
+     */
     private void optionSelected(Enum<?> option) {
         selectedValue = option.ordinal();
 
@@ -175,6 +217,11 @@ public class Options extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Handles the selection of a report reason.
+     *
+     * @param reason The selected report reason.
+     */
     private void reportReasonSelected(ReportReason reason) {
         int selectedValue = ((ReportReason) reason).getValue();
 
