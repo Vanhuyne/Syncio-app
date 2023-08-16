@@ -16,6 +16,7 @@ import online.syncio.utils.ImageFilter;
 import online.syncio.utils.ImageHelper;
 import online.syncio.utils.TextHelper;
 import online.syncio.view.user.CreateNewPost;
+import online.syncio.view.user.ErrorDetail;
 import org.bson.types.Binary;
 
 /**
@@ -54,10 +55,11 @@ public class CreateNewPostController {
             if (caption.equalsIgnoreCase("Write a caption...")) {
                 caption = "";
             }
-            
+
             caption = TextHelper.censorBadWords(caption);
         } catch (BadLocationException ex) {
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         ArrayList<Binary> lPhoto = new ArrayList<>();

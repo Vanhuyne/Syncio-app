@@ -51,15 +51,15 @@ public class MongoDBConnect {
                 mongoClient = MongoClients.create(Account.CONNECTION_STRING);
                 database = mongoClient.getDatabase(Account.DATABASE_NAME).withCodecRegistry(pojoCodecRegistry);
             } catch (MongoTimeoutException ex) {
-                System.err.println(ex);
+                //System.err.println(ex);
                 GlassPanePopup.showPopup(new MyDialog("Connection Timeout", "Connection to the database timed out. Please try again later.<br>(Database access is blocked on the school's Wi-Fi network at FPT Polytechnic.)"), "dialog");
                 return;
             } catch (MongoException ex) {
-                System.err.println(ex);
+                //System.err.println(ex);
                 GlassPanePopup.showPopup(new MyDialog("Database Error", "An error occurred while communicating with the database.<br>Please try again later."), "dialog");
                 return;
             } catch (Exception ex) {
-                System.err.println(ex);
+                //System.err.println(ex);
                 GlassPanePopup.showPopup(new MyDialog("Error", "An unexpected error occurred.<br>Please contact support for assistance."), "dialog");
                 return;
             }

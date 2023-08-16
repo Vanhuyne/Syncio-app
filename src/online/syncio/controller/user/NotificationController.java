@@ -1,7 +1,6 @@
 package online.syncio.controller.user;
 
 import com.mongodb.client.FindIterable;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.FileOutputStream;
@@ -18,6 +17,7 @@ import java.util.Properties;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.component.MyLabel;
 import online.syncio.component.SearchedUserCard;
 import online.syncio.dao.MongoDBConnect;
@@ -25,6 +25,7 @@ import online.syncio.dao.PostDAO;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Post;
 import online.syncio.model.UserIDAndDateAndText;
+import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.NotificationsPanel;
 
 /**
@@ -79,7 +80,8 @@ public class NotificationController {
         try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_FILE_PATH)) {
             properties.load(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            String errorInfo = e.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         properties.setProperty(userID + "." + DESIRED_DATETIME_KEY, dateTimeFormat.format(date));
@@ -87,7 +89,8 @@ public class NotificationController {
         try (OutputStream outputStream = new FileOutputStream("src/" + CONFIG_FILE_PATH)) {
             properties.store(outputStream, "Desired Date and Time for Users");
         } catch (IOException e) {
-            e.printStackTrace();
+            String errorInfo = e.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
     }
 
@@ -151,7 +154,8 @@ public class NotificationController {
                         break;
                     }
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    String errorInfo = e.getMessage();
+                    GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
                 }
             }
         }

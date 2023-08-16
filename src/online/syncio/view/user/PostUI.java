@@ -60,7 +60,13 @@ public class PostUI extends javax.swing.JPanel {
             liked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-red_24px.png")));
             unliked = new ImageIcon(ImageIO.read(getClass().getResource("/online/syncio/resources/images/icons/heart-white_24px.png")));
         } catch (IOException ex) {
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
+            return;
+        } catch (IllegalArgumentException ex) {
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
+            return;
         }
 
         showInfoPost();
@@ -532,8 +538,6 @@ public class PostUI extends javax.swing.JPanel {
     public MyLabel getLblReport() {
         return lblMoreOption;
     }
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private online.syncio.component.MyButton btnNext;

@@ -26,6 +26,7 @@ import online.syncio.utils.ActionHelper;
 import online.syncio.utils.GoogleOAuthHelper;
 import online.syncio.utils.TextHelper;
 import online.syncio.view.admin.MainAdmin;
+import online.syncio.view.user.ErrorDetail;
 import online.syncio.view.user.Main;
 
 /**
@@ -305,7 +306,8 @@ public class Login extends javax.swing.JFrame {
                 GlassPanePopup.showPopup(new MyDialog("Account Not Found", "You don't have a linked Syncio account with your Google Account.\nTry logging in with your username. If you don't have an account, please sign up."), "dialog");
             }
         } catch (IOException | GeneralSecurityException ex) {
-            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
     }//GEN-LAST:event_btnContinueWithGoogleActionPerformed
 

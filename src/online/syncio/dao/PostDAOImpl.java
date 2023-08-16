@@ -19,10 +19,12 @@ import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.model.Post;
 import online.syncio.model.User;
 import online.syncio.model.UserIDAndDate;
 import online.syncio.model.UserIDAndDateAndText;
+import online.syncio.view.user.ErrorDetail;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -48,8 +50,10 @@ public class PostDAOImpl implements PostDAO {
 
             return true;
         } catch (Exception ex) {
-            System.out.println("Failed to insert into MongoDB: " + ex.getMessage());
-            ex.printStackTrace();
+//            System.out.println("Failed to insert into MongoDB: " + ex.getMessage());
+//            ex.printStackTrace();
+            String errorInfo = ex.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         return false;
@@ -77,7 +81,8 @@ public class PostDAOImpl implements PostDAO {
         try {
             postCollection.find().sort(Sorts.descending("datePosted")).into(lPost);
         } catch (Exception e) {
-            e.printStackTrace();
+            String errorInfo = e.getMessage();
+            GlassPanePopup.showPopup(new ErrorDetail(errorInfo), "errordetail");
         }
 
         return lPost;
