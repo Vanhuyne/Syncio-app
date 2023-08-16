@@ -25,9 +25,8 @@ public class MessagePanel extends JPanel {
 
         pnlUserList.setLayout(new BoxLayout(pnlUserList, BoxLayout.Y_AXIS));
 
-        controller = new MessageController(this);
-
         if (LoggedInUser.getCurrentUser() != null) {
+            controller = new MessageController(this);
             controller.addUserToHistoryPanel();
         }
     }

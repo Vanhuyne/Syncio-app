@@ -151,8 +151,6 @@ public class MessageController {
             pnlMsg.getChatArea().add(ca, conversationID);
 
             chatAreas.put(conversationID, ca);
-
-            System.out.println(ca.getName());
         }
 
         cardLayout.show(pnlMsg.getChatArea(), conversationID);
@@ -168,8 +166,6 @@ public class MessageController {
                 Conversation conversation = changeDocument.getFullDocument();
 
                 List<String> participants = conversation.getParticipants();
-
-                System.out.println(participants.contains(LoggedInUser.getCurrentUser().getIdAsString()));
 
                 if (participants.contains(LoggedInUser.getCurrentUser().getIdAsString())) {
                     if (!historyList.contains(conversation.getIdAsString())) {

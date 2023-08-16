@@ -11,18 +11,22 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
+import online.syncio.component.GlassPanePopup;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
 import online.syncio.model.User;
 import online.syncio.resources.fonts.MyFont;
 import online.syncio.view.user.Main;
+import online.syncio.view.user.PostDetailUI;
 
 public class ChatBox extends JComponent {
 
@@ -94,6 +98,19 @@ public class ChatBox extends JComponent {
         text.setEditable(false);
 
         text.setText(message.getText());
+
+        String objectID = extractObjectId(message.getText());
+
+        if (objectID != null && MongoDBConnect.getPostDAO().getByID(objectID) != null) {
+            text.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            text.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    GlassPanePopup.showPopup(new PostDetailUI(objectID), "postdetail");
+                }
+            });
+        }
+
         User messagingUser = MongoDBConnect.getUserDAO().getByID(message.getSenderID());
 
         labelDate = new JLabel(messagingUser.getUsername() + " | " + message.getDateSent());
@@ -137,5 +154,14 @@ public class ChatBox extends JComponent {
 
     public static enum BoxType {
         LEFT, RIGHT
+    }
+
+    private String extractObjectId(String text) {
+        Pattern pattern = Pattern.compile("#([0-9a-fA-F]{24})"); // Matches strings like "#507f1f77bcf86cd799439011"
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }
