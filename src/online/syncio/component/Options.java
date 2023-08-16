@@ -100,10 +100,7 @@ public class Options extends javax.swing.JPanel {
         return null;
     }
 
-  
-  
-    public Options() {
-=======
+
 
     public Options(OptionType optionType) {
         this.optionType = optionType;
