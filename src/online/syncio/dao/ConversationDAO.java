@@ -10,9 +10,7 @@ public interface ConversationDAO extends DAO<Conversation> {
 
     public Conversation getByParticipants(List<String> participants);
 
-    public List<String> getAllMessageHistory(String currentUser);
-
-    public List<String> getMessagedUser(String currentUser);
+    public List<String> getAllMessageHistory(String currentUserID);
 
     public ChangeStreamIterable<Conversation> getChangeStream();
 

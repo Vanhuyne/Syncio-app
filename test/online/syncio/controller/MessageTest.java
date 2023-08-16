@@ -10,9 +10,11 @@ import online.syncio.component.SearchedCard;
 import online.syncio.component.message.ChatBox;
 import online.syncio.dao.ConversationDAO;
 import online.syncio.dao.MongoDBConnect;
+import online.syncio.dao.UserDAO;
 import online.syncio.model.Conversation;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.Message;
+import online.syncio.model.User;
 import online.syncio.view.login.Login;
 import org.assertj.swing.edt.GuiActionRunner;
 import static org.assertj.swing.finder.WindowFinder.findFrame;
@@ -27,13 +29,19 @@ import org.junit.Test;
 public class MessageTest {
 
     FrameFixture window;
+    UserDAO userDAO = MongoDBConnect.getUserDAO();
     ConversationDAO conversationDAO = MongoDBConnect.getConversationDAO();
 
     final String username = "thuanID";
     final String password = "1";
+    User currentUser;
+    String currentUserID;
 
     @Before
     public void setUp() {
+        currentUser = userDAO.getByUsername(username);
+        currentUserID = currentUser.getIdAsString();
+
         Login frame = GuiActionRunner.execute(() -> new Login());
         window = new FrameFixture(frame);
         window.show();
@@ -55,7 +63,7 @@ public class MessageTest {
 
         JPanel pnlHistoryUserList = mainWindow.panel("userList").target();
 
-        List<String> historyList = conversationDAO.getAllMessageHistory(username);
+        List<String> historyList = conversationDAO.getAllMessageHistory(currentUserID);
 
         int userCount = historyList.size();
 
@@ -76,7 +84,7 @@ public class MessageTest {
 
     @Test
     public void shouldShowMessagedHistoryWithAUser() {
-        List<String> historyList = conversationDAO.getAllMessageHistory(username);
+        List<String> historyList = conversationDAO.getAllMessageHistory(currentUserID);
 
         Collections.shuffle(Arrays.asList(historyList));
 
@@ -86,10 +94,9 @@ public class MessageTest {
             FrameFixture mainWindow = findFrame("Main").withTimeout(10000).using(window.robot());
             JPanelFixture pnlChatArea = mainWindow.panel("chatArea");
 
-            String conversationID = historyList.iterator().next();;
+            String conversationID = historyList.iterator().next();
 
             mainWindow.panel("userList").panel(conversationID).click();
-
             pause(1000);
 
             pnlChatArea.requireVisible();
@@ -117,7 +124,7 @@ public class MessageTest {
     public void shouldMessageBeSent() {
         FrameFixture mainWindow = findFrame("Main").withTimeout(10000).using(window.robot());
 
-        List<String> historyList = conversationDAO.getAllMessageHistory(username);
+        List<String> historyList = conversationDAO.getAllMessageHistory(currentUserID);
 
         String conversationID = historyList.iterator().next();
 
@@ -141,14 +148,14 @@ public class MessageTest {
         FrameFixture mainWindow = findFrame("Main").withTimeout(10000).using(window.robot());
         JPanelFixture pnlChatArea = mainWindow.panel("chatArea");
 
-        List<String> historyList = conversationDAO.getAllMessageHistory(username);
+        List<String> historyList = conversationDAO.getAllMessageHistory(currentUserID);
 
-        String conversionID = historyList.iterator().next();
+        String conversationID = historyList.iterator().next();
 
-        mainWindow.panel("userList").panel(conversionID).click();
+        mainWindow.panel("userList").panel(conversationID).click();
         pause(1000);
 
-        Conversation converstaion = conversationDAO.getByID(conversionID);
+        Conversation conversation = conversationDAO.getByID(conversationID);
 
         String messageContent = "This is a message to see if it can be sent to MongoDB!!!";
 
@@ -157,7 +164,7 @@ public class MessageTest {
 
         pause(3000);
 
-        Component[] compList = pnlChatArea.panel(conversionID).panel("body").target().getComponents();
+        Component[] compList = pnlChatArea.panel(conversationID).panel("body").target().getComponents();
         Collections.reverse(Arrays.asList(compList));
 
         Component lastestMessage = compList[0];
@@ -166,7 +173,7 @@ public class MessageTest {
             Message msg = chatBox.getMessage();
 
             // Người gửi có phải là người đăng nhập
-            assertEquals(username, msg.getSenderID());
+            assertEquals(currentUserID, msg.getSenderID());
 
             // Tin nhắn có trùng nội dùng
             assertEquals(messageContent, msg.getText());
@@ -181,7 +188,7 @@ public class MessageTest {
         FrameFixture mainWindow = findFrame("Main").withTimeout(10000).using(window.robot());
         JPanelFixture pnlChatArea = mainWindow.panel("chatArea");
 
-        List<String> historyList = conversationDAO.getAllMessageHistory(username);
+        List<String> historyList = conversationDAO.getAllMessageHistory(currentUserID);
         String conversatonID = historyList.iterator().next();
 
         mainWindow.panel("userList").panel(conversatonID).click();
