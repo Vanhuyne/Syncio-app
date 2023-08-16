@@ -1,5 +1,8 @@
 package online.syncio.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -98,5 +101,13 @@ public class ActionHelper {
             e.printStackTrace();
             // Handle restart errors
         }
+    }
+    
+    
+    
+    public static void copyToClipboard(String text) {
+        StringSelection selection = new StringSelection(text);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
     }
 }

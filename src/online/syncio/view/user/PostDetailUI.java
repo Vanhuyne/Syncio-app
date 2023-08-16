@@ -564,7 +564,7 @@ public class PostDetailUI extends javax.swing.JPanel {
         String uID = LoggedInUser.getCurrentUser().getId().toString();
 
         if (postDAO.addComment(cmt, uID, postID)) {
-            System.out.println("Đã gửi comment");
+//            System.out.println("Đã gửi comment");
             txtCmt.setText("");
             new MyNotification((JFrame) SwingUtilities.getWindowAncestor(this), true, "Sent a Comment").setVisible(true);
             post = postDAO.getByID(postID);

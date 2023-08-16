@@ -3,13 +3,24 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/utils/GoogleOAuthHelper.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/view/user/CreateNewPost.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/utils/ImageFilter.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/utils/Export.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/controller/user/CreateNewPostController.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/controller/user/ForgotController.java</file>
-            <file>file:/D:/Syncio_Huy/src/online/syncio/utils/ImageHelper.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/test/test/ForgotTest.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/PostDetailUI.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/dao/PostDAOImpl.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/component/Options.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/user/HomeController.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/config/Version.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/admin/UserDetail.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/WebsiteHelper.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/user/NotificationController.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/controller/user/MainController.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/NotificationsPanel.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/Main.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/PostUI.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/admin/MainAdmin.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/FileHelper.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/Home.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/utils/ActionHelper.java</file>
+            <file>file:/D:/FPT%20POLYTECHNIC/Du%20An%201%20(PRO1041)/Bai%20Tap/Syncio/src/online/syncio/view/user/CommentUI.java</file>
         </group>
     </open-files>
 </project-private>

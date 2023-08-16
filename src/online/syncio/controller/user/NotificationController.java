@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import online.syncio.component.MyLabel;
 import online.syncio.component.SearchedUserCard;
@@ -95,32 +96,37 @@ public class NotificationController {
      * Displays notifications based on the desiredDateTime.
      */
     public void displayNotifications() {
-        pnlNoti.getPnlResult().removeAll();
+        SwingUtilities.invokeLater(() -> {
+            pnlNoti.getPnlResult().removeAll();
+            pnlNoti.getPnlResult().revalidate();
+            pnlNoti.getPnlResult().repaint();
 
-        String currentUserID = LoggedInUser.getCurrentUser().getId().toString();
-        postList = postDAO.getAllByUserIDFindIterable(currentUserID);
+            String currentUserID = LoggedInUser.getCurrentUser().getId().toString();
+            postList = postDAO.getAllByUserIDFindIterable(currentUserID);
 
-        readDesiredDateTime(currentUserID);
+            readDesiredDateTime(currentUserID);
 
-        MyLabel lblLast3Days = new MyLabel("Last 3 days");
-        lblLast3Days.setPreferredSize(new Dimension(300, 30));
-        lblLast3Days.setBorder(new EmptyBorder(5, 0, 5, 0));
-        lblLast3Days.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        pnlNoti.getPnlResult().add(lblLast3Days);
-        for (Post post : postList) {
-            List<UserIDAndDateAndText> comments = post.getCommentList();
-            Collections.reverse(comments);
+            MyLabel lblLast3Days = new MyLabel("Last 3 days");
+            lblLast3Days.setPreferredSize(new Dimension(300, 30));
+            lblLast3Days.setBorder(new EmptyBorder(5, 0, 5, 0));
+            lblLast3Days.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            int nums = countNewComments(comments);
+            pnlNoti.getPnlResult().add(lblLast3Days);
+            for (Post post : postList) {
+                List<UserIDAndDateAndText> comments = post.getCommentList();
+                Collections.reverse(comments);
 
-            if (nums > 0) {
-                pnlNoti.getPnlResult().add(createNotificationCard(post, nums));
+                int nums = countNewComments(comments);
+
+                if (nums > 0) {
+                    pnlNoti.getPnlResult().add(createNotificationCard(post, nums));
+                }
             }
-        }
 
-        pnlNoti.getPnlResult().revalidate();
-        pnlNoti.getPnlResult().repaint();
+            // Revalidate and repaint after adding new notifications
+            pnlNoti.getPnlResult().revalidate();
+            pnlNoti.getPnlResult().repaint();
+        });
     }
 
     /**
