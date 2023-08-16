@@ -1,47 +1,42 @@
 package online.syncio.controller.user;
 
+import com.mongodb.client.ChangeStreamIterable;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import javax.swing.Box;
-import online.syncio.component.SearchedUserCard;
+import javax.swing.SwingUtilities;
+import online.syncio.component.SearchedCard;
 import online.syncio.component.message.ChatArea;
-import online.syncio.dao.MessageDAO;
+import online.syncio.dao.ConversationDAO;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.UserDAO;
+import online.syncio.model.Conversation;
 import online.syncio.model.LoggedInUser;
 import online.syncio.model.User;
 import online.syncio.view.user.MessagePanel;
 
-/**
- * Controller class for managing user messaging functionality.
- */
 public class MessageController {
 
     private MessagePanel pnlMsg;
     private CardLayout cardLayout;
 
     private UserDAO userDAO = MongoDBConnect.getUserDAO();
-    private MessageDAO messageDAO = MongoDBConnect.getMessageDAO();
-    private Set<String> messageUserSet = new HashSet<>();
+    private ConversationDAO conversationDAO = MongoDBConnect.getConversationDAO();
+    private List<String> historyList = new ArrayList<>();
 
-    /**
-     * Constructs a MessageController with the provided MessagePanel.
-     *
-     * @param pnlMsg The MessagePanel instance.
-     */
+    private HashMap<String, Component> chatAreas = new HashMap<>();
+
     public MessageController(MessagePanel pnlMsg) {
         this.pnlMsg = pnlMsg;
-
         cardLayout = (CardLayout) pnlMsg.getChatArea().getLayout();
     }
 
-    /**
-     * Checks if a user is logged in and adds them to the history panel.
-     */
     public void recheckLoggedInUser() {
         if (LoggedInUser.isUser()) {
             addUserToHistoryPanel();
@@ -50,96 +45,166 @@ public class MessageController {
         }
     }
 
-    /**
-     * Adds messaging users to the history panel.
-     */
     public void addUserToHistoryPanel() {
         pnlMsg.getPnlUserList().removeAll();
 
-        messageUserSet = messageDAO.getMessagingUsers(LoggedInUser.getCurrentUser().getUsername());
-
-        for (String username : messageUserSet) {
-            createCardForHistoryPanel(username);
+        if (!historyList.isEmpty()) {
+            historyList.clear();
         }
 
-        pnlMsg.getPnlUserList().revalidate();
-        pnlMsg.getPnlUserList().repaint();
+        historyList = conversationDAO.getAllMessageHistory(LoggedInUser.getCurrentUser().getIdAsString());
+
+        Thread thread = new Thread(() -> {
+            for (String str : historyList) {
+                Conversation con = conversationDAO.getByID(str);
+                List<String> participants = con.getParticipants();
+                participants.remove(LoggedInUser.getCurrentUser().getIdAsString());
+
+                SwingUtilities.invokeLater(() -> {
+                    if (participants.size() == 1) {
+                        User user = userDAO.getByID(participants.get(0));
+                        createCard(str, user);
+                    }
+
+                    if (participants.size() >= 2) {
+                        createCard(str, null);
+                    }
+                });
+            }
+
+            pnlMsg.getPnlUserList().revalidate();
+            pnlMsg.getPnlUserList().repaint();
+        });
+        thread.start();
+
+        getConversationChangeStream();
+        getUsersChangeStream();
     }
 
-    /**
-     * Creates a card for the history panel with the given username.
-     *
-     * @param username The username to create the card for.
-     */
-    public void createCardForHistoryPanel(String username) {
-        User user = userDAO.getByUsername(username);
+    private void createCard(String identifier, User user) {
+        SearchedCard card = new SearchedCard();
 
-        SearchedUserCard card = new SearchedUserCard(user);
-        card.setName(username.trim());
+        if (user == null) {
+            card.setConversationID(identifier, null);
+        } else {
+            card.setConversationID(identifier, user);
+        }
+
+        card.setName(identifier);
 
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                openMessage(card.getUser().getUsername().trim());
+                openMessage(card.getConversationID());
             }
         });
 
         pnlMsg.getPnlUserList().add(card);
-        Box.createVerticalStrut(20);
-
-        pnlMsg.getPnlUserList().revalidate();
-        pnlMsg.getPnlUserList().repaint();
+        pnlMsg.getPnlUserList().add(Box.createVerticalStrut(20));
     }
 
-    /**
-     * Opens a message chat with the given messaging username.
-     *
-     * @param messagingUsername The username of the messaging user.
-     */
-    public void openMessage(String messagingUsername) {
-        Component[] componentList = pnlMsg.getChatArea().getComponents();
+    public void openMessageFromProfie(String userID) {
+        User user = userDAO.getByID(userID);
 
-        boolean found = false;
+        String[] testParticipants = new String[]{LoggedInUser.getCurrentUser().getIdAsString(), user.getIdAsString()};
 
-        User messagingUser = userDAO.getByUsername(messagingUsername);
+        Conversation con = conversationDAO.getByParticipants(Arrays.asList(testParticipants));
 
-        try {
-            for (Component c : componentList) {
-                if (c instanceof ChatArea
-                        && c.getName().equalsIgnoreCase(messagingUser.getUsername())) {
-                    cardLayout.show(pnlMsg.getChatArea(), messagingUser.getUsername());
-                    found = true;
+        if (con == null) {
+            con = new Conversation(Arrays.asList(testParticipants), new ArrayList<>());
+            conversationDAO.add(con);
+        }
+    }
 
-                    break;
-                }
+    public void openMessage(String conversationID) {
+        Component chatArea = chatAreas.get(conversationID);
+
+        if (chatArea == null) {
+            createChatArea(conversationID);
+        } else {
+            cardLayout.show(pnlMsg.getChatArea(), conversationID);
+        }
+    }
+
+    public void createChatArea(String conversationID) {
+        if (!historyList.contains(conversationID)) {
+            Conversation con = conversationDAO.getByID(conversationID);
+            List<String> participants = con.getParticipants();
+            participants.remove(LoggedInUser.getCurrentUser().getIdAsString());
+
+            if (participants.size() == 1) {
+                User user = userDAO.getByID(participants.get(0));
+                createCard(conversationID, user);
             }
-        } catch (Exception e) {
-            createMessage(messagingUser);
-            found = true;
+
+            if (participants.size() >= 2) {
+                createCard(conversationID, null);
+            }
+
+            historyList.add(conversationID);
         }
 
-        if (!found) {
-            createMessage(messagingUser);
+        if (!chatAreas.containsKey(conversationID)) {
+            ChatArea ca = new ChatArea();
+            ca.setConversationID(conversationID);
+            ca.setName(conversationID);
+            pnlMsg.getChatArea().add(ca, conversationID);
+
+            chatAreas.put(conversationID, ca);
+
+            System.out.println(ca.getName());
         }
+
+        cardLayout.show(pnlMsg.getChatArea(), conversationID);
     }
 
-    /**
-     * Creates a message chat area for the given messaging user.
-     *
-     * @param messagingUser The messaging user.
-     */
-    public void createMessage(User messagingUser) {
-        String username = messagingUser.getUsername();
+    // Dùng để update giao diện, kiểm tra người dùng này có được người mới nhăn tin
+    // hoặc được mời vào group chat
+    public void getConversationChangeStream() {
+        ChangeStreamIterable<Conversation> changeStream = conversationDAO.getChangeStream();
 
-        if (!messageUserSet.contains(username)) {
-            createCardForHistoryPanel(username);
-        }
+        Thread changeStreamThread = new Thread(() -> {
+            changeStream.forEach(changeDocument -> {
+                Conversation conversation = changeDocument.getFullDocument();
 
-        ChatArea ca = new ChatArea();
-        ca.setMessagingUser(messagingUser);
-        ca.setName(username.trim());
+                List<String> participants = conversation.getParticipants();
 
-        pnlMsg.getChatArea().add(ca, ca.getName());
-        cardLayout.show(pnlMsg.getChatArea(), username);
+                if (participants.contains(LoggedInUser.getCurrentUser().getIdAsString())) {
+                    createChatArea(conversation.getIdAsString());
+                }
+
+                pnlMsg.getPnlUserList().revalidate();
+                pnlMsg.getPnlUserList().repaint();
+            });
+        });
+
+        changeStreamThread.start();
+    }
+
+    // Dùng để update giao diện, kiểm tra người dùng có thay đổi thông tin cá nhân
+    public void getUsersChangeStream() {
+        ChangeStreamIterable<User> changeStream = userDAO.getChangeStream();
+
+        Thread changeStreamThread = new Thread(() -> {
+            changeStream.forEach(changeDocument -> {
+                User user = changeDocument.getFullDocument();
+
+                if (user != null) {
+
+                    String[] testParticipants = new String[]{LoggedInUser.getCurrentUser().getIdAsString(), user.getIdAsString()};
+
+                    Conversation con = conversationDAO.getByParticipants(Arrays.asList(testParticipants));
+
+                    if (con != null) {
+                        addUserToHistoryPanel();
+                    }
+
+                }
+            });
+            pnlMsg.getPnlUserList().revalidate();
+            pnlMsg.getPnlUserList().repaint();
+        });
+
+        changeStreamThread.start();
     }
 }

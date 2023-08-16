@@ -64,10 +64,10 @@ public class ChatBox extends JComponent {
         senderAvatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (message.getSender().trim().equalsIgnoreCase(LoggedInUser.getCurrentUser().getUsername().trim())) {
+                if (message.getSenderID().equalsIgnoreCase(LoggedInUser.getCurrentUser().getIdAsString())) {
                     Main.getInstance().getBtnProfile().doClick();
                 } else {
-                    User user = MongoDBConnect.getUserDAO().getByUsername(message.getSender().trim());
+                    User user = MongoDBConnect.getUserDAO().getByID(message.getSenderID());
                     Main.getInstance().profile.getController().loadProfile(user);
                     Main.getInstance().showTab("profile");
                 }
@@ -93,8 +93,10 @@ public class ChatBox extends JComponent {
         text.setOpaque(false);
         text.setEditable(false);
 
-        text.setText(message.getMessage());
-        labelDate = new JLabel(message.getSender() + " | " + message.getDateSent());
+        text.setText(message.getText());
+        User messagingUser = MongoDBConnect.getUserDAO().getByID(message.getSenderID());
+
+        labelDate = new JLabel(messagingUser.getUsername() + " | " + message.getDateSent());
         labelDate.setForeground(new Color(127, 127, 127));
         labelDate.setFont(regularFont);
 

@@ -34,11 +34,9 @@ import org.bson.types.ObjectId;
  */
 public class PostDAOImpl implements PostDAO {
 
-    private MongoDatabase database;
     private MongoCollection<Post> postCollection;
 
     public PostDAOImpl(MongoDatabase database) {
-        this.database = database;
         postCollection = database.getCollection("posts", Post.class);
     }
 
@@ -118,8 +116,6 @@ public class PostDAOImpl implements PostDAO {
 
     @Override
     public FindIterable<Post> getAllPostOfFollowers(User user) {
-        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
-
         // Get the list of follower IDs from the user object
         List<String> followerIds = new ArrayList<>();
         for (UserIDAndDate userIDAndDate : user.getFollowing()) {
@@ -133,7 +129,7 @@ public class PostDAOImpl implements PostDAO {
         Bson filter = and(in("userID", followerIds), eq("flag", 0));
 
         // Execute the query and return the result
-        return posts.find(filter).sort(Sorts.descending("datePosted"));
+        return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
 
     @Override
@@ -153,7 +149,6 @@ public class PostDAOImpl implements PostDAO {
 
     @Override
     public FindIterable<Post> getAllPostOther(User user) {
-        MongoCollection<Post> posts = database.getCollection("posts", Post.class);
         Bson filter;
 
         if (user != null) {
@@ -173,7 +168,7 @@ public class PostDAOImpl implements PostDAO {
         }
 
         // Execute the query and return the result
-        return posts.find(filter).sort(Sorts.descending("datePosted"));
+        return postCollection.find(filter).sort(Sorts.descending("datePosted"));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package online.syncio.dao;
 
+import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import online.syncio.model.User;
@@ -14,7 +15,8 @@ public interface UserDAO extends DAO<User> {
      *
      * @param username The username of the user.
      * @param password The password of the user.
-     * @return The authenticated User instance if successful, or null if authentication fails.
+     * @return The authenticated User instance if successful, or null if
+     * authentication fails.
      */
     public User authentication(String username, String password);
 
@@ -119,4 +121,6 @@ public interface UserDAO extends DAO<User> {
      * @return The User instance with the specified username.
      */
     public User getByUsername(String username);
+
+    public ChangeStreamIterable<User> getChangeStream();
 }

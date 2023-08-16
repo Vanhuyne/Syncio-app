@@ -13,7 +13,7 @@ import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import online.syncio.component.MyChart;
-import online.syncio.component.SearchedUserCard;
+import online.syncio.component.SearchedCard;
 import online.syncio.dao.MongoDBConnect;
 import online.syncio.dao.PostDAO;
 import online.syncio.dao.UserDAO;
@@ -169,7 +169,7 @@ public class DashboardController {
         for (Map.Entry<String, Integer> entry : topUsers) {
             String userID = entry.getKey();
             User user = userDAO.getByID(userID);
-            dashboard.getPnlResult().add(new SearchedUserCard(user, new Color(245, 245, 245)));
+            dashboard.getPnlResult().add(new SearchedCard(user, new Color(245, 245, 245)));
             Box.createVerticalStrut(20);
         }
 
