@@ -59,6 +59,7 @@ To access and download Syncio, visit our domain at [https://syncio.online/](http
    git clone https://github.com/56duong/Syncio.git
 
 2. Update the following constants for the application:
+
     - Update the MongoDB connection string, email API key, and other constants in the `Account.java` file located at [src/online/syncio/config/Account.java](https://github.com/56duong/Syncio/blob/master/src/online/syncio/config/Account.java).
     - Update the Google OAuth client credentials in the `credentials.json` file located at [src/online/syncio/config/credentials.json](https://github.com/56duong/Syncio/blob/master/src/online/syncio/config/credentials.json).
 
