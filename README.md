@@ -20,7 +20,6 @@ Syncio is a social media platform built with [Java](https://www.java.com/) by a 
 - Messaging and chat functionality.
 - Customizable user interfaces for admin and regular users.
 - Post creation, sharing, and interaction.
-- Responsive design for various devices.
 
 ## User Interface
 
